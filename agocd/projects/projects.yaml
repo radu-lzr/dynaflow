@@ -1,0 +1,34 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: monitoring
+  namespace: argocd
+spec:
+  description: "Stack d'observabilité et métriques"
+  sourceRepos:
+    - '*'
+  destinations:
+    # Autorise le déploiement uniquement dans le namespace 'monitoring'
+    - namespace: monitoring
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+
+---
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dynaflow
+  namespace: argocd
+spec:
+  description: "Microservices métiers ECU"
+  sourceRepos:
+    - '*'
+  destinations:
+    # Autorise le déploiement uniquement dans le namespace 'dynaflow'
+    - namespace: dynaflow
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'

@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: loki
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: monitoring
+  sources:
+    - repoURL: [https://grafana.github.io/helm-charts](https://grafana.github.io/helm-charts)
+      chart: loki
+      targetRevision: 6.55.0
+      helm:
+        valueFiles:
+          - $values/argocd/values/loki.yaml
+    - repoURL: [https://github.com/radu-lzr/dynaflow](https://github.com/radu-lzr/dynaflow)
+      targetRevision: main
+      ref: values
+  destination:
+    server: [https://kubernetes.default.svc](https://kubernetes.default.svc)
+    namespace: monitoring
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
