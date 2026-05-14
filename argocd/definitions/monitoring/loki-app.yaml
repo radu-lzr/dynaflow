@@ -16,8 +16,9 @@ spec:
           - $values/argocd/values/loki.yaml
     - repoURL: https://github.com/radu-lzr/dynaflow
       targetRevision: main
-      path: values
+      ref: values
   destination:
+    server: https://kubernetes.default.svc
     namespace: monitoring
   syncPolicy:
     automated:

@@ -16,7 +16,7 @@ spec:
           - $values/argocd/values/kube-prometheus-stack.yaml
     - repoURL: https://github.com/radu-lzr/dynaflow
       targetRevision: main
-      path: values
+      ref: values
   ignoreDifferences:
     - kind: Secret
       name: kube-prometheus-stack-grafana
