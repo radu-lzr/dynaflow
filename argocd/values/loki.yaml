@@ -8,18 +8,27 @@ loki:
     configs:
       - from: 2024-04-01
         store: tsdb
-        object_store: filesystem 
+        object_store: s3
         index:
           prefix: index_
           period: 24h
 
   storage:
-    type: filesystem
+    type: s3
 
-deploymentMode: SingleBinary
+minio:
+  enabled: true
+
+deploymentMode: Monolithic
 singleBinary:
   replicas: 1
   persistence:
     enabled: true
     size: 20Gi 
     storageClass: standard 
+backend:
+  replicas: 0
+read:
+  replicas: 0
+write:
+  replicas: 0
