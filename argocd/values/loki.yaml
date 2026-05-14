@@ -1,1 +1,2 @@
-# Loki chart overrides
+minio:
+  enabled: true
