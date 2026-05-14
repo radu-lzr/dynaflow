@@ -11,6 +11,8 @@ spec:
     # Autorise le déploiement uniquement dans le namespace 'monitoring'
     - namespace: monitoring
       server: https://kubernetes.default.svc
+    - namespace: kube-system
+      server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: '*'
       kind: '*'
