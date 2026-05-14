@@ -10,10 +10,10 @@ spec:
   source:
     repoURL: https://github.com/radu-lzr/dynaflow
     targetRevision: main
-    path: argocd/definitions/monitoring 
+    path: argocd/definitions/monitoring
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd 
+    namespace: argocd
   syncPolicy:
     automated:
       prune: true

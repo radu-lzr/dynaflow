@@ -16,7 +16,7 @@ spec:
           - $values/argocd/values/mimir.yaml
     - repoURL: https://github.com/radu-lzr/dynaflow
       targetRevision: main
-      ref: values
+      path: values
   ignoreDifferences:
     - group: admissionregistration.k8s.io
       kind: MutatingWebhookConfiguration

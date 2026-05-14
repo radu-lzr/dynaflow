@@ -16,7 +16,7 @@ spec:
           - $values/argocd/values/loki.yaml
     - repoURL: https://github.com/radu-lzr/dynaflow
       targetRevision: main
-      ref: values
+      path: values
   destination:
     namespace: monitoring
   syncPolicy:
