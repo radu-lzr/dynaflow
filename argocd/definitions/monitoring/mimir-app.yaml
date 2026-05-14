@@ -8,13 +8,13 @@ metadata:
 spec:
   project: monitoring
   sources:
-    - repoURL: [https://grafana.github.io/helm-charts](https://grafana.github.io/helm-charts)
+    - repoURL: https://grafana.github.io/helm-charts
       chart: mimir-distributed
       targetRevision: 6.0.6
       helm:
         valueFiles:
           - $values/argocd/values/mimir.yaml
-    - repoURL: [https://github.com/radu-lzr/dynaflow](https://github.com/radu-lzr/dynaflow)
+    - repoURL: https://github.com/radu-lzr/dynaflow
       targetRevision: main
       ref: values
   ignoreDifferences:
@@ -27,7 +27,7 @@ spec:
       jsonPointers:
         - /webhooks/0/namespaceSelector/matchExpressions
   destination:
-    server: [https://kubernetes.default.svc](https://kubernetes.default.svc)
+    server: https://kubernetes.default.svc
     namespace: monitoring
   syncPolicy:
     automated:

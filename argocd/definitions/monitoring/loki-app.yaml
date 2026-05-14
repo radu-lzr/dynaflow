@@ -8,17 +8,16 @@ metadata:
 spec:
   project: monitoring
   sources:
-    - repoURL: [https://grafana.github.io/helm-charts](https://grafana.github.io/helm-charts)
+    - repoURL: https://grafana.github.io/helm-charts
       chart: loki
       targetRevision: 6.55.0
       helm:
         valueFiles:
           - $values/argocd/values/loki.yaml
-    - repoURL: [https://github.com/radu-lzr/dynaflow](https://github.com/radu-lzr/dynaflow)
+    - repoURL: https://github.com/radu-lzr/dynaflow
       targetRevision: main
       ref: values
   destination:
-    server: [https://kubernetes.default.svc](https://kubernetes.default.svc)
     namespace: monitoring
   syncPolicy:
     automated:
