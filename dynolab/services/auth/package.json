@@ -7,6 +7,11 @@
     "@dynolab/core": "workspace:*",
     "fastify": "^5.0.0",
     "fastify-plugin": "^5.1.0",
-    "ioredis": "^5.4.0"
+    "ioredis": "^5.4.0",
+    "argon2": "^0.44.0",
+    "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.3"
   }
 }
