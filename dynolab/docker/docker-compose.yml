@@ -1,0 +1,148 @@
+version: '3.8'
+
+services:
+  # ============ DATABASES ============
+
+  pg-auth:
+    image: postgres:16-alpine
+    container_name: dynolab-pg-auth
+    environment:
+      POSTGRES_DB: dynolab_auth
+      POSTGRES_USER: dynolab
+      POSTGRES_PASSWORD: dynolab_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - pg_auth_data:/var/lib/postgresql/data
+
+  pg-access:
+    image: postgres:16-alpine
+    container_name: dynolab-pg-access
+    environment:
+      POSTGRES_DB: dynolab_access
+      POSTGRES_USER: dynolab
+      POSTGRES_PASSWORD: dynolab_dev
+    ports:
+      - '5433:5432'
+    volumes:
+      - pg_access_data:/var/lib/postgresql/data
+
+  pg-site:
+    image: postgres:16-alpine
+    container_name: dynolab-pg-site
+    environment:
+      POSTGRES_DB: dynolab_site
+      POSTGRES_USER: dynolab
+      POSTGRES_PASSWORD: dynolab_dev
+    ports:
+      - '5434:5432'
+    volumes:
+      - pg_site_data:/var/lib/postgresql/data
+
+  pg-client-vehicle:
+    image: postgres:16-alpine
+    container_name: dynolab-pg-client-vehicle
+    environment:
+      POSTGRES_DB: dynolab_client_vehicle
+      POSTGRES_USER: dynolab
+      POSTGRES_PASSWORD: dynolab_dev
+    ports:
+      - '5435:5432'
+    volumes:
+      - pg_client_vehicle_data:/var/lib/postgresql/data
+
+  pg-map:
+    image: postgres:16-alpine
+    container_name: dynolab-pg-map
+    environment:
+      POSTGRES_DB: dynolab_map
+      POSTGRES_USER: dynolab
+      POSTGRES_PASSWORD: dynolab_dev
+    ports:
+      - '5436:5432'
+    volumes:
+      - pg_map_data:/var/lib/postgresql/data
+
+  pg-workshop:
+    image: postgres:16-alpine
+    container_name: dynolab-pg-workshop
+    environment:
+      POSTGRES_DB: dynolab_workshop
+      POSTGRES_USER: dynolab
+      POSTGRES_PASSWORD: dynolab_dev
+    ports:
+      - '5437:5432'
+    volumes:
+      - pg_workshop_data:/var/lib/postgresql/data
+
+  timescaledb:
+    image: timescale/timescaledb:latest-pg16
+    container_name: dynolab-timescaledb
+    environment:
+      POSTGRES_DB: dynolab_telemetry
+      POSTGRES_USER: dynolab
+      POSTGRES_PASSWORD: dynolab_dev
+    ports:
+      - '5438:5432'
+    volumes:
+      - timescale_data:/var/lib/postgresql/data
+
+  mongodb:
+    image: mongo:7
+    container_name: dynolab-mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dynolab
+      MONGO_INITDB_ROOT_PASSWORD: dynolab_dev
+      MONGO_INITDB_DATABASE: dynolab_vehicle
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  # ============ INFRASTRUCTURE ============
+
+  redis:
+    image: redis:7-alpine
+    container_name: dynolab-redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: dynolab-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: dynolab
+      RABBITMQ_DEFAULT_PASS: dynolab_dev
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  minio:
+    image: minio/minio:latest
+    container_name: dynolab-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: dynolab
+      MINIO_ROOT_PASSWORD: dynolab_dev
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - minio_data:/data
+
+volumes:
+  pg_auth_data:
+  pg_access_data:
+  pg_site_data:
+  pg_client_vehicle_data:
+  pg_map_data:
+  pg_workshop_data:
+  timescale_data:
+  mongo_data:
+  redis_data:
+  rabbitmq_data:
+  minio_data:
