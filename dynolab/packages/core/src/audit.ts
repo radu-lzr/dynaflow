@@ -1,4 +1,3 @@
-import type { FastifyRequest, FastifyReply, HookHandlerDoneFunction } from 'fastify';
 import type { Logger } from './logger.js';
 
 export interface AuditAction {
