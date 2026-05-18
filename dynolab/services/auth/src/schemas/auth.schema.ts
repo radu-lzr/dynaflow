@@ -26,7 +26,7 @@ export const RegisterUserSchema = {
             }
         }
     }
-};  
+} as const;  
 
 export const LoginUserSchema = {
     body: {
@@ -60,7 +60,7 @@ export const LoginUserSchema = {
             }
         }
     }
-};
+} as const;
 
 export const RefreshTokenSchema = {
     body: {
@@ -87,7 +87,7 @@ export const RefreshTokenSchema = {
             }
         }
     }
-};
+} as const;
 
 export const LogoutUserSchema = {
     headers: {
@@ -118,4 +118,4 @@ export const LogoutUserSchema = {
             }
         }
     }
-};
+} as const;

@@ -41,7 +41,7 @@ export const GetUsersSchema = {
             }
         }
     }
-};
+} as const;
 
 export const GetUserByIdSchema = {
     params: {
@@ -81,7 +81,7 @@ export const GetUserByIdSchema = {
             }
         }
     }
-};
+} as const;
 
 export const UpdateUserSchema = {
     params: {
@@ -120,7 +120,7 @@ export const UpdateUserSchema = {
             }
         },
     }
-};
+} as const;
 
 export const DeleteUserSchema = {
     params: {
@@ -144,4 +144,4 @@ export const DeleteUserSchema = {
             }
         },
     }
-};        
+} as const;

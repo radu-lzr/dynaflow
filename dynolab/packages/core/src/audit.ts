@@ -5,7 +5,7 @@ export interface AuditAction {
   resource: string;
   resourceId?: string;
   userId?: string;
-  sensitive: boolean;
+  sensitive?: boolean;
   metadata?: Record<string, unknown>;
 }
 
@@ -23,17 +23,19 @@ export function isSensitiveAction(action: string): boolean {
 export function createAuditLogger(logger: Logger) {
   return {
     log(audit: AuditAction) {
+      const sensitive = audit.sensitive ?? isSensitiveAction(audit.action);
+
       const logEntry = {
         audit: true,
         action: audit.action,
         resource: audit.resource,
         resourceId: audit.resourceId,
         userId: audit.userId,
-        sensitive: audit.sensitive,
+        sensitive,
         ...audit.metadata,
       };
 
-      if (audit.sensitive) {
+      if (sensitive) {
         logger.warn(logEntry, `AUDIT [SENSITIVE] ${audit.action} on ${audit.resource}`);
       } else {
         logger.info(logEntry, `AUDIT ${audit.action} on ${audit.resource}`);
