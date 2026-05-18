@@ -7,9 +7,9 @@ services:
     image: postgres:16-alpine
     container_name: dynolab-pg-auth
     environment:
-      POSTGRES_DB: dynolab_auth
-      POSTGRES_USER: dynolab
-      POSTGRES_PASSWORD: dynolab_dev
+      POSTGRES_DB: ${PG_AUTH_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5432:5432'
     volumes:
@@ -19,9 +19,9 @@ services:
     image: postgres:16-alpine
     container_name: dynolab-pg-access
     environment:
-      POSTGRES_DB: dynolab_access
-      POSTGRES_USER: dynolab
-      POSTGRES_PASSWORD: dynolab_dev
+      POSTGRES_DB: ${PG_ACCESS_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5433:5432'
     volumes:
@@ -31,9 +31,9 @@ services:
     image: postgres:16-alpine
     container_name: dynolab-pg-site
     environment:
-      POSTGRES_DB: dynolab_site
-      POSTGRES_USER: dynolab
-      POSTGRES_PASSWORD: dynolab_dev
+      POSTGRES_DB: ${PG_SITE_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5434:5432'
     volumes:
@@ -43,9 +43,9 @@ services:
     image: postgres:16-alpine
     container_name: dynolab-pg-client-vehicle
     environment:
-      POSTGRES_DB: dynolab_client_vehicle
-      POSTGRES_USER: dynolab
-      POSTGRES_PASSWORD: dynolab_dev
+      POSTGRES_DB: ${PG_CLIENT_VEHICLE_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5435:5432'
     volumes:
@@ -55,9 +55,9 @@ services:
     image: postgres:16-alpine
     container_name: dynolab-pg-map
     environment:
-      POSTGRES_DB: dynolab_map
-      POSTGRES_USER: dynolab
-      POSTGRES_PASSWORD: dynolab_dev
+      POSTGRES_DB: ${PG_MAP_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5436:5432'
     volumes:
@@ -67,9 +67,9 @@ services:
     image: postgres:16-alpine
     container_name: dynolab-pg-workshop
     environment:
-      POSTGRES_DB: dynolab_workshop
-      POSTGRES_USER: dynolab
-      POSTGRES_PASSWORD: dynolab_dev
+      POSTGRES_DB: ${PG_WORKSHOP_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5437:5432'
     volumes:
@@ -79,9 +79,9 @@ services:
     image: timescale/timescaledb:latest-pg16
     container_name: dynolab-timescaledb
     environment:
-      POSTGRES_DB: dynolab_telemetry
-      POSTGRES_USER: dynolab
-      POSTGRES_PASSWORD: dynolab_dev
+      POSTGRES_DB: ${TIMESCALE_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - '5438:5432'
     volumes:
@@ -91,13 +91,42 @@ services:
     image: mongo:7
     container_name: dynolab-mongodb
     environment:
-      MONGO_INITDB_ROOT_USERNAME: dynolab
-      MONGO_INITDB_ROOT_PASSWORD: dynolab_dev
-      MONGO_INITDB_DATABASE: dynolab_vehicle
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DB}
     ports:
       - '27017:27017'
     volumes:
       - mongo_data:/data/db
+
+  # ============ SERVICES ============
+
+  auth:
+    build:
+      context: ..
+      dockerfile: services/auth/Dockerfile
+    container_name: dynolab-auth
+    environment:
+      PORT: ${AUTH_PORT}
+      POSTGRES_HOST: pg-auth
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${PG_AUTH_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL}
+      REFRESH_TOKEN_TTL_DAYS: ${REFRESH_TOKEN_TTL_DAYS}
+      MAX_LOGIN_ATTEMPTS: ${MAX_LOGIN_ATTEMPTS}
+      LOCK_DURATION_MINUTES: ${LOCK_DURATION_MINUTES}
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - '${AUTH_PORT}:${AUTH_PORT}'
+    depends_on:
+      - pg-auth
+      - redis
 
   # ============ INFRASTRUCTURE ============
 
@@ -113,8 +142,8 @@ services:
     image: rabbitmq:3-management-alpine
     container_name: dynolab-rabbitmq
     environment:
-      RABBITMQ_DEFAULT_USER: dynolab
-      RABBITMQ_DEFAULT_PASS: dynolab_dev
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
     ports:
       - '5672:5672'
       - '15672:15672'
@@ -126,8 +155,8 @@ services:
     container_name: dynolab-minio
     command: server /data --console-address ":9001"
     environment:
-      MINIO_ROOT_USER: dynolab
-      MINIO_ROOT_PASSWORD: dynolab_dev
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     ports:
       - '9000:9000'
       - '9001:9001'

@@ -2,7 +2,6 @@
   "name": "@dynolab/core",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -12,12 +11,14 @@
   },
   "dependencies": {
     "pino": "^9.0.0",
-    "prom-client": "^15.0.0",
-    "amqplib": "^0.10.0",
-    "ioredis": "^5.4.0"
+    "pg": "^8.0.0",
+    "fastify-plugin": "^5.1.0"
+  },
+  "peerDependencies": {
+    "fastify": "^5.0.0"
   },
   "devDependencies": {
-    "@types/amqplib": "^0.10.0",
+    "@types/pg": "^8.0.0",
     "typescript": "^5.5.0"
   }
 }
