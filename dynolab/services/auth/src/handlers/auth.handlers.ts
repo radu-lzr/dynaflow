@@ -27,7 +27,7 @@ export async function registerUserHandler(
         const existingUsers = await request.server.pg.query(
             'SELECT id FROM users WHERE email = $1', [email]
         );
-        if (existingUsers.rowCount > 0) {
+        if ((existingUsers.rowCount ?? 0) > 0) {
             request.log.warn({ email }, 'Registration attempt with existing email');
             return reply.code(409).send({ message: 'Email already in use' });
         }

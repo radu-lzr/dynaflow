@@ -1,20 +1,18 @@
 import Fastify from 'fastify';
-import { createLogger, createAuditLogger, postgresPlugin } from '@dynolab/core';
-import redisPlugin from './plugins/redis.js';
-import { authRoutes } from './routes/auth.routes.js';
-import { verifyRoutes } from './routes/verify.routes.js';
-import { usersRoutes } from './routes/users.routes.js';
+import { getLoggerOptions, createAuditLogger, postgresPlugin } from '@dynolab/core';
+import redisPlugin from './plugins/redis';
+import { authRoutes } from './routes/auth.routes';
+import { verifyRoutes } from './routes/verify.routes';
+import { usersRoutes } from './routes/users.routes';
 
-const logger = createLogger({ service: 'auth-service' });
-
-const app = Fastify({ logger });
+const app = Fastify({ logger: getLoggerOptions({ service: 'auth-service' }) });
 
 // Plugins
 app.register(postgresPlugin);
 app.register(redisPlugin);
 
 // Audit
-const audit = createAuditLogger(logger);
+const audit = createAuditLogger(app.log);
 app.decorate('audit', audit);
 
 // Routes
@@ -30,8 +28,8 @@ const PORT = parseInt(process.env.PORT || '4001');
 
 app.listen({ port: PORT, host: '0.0.0.0' }, (err, address) => {
     if (err) {
-        logger.error(err, 'Failed to start server');
+        app.log.error(err, 'Failed to start server');
         process.exit(1);
     }
-    logger.info(`Auth service listening on ${address}`);
+    app.log.info(`Auth service listening on ${address}`);
 });

@@ -1,8 +1,8 @@
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-const JWT_ACCESS_TTL = process.env.JWT_ACCESS_TTL;
+const JWT_SECRET = process.env.JWT_SECRET as string;
+const JWT_ACCESS_TTL = process.env.JWT_ACCESS_TTL as string;
 
 if (!JWT_SECRET || !JWT_ACCESS_TTL) {
     throw new Error('JWT_SECRET and JWT_ACCESS_TTL must be defined in environment variables');

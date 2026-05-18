@@ -1,4 +1,7 @@
-import type { Logger } from './logger.js';
+interface MinimalLogger {
+  info(obj: object, msg: string): void;
+  warn(obj: object, msg: string): void;
+}
 
 export interface AuditAction {
   action: string;
@@ -20,7 +23,7 @@ export function isSensitiveAction(action: string): boolean {
   return SENSITIVE_PATTERNS.some((pattern) => pattern.test(action));
 }
 
-export function createAuditLogger(logger: Logger) {
+export function createAuditLogger(logger: MinimalLogger) {
   return {
     log(audit: AuditAction) {
       const sensitive = audit.sensitive ?? isSensitiveAction(audit.action);

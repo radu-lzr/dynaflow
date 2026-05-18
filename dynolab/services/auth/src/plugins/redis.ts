@@ -1,4 +1,4 @@
-import Redis from 'ioredis';
+import { Redis } from 'ioredis';
 import fp from 'fastify-plugin';
 import type { FastifyInstance } from 'fastify';
 

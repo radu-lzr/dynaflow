@@ -2,7 +2,10 @@
   "name": "@dynolab/auth",
   "version": "1.0.0",
   "private": true,
-  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
   "dependencies": {
     "@dynolab/core": "workspace:*",
     "fastify": "^5.0.0",
@@ -13,6 +16,7 @@
   },
   "devDependencies": {
     "@types/jsonwebtoken": "^9.0.3",
-    "json-schema-to-ts": "^3.1.1"
+    "json-schema-to-ts": "^3.1.1",
+    "typescript": "^5.5.0"
   }
 }

@@ -1,4 +1,4 @@
-export { createLogger, type Logger } from './logger.js';
-export { createAuditLogger, isSensitiveAction, type AuditLogger, type AuditAction } from './audit.js';
-export { default as postgresPlugin } from './postgres.js';
+export { createLogger, getLoggerOptions, type Logger } from './logger';
+export { createAuditLogger, isSensitiveAction, type AuditLogger, type AuditAction } from './audit';
+export { default as postgresPlugin } from './postgres';
 export type { Pool } from 'pg'; 

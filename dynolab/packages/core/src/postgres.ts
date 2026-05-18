@@ -1,14 +1,14 @@
-import pg from 'pg';
+import { Pool } from 'pg';
 import fp from 'fastify-plugin';
 import type { FastifyInstance } from 'fastify';
 
 declare module 'fastify' {
     export interface FastifyInstance {
-        pg: pg.Pool;
+        pg: Pool;
     }
 };
 export default fp(async (fastify: FastifyInstance) => {
-    const pool = new pg.Pool({
+    const pool = new Pool({
         host: process.env.POSTGRES_HOST,
         port: parseInt(process.env.POSTGRES_PORT || '5432'),
         user: process.env.POSTGRES_USER,
