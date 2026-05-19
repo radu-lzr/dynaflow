@@ -17,7 +17,7 @@ export const GetPermissionsSchema = {
                         type: 'object',
                         properties: {
                             id: { type: 'string', format: 'uuid' },
-                            code: { type: 'string' },
+                            permissionCode: { type: 'string' },
                             description: { type: 'string', nullable: true },
                             createdAt: { type: 'string', format: 'date-time' }
                         }
@@ -35,9 +35,9 @@ export const GetPermissionsSchema = {
 export const CreatePermissionSchema = {
     body: {
         type: 'object',
-        required: ['code'],
+        required: ['permissionCode'],
         properties: {
-            code: { type: 'string' , pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$'}, // e.g., 'read:users', 'write:roles'
+            permissionCode: { type: 'string' , pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$'}, // e.g., 'read:users', 'write:roles'
             description: { type: 'string', nullable: true }
         }
     },

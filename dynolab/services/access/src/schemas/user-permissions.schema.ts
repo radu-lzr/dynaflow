@@ -1,10 +1,10 @@
 export const AssignPermissionsToUserSchema = {
     body: {
         type: 'object',
-        required: ['userId', 'code', 'resourceId'],
+        required: ['userId', 'permissionCode', 'resourceId'],
         properties: {
             userId: { type: 'string', format: 'uuid' },
-            code: { type: 'string' , pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$'}, // e.g., 'read:users', 'write:roles'
+            permissionCode: { type: 'string' , pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$'}, // e.g., 'read:users', 'write:roles'
             resourceId: { type: 'string', format: 'uuid' },
             siteId: { type: 'string', format: 'uuid', nullable: true }
         }
@@ -43,7 +43,7 @@ export const GetUserPermissionsSchema = {
                     items: {
                         type: 'object',
                         properties: {
-                            code: { type: 'string',  pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$' },
+                            permissionCode: { type: 'string',  pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$' },
                             resourceId: { type: 'string', format: 'uuid' },
                             grantedBy: { type: 'string', format: 'uuid' },
                             grantedAt: { type: 'string', format: 'date-time' }

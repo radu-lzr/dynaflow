@@ -55,7 +55,7 @@ export const GetRoleByIdSchema = {
                         type: 'object',
                         properties: {
                             id: { type: 'string', format: 'uuid' },
-                            code: { type: 'string',  pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$' },
+                            permissionCode: { type: 'string',  pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$' },
                             description: { type: 'string', nullable: true },
                         }
                     }

@@ -1,10 +1,10 @@
 export const CreateTempPermissionSchema = {
     body: {
         type: 'object',
-        required: ['userId', 'code', 'resourceId', 'linkedTo', 'ttlSeconds'],
+        required: ['userId', 'permissionCode', 'resourceId', 'linkedTo', 'ttlSeconds'],
         properties: {
             userId: { type: 'string', format: 'uuid' },
-            code: { type: 'string',  pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$' },
+            permissionCode: { type: 'string',  pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$' },
             resourceId: { type: 'string', format: 'uuid' },
             linkedTo: { type: 'string', format: 'uuid'},
             ttlSeconds: { type: 'integer', minimum: 1 }
@@ -46,7 +46,7 @@ export const GetUserTempPermissionsSchema = {
                         type: 'object',
                         properties: {
                             id: { type: 'string', format: 'uuid' },
-                            code: { type: 'string',  pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$' },
+                            permissionCode: { type: 'string',  pattern: '^[a-z][a-z0-9_]*:[a-z][a-z0-9_]*$' },
                             resourceId: { type: 'string', format: 'uuid' },
                             linkedTo: { type: 'string', format: 'uuid'},
                             expiresAt: { type: 'string', format: 'date-time' },

@@ -8,7 +8,7 @@ interface CheckResult {
 export async function checkPermission(
     pool: Pool,
     userId: string,
-    code: string,
+    permissionCode: string,
     resourceId?: string
 ): Promise<CheckResult> {
 
@@ -18,8 +18,8 @@ export async function checkPermission(
         FROM user_roles ur
         JOIN role_permissions rp ON ur.role_id = rp.role_id
         JOIN permissions p ON rp.permission_id = p.id
-        WHERE ur.user_id = $1 AND p.code = $2
-    `, [userId, code]);
+        WHERE ur.user_id = $1 AND p.permission_code = $2
+    `, [userId, permissionCode]);
 
     if ((roleResult.rowCount ?? 0) > 0) {
         const hasGlobal = roleResult.rows.some(row => row.site_id === null);
@@ -34,9 +34,9 @@ export async function checkPermission(
     const directResult = await pool.query(`
         SELECT resource_id
         FROM user_permissions
-        WHERE user_id = $1 AND permission = $2
+        WHERE user_id = $1 AND permission_code = $2
         AND ($3::uuid IS NULL OR resource_id = $3)
-    `, [userId, code, resourceId || null]);
+    `, [userId, permissionCode, resourceId || null]);
 
     if ((directResult.rowCount ?? 0) > 0) {
         return { allowed: true, scopes: null };
@@ -46,10 +46,10 @@ export async function checkPermission(
     const tempResult = await pool.query(`
         SELECT resource_id
         FROM temp_permissions
-        WHERE user_id = $1 AND permission = $2
+        WHERE user_id = $1 AND permission_code = $2
         AND ($3::uuid IS NULL OR resource_id = $3)
         AND expires_at > NOW()
-    `, [userId, code, resourceId || null]);
+    `, [userId, permissionCode, resourceId || null]);
 
     if ((tempResult.rowCount ?? 0) > 0) {
         return { allowed: true, scopes: null };
