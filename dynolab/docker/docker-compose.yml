@@ -128,6 +128,24 @@ services:
       - pg-auth
       - redis
 
+  access:
+    build:
+      context: ..
+      dockerfile: services/access/Dockerfile
+    container_name: dynolab-access
+    environment:
+      PORT: ${ACCESS_PORT}
+      POSTGRES_HOST: pg-access
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${PG_ACCESS_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - '${ACCESS_PORT}:${ACCESS_PORT}'
+    depends_on:
+      - pg-access
+
   # ============ INFRASTRUCTURE ============
 
   redis:

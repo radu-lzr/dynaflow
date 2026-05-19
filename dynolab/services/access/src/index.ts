@@ -7,7 +7,7 @@ import userRolesRoutes from './routes/user-roles.routes';
 import userPermissionsRoutes from './routes/user-permissions.routes';
 import tempPermissionsRoutes from './routes/temp-permissions.routes';
 
-const app = Fastify({ logger: getLoggerOptions({ service: 'auth-service' }) });
+const app = Fastify({ logger: getLoggerOptions({ service: 'access-service' }) });
 
 // Plugins
 app.register(postgresPlugin);
@@ -28,12 +28,12 @@ app.register(tempPermissionsRoutes);
 app.get('/health', async () => ({ status: 'ok' }));
 
 // Start
-const PORT = parseInt(process.env.PORT || '4001');
+const PORT = parseInt(process.env.PORT || '4002');
 
 app.listen({ port: PORT, host: '0.0.0.0' }, (err, address) => {
     if (err) {
         app.log.error(err, 'Failed to start server');
         process.exit(1);
     }
-    app.log.info(`Auth service listening on ${address}`);
+    app.log.info(`Access service listening on ${address}`);
 });
