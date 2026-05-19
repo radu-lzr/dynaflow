@@ -1,0 +1,30 @@
+meta {
+  name: Filter Users By Account Type
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{authUrl}}/users
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+params:query {
+  accountType: client
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all results are clients", function() {
+    res.body.users.forEach(function(u) {
+      expect(u.accountType).to.equal("client");
+    });
+  });
+}

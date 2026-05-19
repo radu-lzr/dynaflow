@@ -1,0 +1,30 @@
+meta {
+  name: Filter Users By isActive
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{authUrl}}/users
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+params:query {
+  isActive: true
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all results are active", function() {
+    res.body.users.forEach(function(u) {
+      expect(u.isActive).to.be.true;
+    });
+  });
+}

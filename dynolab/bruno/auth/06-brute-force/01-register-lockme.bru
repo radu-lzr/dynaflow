@@ -1,0 +1,27 @@
+meta {
+  name: Register Lockme User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{authUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "lockme@dynolab.com",
+    "password": "lockmepass123",
+    "firstName": "Lock",
+    "lastName": "Me",
+    "accountType": "internal"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+}

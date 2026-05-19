@@ -1,0 +1,26 @@
+meta {
+  name: Refresh After Logout — Revoked Token (401)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{authUrl}}/auth/refresh
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "refreshToken": "{{techRefreshToken}}"
+  }
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.status).to.equal(401);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

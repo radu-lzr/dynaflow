@@ -1,0 +1,36 @@
+meta {
+  name: Refresh Admin Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{authUrl}}/auth/refresh
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "refreshToken": "{{adminRefreshToken}}"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has new accessToken", function() {
+    expect(res.body.accessToken).to.be.a("string");
+  });
+  test("has new refreshToken", function() {
+    expect(res.body.refreshToken).to.be.a("string");
+  });
+}
+
+script:post-response {
+  // Save new tokens; old adminRefreshToken is now consumed
+  bru.setVar("adminRefreshTokenUsed", bru.getVar("adminRefreshToken"));
+  bru.setVar("adminAccessToken", res.body.accessToken);
+  bru.setVar("adminRefreshToken", res.body.refreshToken);
+}

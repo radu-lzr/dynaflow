@@ -1,0 +1,27 @@
+meta {
+  name: Login With Correct Password After Lock (423)
+  type: http
+  seq: 7
+}
+
+post {
+  url: {{authUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "lockme@dynolab.com",
+    "password": "lockmepass123"
+  }
+}
+
+tests {
+  test("status 423", function() {
+    expect(res.status).to.equal(423);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

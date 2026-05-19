@@ -1,0 +1,33 @@
+meta {
+  name: Get Admin User By Id
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{authUrl}}/users/{{adminId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("id matches", function() {
+    expect(res.body.id).to.equal(bru.getVar("adminId"));
+  });
+  test("has email", function() {
+    expect(res.body.email).to.be.a("string");
+  });
+  test("has accountType", function() {
+    expect(res.body.accountType).to.be.a("string");
+  });
+  test("has isActive", function() {
+    expect(res.body.isActive).to.be.a("boolean");
+  });
+}

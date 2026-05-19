@@ -1,0 +1,24 @@
+meta {
+  name: Failed Login Attempt 5/5 — Account Locks
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{authUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "lockme@dynolab.com",
+    "password": "wrongpassword"
+  }
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.status).to.equal(401);
+  });
+}

@@ -1,0 +1,36 @@
+meta {
+  name: Search Users By Name
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{authUrl}}/users
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+params:query {
+  search: admin
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has users array", function() {
+    expect(res.body.users).to.be.an("array");
+  });
+  test("results match search term", function() {
+    res.body.users.forEach(function(u) {
+      const match = u.email.toLowerCase().includes("admin") ||
+                    u.firstName.toLowerCase().includes("admin") ||
+                    u.lastName.toLowerCase().includes("admin");
+      expect(match).to.be.true;
+    });
+  });
+}
