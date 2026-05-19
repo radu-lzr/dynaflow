@@ -430,7 +430,8 @@ CREATE TABLE roles (
     name            VARCHAR(50) UNIQUE NOT NULL,
     description     VARCHAR(255),
     is_system       BOOLEAN DEFAULT false,
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE permissions (
