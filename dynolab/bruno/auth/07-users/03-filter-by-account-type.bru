@@ -5,17 +5,13 @@ meta {
 }
 
 get {
-  url: {{authUrl}}/users
+  url: {{authUrl}}/users?accountType=client
   body: none
   auth: none
 }
 
 headers {
   X-User-Id: {{adminId}}
-}
-
-params:query {
-  accountType: client
 }
 
 tests {

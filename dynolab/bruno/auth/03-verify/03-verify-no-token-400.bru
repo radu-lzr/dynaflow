@@ -1,0 +1,17 @@
+meta {
+  name: Verify No Token (400)
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{authUrl}}/auth/verify
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}
