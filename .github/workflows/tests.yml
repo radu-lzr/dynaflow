@@ -27,6 +27,9 @@ jobs:
         with:
           version: 9
 
+      - name: Setup environment variables
+        run: cp dynolab/docker/.env.example dynolab/docker/.env
+
       - name: Start databases and Redis
         run: docker compose -f dynolab/docker/docker-compose.yml up -d pg-auth pg-access redis
 
