@@ -1,0 +1,24 @@
+meta {
+  name: List Sites With Search
+  type: http
+  seq: 10
+}
+
+get {
+  url: {{siteUrl}}/sites?search=Lyon
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has items array", function() {
+    expect(res.body.items).to.be.an("array");
+  });
+}

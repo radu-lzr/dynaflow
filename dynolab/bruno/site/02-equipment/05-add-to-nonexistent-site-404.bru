@@ -1,0 +1,30 @@
+meta {
+  name: Add Equipment To Nonexistent Site 404
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{siteUrl}}/sites/00000000-0000-0000-0000-000000000000/equipment
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "type": "ecu_flasher"
+  }
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.status).to.equal(404);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

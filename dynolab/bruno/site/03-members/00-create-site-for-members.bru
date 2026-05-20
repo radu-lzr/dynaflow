@@ -1,0 +1,35 @@
+meta {
+  name: Setup - Create Site For Members Tests
+  type: http
+  seq: 0
+}
+
+post {
+  url: {{siteUrl}}/sites
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "name": "Bordeaux Workshop",
+    "city": "Bordeaux",
+    "country": "France"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("memberSiteId", res.body.id);
+  }
+}

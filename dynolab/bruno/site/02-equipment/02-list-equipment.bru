@@ -1,0 +1,33 @@
+meta {
+  name: List Equipment
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{siteUrl}}/sites/{{equipmentSiteId}}/equipment
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has items array", function() {
+    expect(res.body.items).to.be.an("array");
+  });
+  test("at least one item", function() {
+    expect(res.body.items.length).to.be.greaterThan(0);
+  });
+  test("item has expected fields", function() {
+    const item = res.body.items[0];
+    expect(item.id).to.be.a("string");
+    expect(item.type).to.be.a("string");
+    expect(item.isOperational).to.be.a("boolean");
+  });
+}

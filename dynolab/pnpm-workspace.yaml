@@ -3,3 +3,4 @@ packages:
   - 'services/*'
 allowBuilds:
   argon2: true
+  esbuild: true
