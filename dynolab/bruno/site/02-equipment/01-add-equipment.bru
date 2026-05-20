@@ -1,0 +1,42 @@
+meta {
+  name: Add Equipment
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{siteUrl}}/sites/{{equipmentSiteId}}/equipment
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "type": "dyno_bench",
+    "brand": "Mustang",
+    "model": "MD-1750",
+    "serialNumber": "SN-001"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("equipmentId", res.body.id);
+  }
+}

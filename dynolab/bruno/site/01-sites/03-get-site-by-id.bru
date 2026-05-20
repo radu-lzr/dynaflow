@@ -1,0 +1,36 @@
+meta {
+  name: Get Site By Id
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{siteUrl}}/sites/{{siteId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("id matches", function() {
+    expect(res.body.id).to.equal(bru.getVar("siteId"));
+  });
+  test("has name", function() {
+    expect(res.body.name).to.be.a("string");
+  });
+  test("has equipmentCount", function() {
+    expect(res.body.equipmentCount).to.be.a("number");
+  });
+  test("has memberCount", function() {
+    expect(res.body.memberCount).to.be.a("number");
+  });
+  test("has isActive", function() {
+    expect(res.body.isActive).to.be.a("boolean");
+  });
+}

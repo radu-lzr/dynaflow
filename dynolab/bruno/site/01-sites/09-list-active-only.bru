@@ -1,0 +1,26 @@
+meta {
+  name: List Active Sites Only
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{siteUrl}}/sites?isActive=true
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all items are active", function() {
+    res.body.items.forEach(function(site) {
+      expect(site.isActive).to.equal(true);
+    });
+  });
+}

@@ -1,0 +1,30 @@
+meta {
+  name: Add Member
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{siteUrl}}/sites/{{memberSiteId}}/members
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "userId": "{{techId}}"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

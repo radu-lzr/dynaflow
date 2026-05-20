@@ -179,6 +179,25 @@ services:
       pg-access:
         condition: service_healthy
 
+  site:
+    build:
+      context: ..
+      dockerfile: services/site/Dockerfile
+    container_name: dynolab-site
+    environment:
+      PORT: ${SITE_PORT}
+      POSTGRES_HOST: pg-site
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${PG_SITE_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - '${SITE_PORT}:${SITE_PORT}'
+    depends_on:
+      pg-site:
+        condition: service_healthy
+
   # ============ INFRASTRUCTURE ============
 
   redis:

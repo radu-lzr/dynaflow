@@ -1,0 +1,26 @@
+meta {
+  name: List Equipment Filter By Type
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{siteUrl}}/sites/{{equipmentSiteId}}/equipment?type=dyno_bench
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all items are dyno_bench", function() {
+    res.body.items.forEach(function(eq) {
+      expect(eq.type).to.equal("dyno_bench");
+    });
+  });
+}
