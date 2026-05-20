@@ -1,0 +1,68 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  bruno-tests:
+    name: Auth then Access Bruno tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Start databases and Redis
+        run: docker compose -f docker/docker-compose.yml up -d pg-auth pg-access redis
+
+      - name: Wait for PostgreSQL
+        run: |
+          until docker compose -f docker/docker-compose.yml exec -T pg-auth pg_isready -U dynolab -d dynolab_auth >/dev/null 2>&1; do
+            sleep 2
+          done
+          until docker compose -f docker/docker-compose.yml exec -T pg-access pg_isready -U dynolab -d dynolab_access >/dev/null 2>&1; do
+            sleep 2
+          done
+
+      - name: Start auth and access services
+        run: docker compose -f docker/docker-compose.yml up -d auth access
+
+      - name: Wait for service health checks
+        run: |
+          until curl -fsS http://localhost:4001/health >/dev/null; do
+            sleep 2
+          done
+          until curl -fsS http://localhost:4002/health >/dev/null; do
+            sleep 2
+          done
+
+      - name: Run auth Bruno collection
+        working-directory: bruno
+        run: pnpm dlx @usebruno/cli@latest run auth --env local -r --output results_auth_ci.json
+
+      - name: Run access Bruno collection
+        working-directory: bruno
+        run: pnpm dlx @usebruno/cli@latest run access --env local -r --output results_access_ci.json
+
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose -f docker/docker-compose.yml logs --no-color auth access pg-auth pg-access redis
+
+      - name: Tear down containers
+        if: always()
+        run: docker compose -f docker/docker-compose.yml down -v
