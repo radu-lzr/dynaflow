@@ -55,11 +55,11 @@ jobs:
           done
 
       - name: Run auth Bruno collection
-        working-directory: bruno
+        working-directory: dynolab/bruno
         run: pnpm dlx @usebruno/cli@latest run auth --env local -r --output results_auth_ci.json
 
       - name: Run access Bruno collection
-        working-directory: bruno
+        working-directory: dynolab/bruno
         run: pnpm dlx @usebruno/cli@latest run access --env local -r --output results_access_ci.json
 
       - name: Show service logs on failure
