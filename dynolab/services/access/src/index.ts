@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import { getLoggerOptions, createAuditLogger, postgresPlugin } from '@dynolab/core';
+import dbPlugin from './plugins/db';
 import checkRoutes from './routes/check.routes';
 import rolesRoutes from './routes/roles.routes';
 import permissionsRoutes from './routes/permissions.routes';
@@ -11,6 +12,7 @@ const app = Fastify({ logger: getLoggerOptions({ service: 'access-service' }) })
 
 // Plugins
 app.register(postgresPlugin);
+app.register(dbPlugin);
 
 // Audit
 const audit = createAuditLogger(app.log);
