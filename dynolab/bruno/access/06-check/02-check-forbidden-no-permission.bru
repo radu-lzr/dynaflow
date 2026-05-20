@@ -1,0 +1,28 @@
+meta {
+  name: Check Access Forbidden No Permission 403
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{accessUrl}}/access/check
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userId": "{{techId}}",
+    "method": "GET",
+    "path": "/roles"
+  }
+}
+
+tests {
+  test("status 403", function() {
+    expect(res.status).to.equal(403);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

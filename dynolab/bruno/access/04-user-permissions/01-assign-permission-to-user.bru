@@ -1,0 +1,39 @@
+meta {
+  name: Assign Permission To User
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{accessUrl}}/user-permissions
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "userId": "{{techId}}",
+    "permissionCode": "map:download",
+    "resourceId": "{{techId}}"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  bru.setVar("userPermId", res.body.id);
+}

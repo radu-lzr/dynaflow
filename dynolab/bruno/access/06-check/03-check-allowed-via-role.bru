@@ -1,0 +1,31 @@
+meta {
+  name: Check Access Allowed Via Role 200
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{accessUrl}}/access/check
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "userId": "{{techId}}",
+    "method": "GET",
+    "path": "/users"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("allowed is true", function() {
+    expect(res.body.allowed).to.equal(true);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

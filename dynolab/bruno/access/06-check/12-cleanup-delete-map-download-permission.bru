@@ -1,0 +1,24 @@
+meta {
+  name: Cleanup Delete Map Download Permission
+  type: http
+  seq: 12
+}
+
+delete {
+  url: {{accessUrl}}/permissions/{{mapDownloadPermId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

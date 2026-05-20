@@ -1,0 +1,28 @@
+meta {
+  name: Get Role Shows Assigned Permission
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{accessUrl}}/roles/{{roleId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has permissions", function() {
+    expect(res.body.permissions).to.be.an("array");
+    expect(res.body.permissions.length).to.be.greaterThan(0);
+  });
+  test("permission has permissionCode", function() {
+    expect(res.body.permissions[0].permissionCode).to.be.a("string");
+  });
+}

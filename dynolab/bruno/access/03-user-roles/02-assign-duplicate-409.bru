@@ -1,0 +1,31 @@
+meta {
+  name: Assign Duplicate Role To User 409
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{accessUrl}}/user-roles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "userId": "{{techId}}",
+    "roleId": "{{roleId}}"
+  }
+}
+
+tests {
+  test("status 409", function() {
+    expect(res.status).to.equal(409);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

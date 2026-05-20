@@ -1,0 +1,29 @@
+meta {
+  name: List Permissions With Search
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{accessUrl}}/permissions?search=user&page=1&limit=5
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has permissions array", function() {
+    expect(res.body.permissions).to.be.an("array");
+  });
+  test("results match search", function() {
+    res.body.permissions.forEach(function(p) {
+      expect(p.permissionCode.toLowerCase()).to.include("user");
+    });
+  });
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Get Role By Id
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{accessUrl}}/roles/{{roleId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("id matches", function() {
+    expect(res.body.id).to.equal(bru.getVar("roleId"));
+  });
+  test("has name", function() {
+    expect(res.body.name).to.be.a("string");
+  });
+  test("has permissions array", function() {
+    expect(res.body.permissions).to.be.an("array");
+  });
+  test("has isSystem", function() {
+    expect(res.body.isSystem).to.be.a("boolean");
+  });
+}

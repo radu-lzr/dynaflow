@@ -1,0 +1,30 @@
+meta {
+  name: Create Duplicate Role 409
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{accessUrl}}/roles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "name": "Test Role"
+  }
+}
+
+tests {
+  test("status 409", function() {
+    expect(res.status).to.equal(409);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

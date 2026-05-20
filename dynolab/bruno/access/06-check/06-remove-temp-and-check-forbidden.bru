@@ -1,0 +1,21 @@
+meta {
+  name: Remove Temp Then Check Forbidden 403
+  type: http
+  seq: 6
+}
+
+delete {
+  url: {{accessUrl}}/temp-permissions/{{checkTempPermId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("temp permission removed 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

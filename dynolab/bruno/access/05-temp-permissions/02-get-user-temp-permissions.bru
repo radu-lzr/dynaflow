@@ -1,0 +1,36 @@
+meta {
+  name: Get User Temp Permissions
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{accessUrl}}/temp-permissions/{{techId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has permissions array", function() {
+    expect(res.body.permissions).to.be.an("array");
+  });
+  test("has at least one temp permission", function() {
+    expect(res.body.permissions.length).to.be.greaterThan(0);
+  });
+  test("permission has id", function() {
+    expect(res.body.permissions[0].id).to.be.a("string");
+  });
+  test("permission has expiresAt", function() {
+    expect(res.body.permissions[0].expiresAt).to.be.a("string");
+  });
+  test("permission has linkedTo", function() {
+    expect(res.body.permissions[0].linkedTo).to.be.a("string");
+  });
+}

@@ -1,0 +1,2595 @@
+[
+  {
+    "iterationIndex": 0,
+    "results": [
+      {
+        "test": {
+          "filename": "auth/01-register/01-register-admin.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"admin@dynolab.com\",\n  \"password\": \"adminpass123\",\n  \"firstName\": \"Admin\",\n  \"lastName\": \"DynoLab\",\n  \"accountType\": \"internal\"\n}"
+        },
+        "response": {
+          "status": 409,
+          "statusText": "Conflict",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "34",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Email already in use"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 42,
+          "duration": 42,
+          "size": 34
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 201",
+            "status": "fail",
+            "error": "expected 409 to equal 201",
+            "uid": "JKThNZw245k3DsCNv9_qk"
+          },
+          {
+            "description": "has id",
+            "status": "fail",
+            "error": "expected undefined to be a string",
+            "uid": "uLCjtLSRTwLhPqu39i9_8"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "jM36WcKMcw4RJWxG2gnra"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.322614147,
+        "name": "Register Admin",
+        "path": "auth/01-register/01-register-admin",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/01-register/02-register-tech.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"tech@dynolab.com\",\n  \"password\": \"techpass123\",\n  \"firstName\": \"Jean\",\n  \"lastName\": \"Technicien\",\n  \"accountType\": \"internal\"\n}"
+        },
+        "response": {
+          "status": 409,
+          "statusText": "Conflict",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "34",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Email already in use"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 7,
+          "duration": 7,
+          "size": 34
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 201",
+            "status": "fail",
+            "error": "expected 409 to equal 201",
+            "uid": "XanTAAkIjLw8bkSzH-Ixa"
+          },
+          {
+            "description": "has id",
+            "status": "fail",
+            "error": "expected undefined to be a string",
+            "uid": "Zv6OUdSF8GmeZpidbnQg9"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.135383282,
+        "name": "Register Technician",
+        "path": "auth/01-register/02-register-tech",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/01-register/03-register-carto.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"carto@dynolab.com\",\n  \"password\": \"cartopass123\",\n  \"firstName\": \"Marie\",\n  \"lastName\": \"Cartographe\",\n  \"accountType\": \"internal\"\n}"
+        },
+        "response": {
+          "status": 409,
+          "statusText": "Conflict",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "34",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Email already in use"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 7,
+          "duration": 7,
+          "size": 34
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 201",
+            "status": "fail",
+            "error": "expected 409 to equal 201",
+            "uid": "FkpSB3wNrbaZVyaNh3S5C"
+          },
+          {
+            "description": "has id",
+            "status": "fail",
+            "error": "expected undefined to be a string",
+            "uid": "mnGuFTSmjXeli94CzppvJ"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.089780522,
+        "name": "Register Cartographer",
+        "path": "auth/01-register/03-register-carto",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/01-register/04-register-client.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"client@dynolab.com\",\n  \"password\": \"clientpass123\",\n  \"firstName\": \"Pierre\",\n  \"lastName\": \"Client\",\n  \"accountType\": \"client\"\n}"
+        },
+        "response": {
+          "status": 409,
+          "statusText": "Conflict",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "34",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Email already in use"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 34
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 201",
+            "status": "fail",
+            "error": "expected 409 to equal 201",
+            "uid": "v9zD0f4on6NPOvi86sSFP"
+          },
+          {
+            "description": "has id",
+            "status": "fail",
+            "error": "expected undefined to be a string",
+            "uid": "vMRLwAmmH_kuMbtxGHGG-"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.128197698,
+        "name": "Register Client",
+        "path": "auth/01-register/04-register-client",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/01-register/05-register-duplicate-409.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"admin@dynolab.com\",\n  \"password\": \"anotherpass123\",\n  \"firstName\": \"Duplicate\",\n  \"lastName\": \"User\",\n  \"accountType\": \"internal\"\n}"
+        },
+        "response": {
+          "status": 409,
+          "statusText": "Conflict",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "34",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Email already in use"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 8,
+          "duration": 8,
+          "size": 34
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 409",
+            "status": "pass",
+            "uid": "lx4d0jxvXOLie3VOuHtdH"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "3A-I3BZDSd99ZYD4gaYZb"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.049180175,
+        "name": "Register Duplicate Email (409)",
+        "path": "auth/01-register/05-register-duplicate-409",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/01-register/06-register-invalid-email-400.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"not-an-email\",\n  \"password\": \"testpass123\",\n  \"firstName\": \"Bad\",\n  \"lastName\": \"Email\",\n  \"accountType\": \"internal\"\n}"
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "119",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "body/email must match format \"email\""
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 119
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 400",
+            "status": "pass",
+            "uid": "VLBEG55VPJB9YFI-ydLCZ"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.082308764,
+        "name": "Register Invalid Email (400)",
+        "path": "auth/01-register/06-register-invalid-email-400",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/01-register/07-register-short-password-400.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"short@test.com\",\n  \"password\": \"123\",\n  \"firstName\": \"Short\",\n  \"lastName\": \"Pass\",\n  \"accountType\": \"internal\"\n}"
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "132",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "body/password must NOT have fewer than 8 characters"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 132
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 400",
+            "status": "pass",
+            "uid": "-LL_jZMXPaYQpevepPG2v"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.041123762,
+        "name": "Register Password Too Short (400)",
+        "path": "auth/01-register/07-register-short-password-400",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/01-register/08-register-missing-field-400.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"missing@test.com\",\n  \"firstName\": \"No\",\n  \"lastName\": \"Password\",\n  \"accountType\": \"internal\"\n}"
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "124",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "body must have required property 'password'"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 5,
+          "duration": 5,
+          "size": 124
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 400",
+            "status": "pass",
+            "uid": "41JQckFXV7FLoXcVHuLBH"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.044972668,
+        "name": "Register Missing Required Field (400)",
+        "path": "auth/01-register/08-register-missing-field-400",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/01-register/09-register-with-phone.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"phone@test.com\",\n  \"password\": \"testpass123\",\n  \"firstName\": \"With\",\n  \"lastName\": \"Phone\",\n  \"accountType\": \"internal\",\n  \"phone\": \"+32470123456\"\n}"
+        },
+        "response": {
+          "status": 409,
+          "statusText": "Conflict",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "34",
+            "date": "Wed, 20 May 2026 09:42:26 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Email already in use"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 5,
+          "duration": 5,
+          "size": 34
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 201",
+            "status": "fail",
+            "error": "expected 409 to equal 201",
+            "uid": "Qw_hkyWcZwHBxOUrMS-or"
+          },
+          {
+            "description": "has id",
+            "status": "fail",
+            "error": "expected undefined to be a string",
+            "uid": "civSA9DtxDFnHX_KiRiws"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.061005465,
+        "name": "Register With Phone Number",
+        "path": "auth/01-register/09-register-with-phone",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/02-login/01-login-admin.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"admin@dynolab.com\",\n  \"password\": \"adminpass123\"\n}"
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "494",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0NWUwNmE4MC03MDVjLTRjMDctYTkyZi1lNWI5YjgzM2VlYzkiLCJhY2NvdW50VHlwZSI6ImludGVybmFsIiwianRpIjoiYjg3NGU1NTUtY2ZjOS00NWMzLWJhOTYtODBiNjdiYWZlNTk2IiwiaWF0IjoxNzc5MjcwMTQ3LCJleHAiOjE3NzkyNzEwNDd9.zKCnKc4GUS5yyCAZpH4CroJmcEaKy1qPboC8CUyHYI4",
+            "refreshToken": "d6976284336a6d8940ea6b383c6ec417577a95807d4c519fc463b7c9f6a6378e6bf4fa68437dcd78d6965652b96bd339b5fd9803034e17946b5f080bc07fd3fd",
+            "expiresIn": 900,
+            "message": "Login successful"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 90,
+          "duration": 90,
+          "size": 494
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "dc8OwWHvqim_Mh4eiGnrq"
+          },
+          {
+            "description": "has accessToken",
+            "status": "pass",
+            "uid": "qjHQ9aI9trMnbY2k5tqxR"
+          },
+          {
+            "description": "has refreshToken",
+            "status": "pass",
+            "uid": "VI2L5Q9Dd6G8nHbGTjE5_"
+          },
+          {
+            "description": "has expiresIn",
+            "status": "pass",
+            "uid": "dKgYg-X9PyQFdkC7WhgH-"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.174950017,
+        "name": "Login Admin",
+        "path": "auth/02-login/01-login-admin",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/02-login/02-login-tech.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"tech@dynolab.com\",\n  \"password\": \"techpass123\"\n}"
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "494",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIzOWI4NjA3My0xYjNkLTQxNjItYjAzYS0zODg1Y2YxMWRhMGYiLCJhY2NvdW50VHlwZSI6ImludGVybmFsIiwianRpIjoiNDVkNjNhM2YtYTIzZC00ZjMyLThjYTUtNzEwY2M1MDEwNmI3IiwiaWF0IjoxNzc5MjcwMTQ3LCJleHAiOjE3NzkyNzEwNDd9.JdW7gVCGmEkOfJlSoo9T2c3cUnmHrJ76FdfDpL1R29M",
+            "refreshToken": "df4d36df07f2fc31a964a7e07bd0dc2ca97a5e18037aef4a6fa655ef0abfbd4a054d80805a0f04dffdd19330b3b93c4ac54e696d9febf6e110a98a7bd1a3dac7",
+            "expiresIn": 900,
+            "message": "Login successful"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 52,
+          "duration": 52,
+          "size": 494
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "ESDwdUaYbJv5_OZIGjOYo"
+          },
+          {
+            "description": "has accessToken",
+            "status": "pass",
+            "uid": "ztsW6BOiFTuQE1qJ8Mol1"
+          },
+          {
+            "description": "has refreshToken",
+            "status": "pass",
+            "uid": "dbGn8eek0LvD_XpRTsc_v"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.131597651,
+        "name": "Login Technician",
+        "path": "auth/02-login/02-login-tech",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/02-login/03-login-wrong-password-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"admin@dynolab.com\",\n  \"password\": \"wrongpassword\"\n}"
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "39",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Invalid email or password"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 39,
+          "duration": 39,
+          "size": 39
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "8mLOmAT5gbKGJkhl9oqNs"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "TOC0Ty2b7KxX5-2iU5yB9"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.079821098,
+        "name": "Login Wrong Password (401)",
+        "path": "auth/02-login/03-login-wrong-password-401",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/02-login/04-login-nonexistent-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"nobody@dynolab.com\",\n  \"password\": \"whatever123\"\n}"
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "39",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Invalid email or password"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 39
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "SgM2B71RZO0IacmpENLWZ"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "IH7TQxJQZiYVM7ObLqtYp"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.049271857,
+        "name": "Login Non-Existent Email (401)",
+        "path": "auth/02-login/04-login-nonexistent-401",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/02-login/05-login-missing-field-400.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"admin@dynolab.com\"\n}"
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "124",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "body must have required property 'password'"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 124
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 400",
+            "status": "pass",
+            "uid": "5Y2xT2OqQxajQBpks_tkr"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.043811717,
+        "name": "Login Missing Password Field (400)",
+        "path": "auth/02-login/05-login-missing-field-400",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/03-verify/01-verify-valid.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/verify",
+          "headers": {
+            "Authorization": "Bearer ********",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "98",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "userId": "45e06a80-705c-4c07-a92f-e5b9b833eec9",
+            "accountType": "internal",
+            "message": "Token valid"
+          },
+          "url": "http://localhost/auth/verify",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 98
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "userId matches adminId",
+            "status": "fail",
+            "error": "expected '45e06a80-705c-4c07-a92f-e5b9b833eec9' to equal undefined",
+            "uid": "yDkJI_in8oTJTYH_S-V-H"
+          },
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "E-T7WOQ5XK52dLYVS4i80"
+          },
+          {
+            "description": "has userId",
+            "status": "pass",
+            "uid": "ZxQZoq4NneYjsiFRdQa2N"
+          },
+          {
+            "description": "has accountType",
+            "status": "pass",
+            "uid": "msy--pxTameQPf7HwaoKU"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.049055906,
+        "name": "Verify Valid Token",
+        "path": "auth/03-verify/01-verify-valid",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/03-verify/02-verify-invalid-token-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/verify",
+          "headers": {
+            "Authorization": "Bearer ********",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "26",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Unauthorized"
+          },
+          "url": "http://localhost/auth/verify",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 26
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "x7AfxVtlygqfJh3jOKbwJ"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "puydnHTE43qxhPkJ1eUts"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.04295126,
+        "name": "Verify Invalid Token (401)",
+        "path": "auth/03-verify/02-verify-invalid-token-401",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/03-verify/03-verify-no-token-400.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/verify",
+          "headers": {
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "132",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "headers must have required property 'authorization'"
+          },
+          "url": "http://localhost/auth/verify",
+          "responseTime": 2,
+          "duration": 2,
+          "size": 132
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 400",
+            "status": "pass",
+            "uid": "cTOVZuJQsl0dQ9vqQtJp6"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.048610736,
+        "name": "Verify No Token (400)",
+        "path": "auth/03-verify/03-verify-no-token-400",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/04-refresh/01-refresh-admin.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/refresh",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"refreshToken\": \"d6976284336a6d8940ea6b383c6ec417577a95807d4c519fc463b7c9f6a6378e6bf4fa68437dcd78d6965652b96bd339b5fd9803034e17946b5f080bc07fd3fd\"\n}"
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "506",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0NWUwNmE4MC03MDVjLTRjMDctYTkyZi1lNWI5YjgzM2VlYzkiLCJhY2NvdW50VHlwZSI6ImludGVybmFsIiwianRpIjoiMWExM2MzZjctNDdiNS00OGFmLThhNjItNWE5Mjk4YTQyZGFjIiwiaWF0IjoxNzc5MjcwMTQ3LCJleHAiOjE3NzkyNzEwNDd9.rTy9fls1_fsOE4Pcr5sSHPzSLbpC2RDKpEFVpLVxX80",
+            "refreshToken": "6ce7e0804251297b7758e03e7545c48835829d82b7b7503e6ce19261b32c56aad44cdd7c5947dec126b4d5d472ce5826051686cde817189bf6475ea55d8f701a",
+            "expiresIn": 900,
+            "message": "Token refreshed successfully"
+          },
+          "url": "http://localhost/auth/refresh",
+          "responseTime": 17,
+          "duration": 17,
+          "size": 506
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "ozQxLBi2B4DC9ojmyfiY3"
+          },
+          {
+            "description": "has new accessToken",
+            "status": "pass",
+            "uid": "nJ5DFb7TLjw5v6Fgy75g3"
+          },
+          {
+            "description": "has new refreshToken",
+            "status": "pass",
+            "uid": "ff_y-pRJWFCcA6wsdCrDf"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.098463555,
+        "name": "Refresh Admin Token",
+        "path": "auth/04-refresh/01-refresh-admin",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/04-refresh/02-refresh-reuse-theft-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/refresh",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"refreshToken\": \"d6976284336a6d8940ea6b383c6ec417577a95807d4c519fc463b7c9f6a6378e6bf4fa68437dcd78d6965652b96bd339b5fd9803034e17946b5f080bc07fd3fd\"\n}"
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "46",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Invalid or expired refresh token"
+          },
+          "url": "http://localhost/auth/refresh",
+          "responseTime": 5,
+          "duration": 5,
+          "size": 46
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "B3yJSkjKK6SR2umBiqdJ0"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "j46NRRea98Per1s2XY_Km"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.047658293,
+        "name": "Refresh Reused Token — Theft Detection (401)",
+        "path": "auth/04-refresh/02-refresh-reuse-theft-401",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/04-refresh/03-refresh-fake-token-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/refresh",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"refreshToken\": \"completely_fake_token\"\n}"
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "46",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Invalid or expired refresh token"
+          },
+          "url": "http://localhost/auth/refresh",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 46
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "TxGuAL90B-MVw81fOMOfB"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "dxvIUwILBFMwA105LSqLO"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.044201054,
+        "name": "Refresh Fake Token (401)",
+        "path": "auth/04-refresh/03-refresh-fake-token-401",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/04-refresh/04-relogin-admin.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"admin@dynolab.com\",\n  \"password\": \"adminpass123\"\n}"
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "494",
+            "date": "Wed, 20 May 2026 09:42:27 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI0NWUwNmE4MC03MDVjLTRjMDctYTkyZi1lNWI5YjgzM2VlYzkiLCJhY2NvdW50VHlwZSI6ImludGVybmFsIiwianRpIjoiOTA3MjlhNjUtZjNjMC00NzA1LTlkYWQtMzQ4MTBjYjlhNjY5IiwiaWF0IjoxNzc5MjcwMTQ3LCJleHAiOjE3NzkyNzEwNDd9.vUvwbrrUP1_bRr_m06gPpBHH_o-lm1C-UqoSFkxNrtI",
+            "refreshToken": "8a515bca9735f0893312de6e887ae35895fdc2b0dc7a2ce99e159b32e41a306ac32c00d63553c1a01d4e2f9eb0bd3c0ab483211b56363d462dda696faf95a865",
+            "expiresIn": 900,
+            "message": "Login successful"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 49,
+          "duration": 49,
+          "size": 494
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "C8DbWXCgE2Yuf1-0mAJW8"
+          },
+          {
+            "description": "has accessToken",
+            "status": "pass",
+            "uid": "i9ZwyRQcOyC-j1FzplZdO"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.133539411,
+        "name": "Re-Login Admin (Theft Revoked All Sessions)",
+        "path": "auth/04-refresh/04-relogin-admin",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/05-logout/01-logout-tech.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/logout",
+          "headers": {
+            "Authorization": "Bearer ********",
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"refreshToken\": \"df4d36df07f2fc31a964a7e07bd0dc2ca97a5e18037aef4a6fa655ef0abfbd4a054d80805a0f04dffdd19330b3b93c4ac54e696d9febf6e110a98a7bd1a3dac7\"\n}"
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "37",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Logged out successfully"
+          },
+          "url": "http://localhost/auth/logout",
+          "responseTime": 6,
+          "duration": 6,
+          "size": 37
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "Xvw4pXtPwaV2zG7Q4RVjJ"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "ktAXQ7aFlEndbtTtrLjaj"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.055120714,
+        "name": "Logout Technician",
+        "path": "auth/05-logout/01-logout-tech",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/05-logout/02-verify-blacklisted-token-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/verify",
+          "headers": {
+            "Authorization": "Bearer ********",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "26",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Unauthorized"
+          },
+          "url": "http://localhost/auth/verify",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 26
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "avfy8DBlIS55gq7nLkD6o"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "nvlKuyDTRvvR8CqZBu50s"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.044408039,
+        "name": "Verify Blacklisted Tech Token (401)",
+        "path": "auth/05-logout/02-verify-blacklisted-token-401",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/05-logout/03-refresh-after-logout-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/refresh",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"refreshToken\": \"df4d36df07f2fc31a964a7e07bd0dc2ca97a5e18037aef4a6fa655ef0abfbd4a054d80805a0f04dffdd19330b3b93c4ac54e696d9febf6e110a98a7bd1a3dac7\"\n}"
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "46",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Invalid or expired refresh token"
+          },
+          "url": "http://localhost/auth/refresh",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 46
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "bJTLKSOyIPH9EbZa4yTXl"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "NL22483H_SkNKjlXf0zeU"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.049214347,
+        "name": "Refresh After Logout — Revoked Token (401)",
+        "path": "auth/05-logout/03-refresh-after-logout-401",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/05-logout/04-logout-invalid-refresh-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/logout",
+          "headers": {
+            "Authorization": "Bearer ********",
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"refreshToken\": \"not_a_real_refresh_token\"\n}"
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "35",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Invalid refresh token"
+          },
+          "url": "http://localhost/auth/logout",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 35
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "DRj0Ux9NUkppngXLSJo1f"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "kvymfEYZqQiWceG7Sl_mP"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.036498928,
+        "name": "Logout With Invalid Refresh Token (401)",
+        "path": "auth/05-logout/04-logout-invalid-refresh-401",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/06-brute-force/01-register-lockme.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/register",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"lockme@dynolab.com\",\n  \"password\": \"lockmepass123\",\n  \"firstName\": \"Lock\",\n  \"lastName\": \"Me\",\n  \"accountType\": \"internal\"\n}"
+        },
+        "response": {
+          "status": 409,
+          "statusText": "Conflict",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "34",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Email already in use"
+          },
+          "url": "http://localhost/auth/register",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 34
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 201",
+            "status": "fail",
+            "error": "expected 409 to equal 201",
+            "uid": "3tkmJE6uQeBLouUnC68p8"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.044328171,
+        "name": "Register Lockme User",
+        "path": "auth/06-brute-force/01-register-lockme",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/06-brute-force/02-failed-attempt-1.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"lockme@dynolab.com\",\n  \"password\": \"wrongpassword\"\n}"
+        },
+        "response": {
+          "status": 423,
+          "statusText": "Locked",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "45",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Account locked, try again later"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 45
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "fail",
+            "error": "expected 423 to equal 401",
+            "uid": "JnZomNs-rvywsZ9IHbA58"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.043286361,
+        "name": "Failed Login Attempt 1/5",
+        "path": "auth/06-brute-force/02-failed-attempt-1",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/06-brute-force/03-failed-attempt-2.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"lockme@dynolab.com\",\n  \"password\": \"wrongpassword\"\n}"
+        },
+        "response": {
+          "status": 423,
+          "statusText": "Locked",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "45",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Account locked, try again later"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 45
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "fail",
+            "error": "expected 423 to equal 401",
+            "uid": "5-qULQYywjk70MuLGNh9G"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.043347011,
+        "name": "Failed Login Attempt 2/5",
+        "path": "auth/06-brute-force/03-failed-attempt-2",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/06-brute-force/04-failed-attempt-3.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"lockme@dynolab.com\",\n  \"password\": \"wrongpassword\"\n}"
+        },
+        "response": {
+          "status": 423,
+          "statusText": "Locked",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "45",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Account locked, try again later"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 45
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "fail",
+            "error": "expected 423 to equal 401",
+            "uid": "_X9x1fwFiYVxSTninjfnh"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.048490711,
+        "name": "Failed Login Attempt 3/5",
+        "path": "auth/06-brute-force/04-failed-attempt-3",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/06-brute-force/05-failed-attempt-4.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"lockme@dynolab.com\",\n  \"password\": \"wrongpassword\"\n}"
+        },
+        "response": {
+          "status": 423,
+          "statusText": "Locked",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "45",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Account locked, try again later"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 45
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "fail",
+            "error": "expected 423 to equal 401",
+            "uid": "lboDVSZ9SS37mneCTawh3"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.035734581,
+        "name": "Failed Login Attempt 4/5",
+        "path": "auth/06-brute-force/05-failed-attempt-4",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/06-brute-force/06-failed-attempt-5.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"lockme@dynolab.com\",\n  \"password\": \"wrongpassword\"\n}"
+        },
+        "response": {
+          "status": 423,
+          "statusText": "Locked",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "45",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Account locked, try again later"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 45
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "fail",
+            "error": "expected 423 to equal 401",
+            "uid": "cudI_NqzaoOpmkgT0vqf_"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.04795269,
+        "name": "Failed Login Attempt 5/5 — Account Locks",
+        "path": "auth/06-brute-force/06-failed-attempt-5",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/06-brute-force/07-login-after-lock-423.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"lockme@dynolab.com\",\n  \"password\": \"lockmepass123\"\n}"
+        },
+        "response": {
+          "status": 423,
+          "statusText": "Locked",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "45",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Account locked, try again later"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 45
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 423",
+            "status": "pass",
+            "uid": "lsyv1qv-8TI607fGudvZd"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "BaQ1p5msoK3_u5QjmrWkc"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.036272481,
+        "name": "Login With Correct Password After Lock (423)",
+        "path": "auth/06-brute-force/07-login-after-lock-423",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/01-list-users.bru"
+        },
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:4001/users",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "1249",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "users": [
+              {
+                "id": "ef9b383b-1803-47d4-b24e-1870ce6a31b8",
+                "email": "lockme@dynolab.com",
+                "firstName": "Lock",
+                "lastName": "Me",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:14.300Z",
+                "isActive": true
+              },
+              {
+                "id": "ab063e0e-89cb-47d4-90ff-1ad7910a8431",
+                "email": "phone@test.com",
+                "firstName": "With",
+                "lastName": "Phone",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:13.142Z",
+                "isActive": true
+              },
+              {
+                "id": "54637d97-9acd-4c39-9c65-95eb802ebcf6",
+                "email": "client@dynolab.com",
+                "firstName": "Pierre",
+                "lastName": "Client",
+                "accountType": "client",
+                "createdAt": "2026-05-20T09:42:12.838Z",
+                "isActive": false
+              },
+              {
+                "id": "83e9e30d-5ff3-406b-a376-638c5e826daf",
+                "email": "carto@dynolab.com",
+                "firstName": "Marie",
+                "lastName": "Cartographe",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:12.626Z",
+                "isActive": true
+              },
+              {
+                "id": "39b86073-1b3d-4162-b03a-3885cf11da0f",
+                "email": "tech@dynolab.com",
+                "firstName": "Jean",
+                "lastName": "Technicien",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:12.408Z",
+                "isActive": true
+              },
+              {
+                "id": "45e06a80-705c-4c07-a92f-e5b9b833eec9",
+                "email": "admin@dynolab.com",
+                "firstName": "Super",
+                "lastName": "Admin",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:12.168Z",
+                "isActive": true
+              }
+            ],
+            "totalCount": 6,
+            "page": 1,
+            "limit": 20,
+            "message": "Users retrieved successfully"
+          },
+          "url": "http://localhost/users",
+          "responseTime": 5,
+          "duration": 5,
+          "size": 1249
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "d49kl7MwtievkGe8z5eCo"
+          },
+          {
+            "description": "has users array",
+            "status": "pass",
+            "uid": "4vtytIxoqnDfOsHkuS5Cc"
+          },
+          {
+            "description": "has totalCount",
+            "status": "pass",
+            "uid": "jKsFxfJ46BHr2CJCTIV26"
+          },
+          {
+            "description": "has page",
+            "status": "pass",
+            "uid": "ySmnPpSrVdj8AtD2XRfa_"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.051364293,
+        "name": "List Users",
+        "path": "auth/07-users/01-list-users",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/02-search-users.bru"
+        },
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:4001/users?search=admin",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "280",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "users": [
+              {
+                "id": "45e06a80-705c-4c07-a92f-e5b9b833eec9",
+                "email": "admin@dynolab.com",
+                "firstName": "Super",
+                "lastName": "Admin",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:12.168Z",
+                "isActive": true
+              }
+            ],
+            "totalCount": 1,
+            "page": 1,
+            "limit": 20,
+            "message": "Users retrieved successfully"
+          },
+          "url": "http://localhost/users?search=admin",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 280
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "5vp5gP-4HNRzuziD5_vaM"
+          },
+          {
+            "description": "has users array",
+            "status": "pass",
+            "uid": "T9d5umkR3BKikATH6UVhu"
+          },
+          {
+            "description": "results match search term",
+            "status": "pass",
+            "uid": "yPCCKikFGmNtcHn3UJmYk"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.038522157,
+        "name": "Search Users By Name",
+        "path": "auth/07-users/02-search-users",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/03-filter-by-account-type.bru"
+        },
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:4001/users?accountType=client",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "282",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "users": [
+              {
+                "id": "54637d97-9acd-4c39-9c65-95eb802ebcf6",
+                "email": "client@dynolab.com",
+                "firstName": "Pierre",
+                "lastName": "Client",
+                "accountType": "client",
+                "createdAt": "2026-05-20T09:42:12.838Z",
+                "isActive": false
+              }
+            ],
+            "totalCount": 1,
+            "page": 1,
+            "limit": 20,
+            "message": "Users retrieved successfully"
+          },
+          "url": "http://localhost/users?accountType=client",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 282
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "GiVzX2UysLVcffa-oYzgQ"
+          },
+          {
+            "description": "all results are clients",
+            "status": "pass",
+            "uid": "dDWhOUmbARCWd2RufLvVs"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.045701973,
+        "name": "Filter Users By Account Type",
+        "path": "auth/07-users/03-filter-by-account-type",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/04-filter-by-is-active.bru"
+        },
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:4001/users?isActive=true",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 200,
+          "statusText": "OK",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "1054",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "users": [
+              {
+                "id": "ef9b383b-1803-47d4-b24e-1870ce6a31b8",
+                "email": "lockme@dynolab.com",
+                "firstName": "Lock",
+                "lastName": "Me",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:14.300Z",
+                "isActive": true
+              },
+              {
+                "id": "ab063e0e-89cb-47d4-90ff-1ad7910a8431",
+                "email": "phone@test.com",
+                "firstName": "With",
+                "lastName": "Phone",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:13.142Z",
+                "isActive": true
+              },
+              {
+                "id": "83e9e30d-5ff3-406b-a376-638c5e826daf",
+                "email": "carto@dynolab.com",
+                "firstName": "Marie",
+                "lastName": "Cartographe",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:12.626Z",
+                "isActive": true
+              },
+              {
+                "id": "39b86073-1b3d-4162-b03a-3885cf11da0f",
+                "email": "tech@dynolab.com",
+                "firstName": "Jean",
+                "lastName": "Technicien",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:12.408Z",
+                "isActive": true
+              },
+              {
+                "id": "45e06a80-705c-4c07-a92f-e5b9b833eec9",
+                "email": "admin@dynolab.com",
+                "firstName": "Super",
+                "lastName": "Admin",
+                "accountType": "internal",
+                "createdAt": "2026-05-20T09:42:12.168Z",
+                "isActive": true
+              }
+            ],
+            "totalCount": 5,
+            "page": 1,
+            "limit": 20,
+            "message": "Users retrieved successfully"
+          },
+          "url": "http://localhost/users?isActive=true",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 1054
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "pass",
+            "uid": "JhKnXRUnMY4LOlEHGAQEt"
+          },
+          {
+            "description": "all results are active",
+            "status": "pass",
+            "uid": "hS5vwWtlYWi7uV-BcHsW3"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.044808364,
+        "name": "Filter Users By isActive",
+        "path": "auth/07-users/04-filter-by-is-active",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/05-get-user-by-id.bru"
+        },
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:4001/users/{{adminId}}",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "117",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "params/id must match format \"uuid\""
+          },
+          "url": "http://localhost/users/%7B%7BadminId%7D%7D",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 117
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "fail",
+            "error": "expected 400 to equal 200",
+            "uid": "NTzu-9RjjnFEckottzeUk"
+          },
+          {
+            "description": "has email",
+            "status": "fail",
+            "error": "expected undefined to be a string",
+            "uid": "pDnRQxrsme-teg2Pfnjvq"
+          },
+          {
+            "description": "has accountType",
+            "status": "fail",
+            "error": "expected undefined to be a string",
+            "uid": "ivaupZKvsJHbrzxvI-SZH"
+          },
+          {
+            "description": "has isActive",
+            "status": "fail",
+            "error": "expected undefined to be a boolean",
+            "uid": "dN-jO3J79yg3F1ieWRJKg"
+          },
+          {
+            "description": "id matches",
+            "status": "pass",
+            "uid": "9bcxIQtbhxI_tZUZhyOBC"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.044216344,
+        "name": "Get Admin User By Id",
+        "path": "auth/07-users/05-get-user-by-id",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/06-get-user-nonexistent-404.bru"
+        },
+        "request": {
+          "method": "GET",
+          "url": "http://localhost:4001/users/00000000-0000-0000-0000-000000000000",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 404,
+          "statusText": "Not Found",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "28",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "User not found"
+          },
+          "url": "http://localhost/users/00000000-0000-0000-0000-000000000000",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 28
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 404",
+            "status": "pass",
+            "uid": "h329dshlnOEhR3XahTHfP"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "3nZ1UShv55UrWbf5XyAmW"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.049505389,
+        "name": "Get Non-Existent User (404)",
+        "path": "auth/07-users/06-get-user-nonexistent-404",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/07-update-user.bru"
+        },
+        "request": {
+          "method": "PUT",
+          "url": "http://localhost:4001/users/{{adminId}}",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"firstName\": \"Super\",\n  \"lastName\": \"Admin\",\n  \"phone\": \"+32470999999\"\n}"
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "117",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "params/id must match format \"uuid\""
+          },
+          "url": "http://localhost/users/%7B%7BadminId%7D%7D",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 117
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "fail",
+            "error": "expected 400 to equal 200",
+            "uid": "MeA6skndZQOEzPAVTm4eJ"
+          },
+          {
+            "description": "firstName updated",
+            "status": "fail",
+            "error": "expected undefined to equal 'Super'",
+            "uid": "JyzNVVJe6K6FrfKa5ZB8q"
+          },
+          {
+            "description": "lastName updated",
+            "status": "fail",
+            "error": "expected undefined to equal 'Admin'",
+            "uid": "yyke2g6QtlQaIdtrZ9wfk"
+          },
+          {
+            "description": "has updatedAt",
+            "status": "fail",
+            "error": "expected undefined to be a string",
+            "uid": "tszWpubC9pemUfpJgFWhG"
+          },
+          {
+            "description": "id matches",
+            "status": "pass",
+            "uid": "hdkJzjNU_tK6CA4FI6anQ"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.049597957,
+        "name": "Update Admin User",
+        "path": "auth/07-users/07-update-user",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/08-update-user-empty-body-400.bru"
+        },
+        "request": {
+          "method": "PUT",
+          "url": "http://localhost:4001/users/{{adminId}}",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": "application/json"
+          },
+          "data": "{}"
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "117",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "params/id must match format \"uuid\""
+          },
+          "url": "http://localhost/users/%7B%7BadminId%7D%7D",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 117
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 400",
+            "status": "pass",
+            "uid": "veWedH8bMPOO0oHBRlyNl"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "Egtqo_KO6brdgYF8JdPlG"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.035549666,
+        "name": "Update User With Empty Body (400)",
+        "path": "auth/07-users/08-update-user-empty-body-400",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/09-update-nonexistent-user-404.bru"
+        },
+        "request": {
+          "method": "PUT",
+          "url": "http://localhost:4001/users/00000000-0000-0000-0000-000000000000",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"firstName\": \"Ghost\"\n}"
+        },
+        "response": {
+          "status": 404,
+          "statusText": "Not Found",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "28",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "User not found"
+          },
+          "url": "http://localhost/users/00000000-0000-0000-0000-000000000000",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 28
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 404",
+            "status": "pass",
+            "uid": "37zE9GCzpArysqen2vRsT"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "mYw4RvmuJUn6Y73f5-y_L"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.050174915,
+        "name": "Update Non-Existent User (404)",
+        "path": "auth/07-users/09-update-nonexistent-user-404",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/10-deactivate-client.bru"
+        },
+        "request": {
+          "method": "DELETE",
+          "url": "http://localhost:4001/users/{{clientId}}",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "117",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "params/id must match format \"uuid\""
+          },
+          "url": "http://localhost/users/%7B%7BclientId%7D%7D",
+          "responseTime": 3,
+          "duration": 3,
+          "size": 117
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 200",
+            "status": "fail",
+            "error": "expected 400 to equal 200",
+            "uid": "4pr4IktofBLrFGA-igTiK"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "MAD3CkP2RQ-fXWWnCzRmr"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.036335595,
+        "name": "Deactivate Client User",
+        "path": "auth/07-users/10-deactivate-client",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/11-deactivate-already-inactive-404.bru"
+        },
+        "request": {
+          "method": "DELETE",
+          "url": "http://localhost:4001/users/{{clientId}}",
+          "headers": {
+            "X-User-Id": "{{adminId}}",
+            "content-type": null
+          }
+        },
+        "response": {
+          "status": 400,
+          "statusText": "Bad Request",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "117",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "statusCode": 400,
+            "code": "FST_ERR_VALIDATION",
+            "error": "Bad Request",
+            "message": "params/id must match format \"uuid\""
+          },
+          "url": "http://localhost/users/%7B%7BclientId%7D%7D",
+          "responseTime": 2,
+          "duration": 2,
+          "size": 117
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 404",
+            "status": "fail",
+            "error": "expected 400 to equal 404",
+            "uid": "kWqzsMAwLuZjKuY784hZp"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "KLp2wEmcg_-NH2Mr6YWLe"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.043590423,
+        "name": "Deactivate Already Inactive User (404)",
+        "path": "auth/07-users/11-deactivate-already-inactive-404",
+        "iterationIndex": 0
+      },
+      {
+        "test": {
+          "filename": "auth/07-users/12-login-deactivated-user-401.bru"
+        },
+        "request": {
+          "method": "POST",
+          "url": "http://localhost:4001/auth/login",
+          "headers": {
+            "content-type": "application/json"
+          },
+          "data": "{\n  \"email\": \"client@dynolab.com\",\n  \"password\": \"clientpass123\"\n}"
+        },
+        "response": {
+          "status": 401,
+          "statusText": "Unauthorized",
+          "headers": {
+            "content-type": "application/json; charset=utf-8",
+            "content-length": "39",
+            "date": "Wed, 20 May 2026 09:42:28 GMT",
+            "connection": "keep-alive",
+            "keep-alive": "timeout=72"
+          },
+          "data": {
+            "message": "Invalid email or password"
+          },
+          "url": "http://localhost/auth/login",
+          "responseTime": 4,
+          "duration": 4,
+          "size": 39
+        },
+        "error": null,
+        "status": "pass",
+        "assertionResults": [],
+        "testResults": [
+          {
+            "description": "status 401",
+            "status": "pass",
+            "uid": "uV7aKKIs5R2K_FJV0TPzj"
+          },
+          {
+            "description": "has message",
+            "status": "pass",
+            "uid": "Za8aSikZo37cOjBqc6_Nl"
+          }
+        ],
+        "preRequestTestResults": [],
+        "postResponseTestResults": [],
+        "shouldStopRunnerExecution": false,
+        "runDuration": 0.049610703,
+        "name": "Login Deactivated User (401)",
+        "path": "auth/07-users/12-login-deactivated-user-401",
+        "iterationIndex": 0
+      }
+    ],
+    "summary": {
+      "totalRequests": 44,
+      "passedRequests": 28,
+      "failedRequests": 16,
+      "errorRequests": 0,
+      "skippedRequests": 0,
+      "totalAssertions": 0,
+      "passedAssertions": 0,
+      "failedAssertions": 0,
+      "totalTests": 93,
+      "passedTests": 66,
+      "failedTests": 27,
+      "totalPreRequestTests": 0,
+      "passedPreRequestTests": 0,
+      "failedPreRequestTests": 0,
+      "totalPostResponseTests": 0,
+      "passedPostResponseTests": 0,
+      "failedPostResponseTests": 0
+    }
+  }
+]

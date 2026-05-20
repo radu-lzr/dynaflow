@@ -1,0 +1,38 @@
+meta {
+  name: Create Temp Permission With Link
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{accessUrl}}/temp-permissions
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "userId": "{{techId}}",
+    "permissionCode": "map:download",
+    "resourceId": "{{techId}}",
+    "linkedTo": "a0000000-0000-0000-0000-000000000002",
+    "ttlSeconds": 3600
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+}
+
+script:post-response {
+  bru.setVar("tempPermId2", res.body.id);
+}
