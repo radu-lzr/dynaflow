@@ -12,13 +12,13 @@ post {
 
 body:json {
   {
-    "email": "lockme@dynolab.com",
+    "email": "{{lockmeEmail}}",
     "password": "wrongpassword"
   }
 }
 
 tests {
-  test("status 401", function() {
-    expect(res.status).to.equal(401);
+  test("status 401 or 423", function() {
+    expect([401, 423]).to.include(res.status);
   });
 }

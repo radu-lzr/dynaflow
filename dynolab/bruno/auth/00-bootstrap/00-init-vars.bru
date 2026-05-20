@@ -1,0 +1,28 @@
+meta {
+  name: Init Run Variables
+  type: http
+  seq: 0
+}
+
+get {
+  url: {{authUrl}}/health
+  body: none
+  auth: none
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}
+
+script:post-response {
+  const runId = `${Date.now()}_${Math.floor(Math.random() * 100000)}`;
+  bru.setVar("runId", runId);
+  bru.setVar("adminEmail", `admin+${runId}@dynolab.com`);
+  bru.setVar("techEmail", `tech+${runId}@dynolab.com`);
+  bru.setVar("cartoEmail", `carto+${runId}@dynolab.com`);
+  bru.setVar("clientEmail", `client+${runId}@dynolab.com`);
+  bru.setVar("phoneEmail", `phone+${runId}@test.com`);
+  bru.setVar("lockmeEmail", `lockme+${runId}@dynolab.com`);
+}

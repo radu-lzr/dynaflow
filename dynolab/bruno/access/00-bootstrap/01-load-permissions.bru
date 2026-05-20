@@ -1,0 +1,39 @@
+meta {
+  name: Load Existing Permissions
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{accessUrl}}/permissions
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}
+
+script:post-response {
+  const userListPermission = res.body.permissions.find(function(item) {
+    return item.permissionCode === "user:list";
+  });
+
+  const mapDownloadPermission = res.body.permissions.find(function(item) {
+    return item.permissionCode === "map:download";
+  });
+
+  if (userListPermission) {
+    bru.setVar("permissionId", userListPermission.id);
+  }
+
+  if (mapDownloadPermission) {
+    bru.setVar("mapDownloadPermId", mapDownloadPermission.id);
+  }
+}

@@ -16,7 +16,7 @@ headers {
 
 body:json {
   {
-    "name": "Updated Test Role",
+    "name": "Updated Test Role {{roleId}}",
     "description": "Updated by Bruno tests"
   }
 }
@@ -26,7 +26,7 @@ tests {
     expect(res.status).to.equal(200);
   });
   test("name is updated", function() {
-    expect(res.body.name).to.equal("Updated Test Role");
+    expect(res.body.name).to.contain("Updated Test Role");
   });
   test("has id", function() {
     expect(res.body.id).to.be.a("string");

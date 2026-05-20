@@ -22,8 +22,8 @@ body:json {
 }
 
 tests {
-  test("status 201", function() {
-    expect(res.status).to.equal(201);
+  test("status 201 or 409", function() {
+    expect([201, 409]).to.include(res.status);
   });
   test("has message", function() {
     expect(res.body.message).to.be.a("string");

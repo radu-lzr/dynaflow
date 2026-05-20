@@ -24,3 +24,9 @@ tests {
     });
   });
 }
+
+script:post-response {
+  if (res.body.users && res.body.users.length > 0) {
+    bru.setVar("clientId", res.body.users[0].id);
+  }
+}

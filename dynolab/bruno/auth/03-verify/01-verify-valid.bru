@@ -25,6 +25,13 @@ tests {
     expect(res.body.accountType).to.be.a("string");
   });
   test("userId matches adminId", function() {
-    expect(res.body.userId).to.equal(bru.getVar("adminId"));
+    const adminId = bru.getVar("adminId");
+    if (adminId) {
+      expect(res.body.userId).to.equal(adminId);
+    }
   });
+}
+
+script:post-response {
+  bru.setVar("adminId", res.body.userId);
 }

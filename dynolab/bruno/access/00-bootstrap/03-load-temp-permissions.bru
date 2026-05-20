@@ -1,0 +1,49 @@
+meta {
+  name: Load Existing Temp Permissions
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{accessUrl}}/temp-permissions/{{techId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200 or 404", function() {
+    expect([200, 404]).to.include(res.status);
+  });
+}
+
+script:post-response {
+  if (res.status === 200 && res.body.permissions) {
+    const tempPermission1 = res.body.permissions.find(function(item) {
+      return item.linkedTo === "a0000000-0000-0000-0000-000000000001";
+    });
+
+    const tempPermission2 = res.body.permissions.find(function(item) {
+      return item.linkedTo === "a0000000-0000-0000-0000-000000000002";
+    });
+
+    const checkTempPermission = res.body.permissions.find(function(item) {
+      return item.linkedTo === "a0000000-0000-0000-0000-000000000003";
+    });
+
+    if (tempPermission1) {
+      bru.setVar("tempPermId", tempPermission1.id);
+    }
+
+    if (tempPermission2) {
+      bru.setVar("tempPermId2", tempPermission2.id);
+    }
+
+    if (checkTempPermission) {
+      bru.setVar("checkTempPermId", checkTempPermission.id);
+    }
+  }
+}
