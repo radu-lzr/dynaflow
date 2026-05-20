@@ -1,0 +1,37 @@
+meta {
+  name: Verify Valid Token
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{authUrl}}/auth/verify
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{adminAccessToken}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has userId", function() {
+    expect(res.body.userId).to.be.a("string");
+  });
+  test("has accountType", function() {
+    expect(res.body.accountType).to.be.a("string");
+  });
+  test("userId matches adminId", function() {
+    const adminId = bru.getVar("adminId");
+    if (adminId) {
+      expect(res.body.userId).to.equal(adminId);
+    }
+  });
+}
+
+script:post-response {
+  bru.setVar("adminId", res.body.userId);
+}

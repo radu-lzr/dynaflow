@@ -1,0 +1,42 @@
+meta {
+  name: Create Role
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{accessUrl}}/roles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "name": "Test Role",
+    "description": "Role created by Bruno tests"
+  }
+}
+
+tests {
+  test("status 201 or 409", function() {
+    expect([201, 409]).to.include(res.status);
+  });
+  test("has id when created", function() {
+    if (res.status === 201) {
+      expect(res.body.id).to.be.a("string");
+    }
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("roleId", res.body.id);
+  }
+}

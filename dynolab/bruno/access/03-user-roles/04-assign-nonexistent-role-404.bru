@@ -1,0 +1,31 @@
+meta {
+  name: Assign Nonexistent Role To User 404
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{accessUrl}}/user-roles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "userId": "{{techId}}",
+    "roleId": "00000000-0000-0000-0000-000000000000"
+  }
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.status).to.equal(404);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

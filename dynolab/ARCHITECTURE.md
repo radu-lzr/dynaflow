@@ -348,7 +348,7 @@ sequenceDiagram
     participant MAP as Map Service
 
     SM->>WS: Assigner intervention #42 à Jean (map: map_xyz)
-    WS->>AC: POST /temp-permissions<br/>{ user: jean, perm: "map:download",<br/>resource: map_xyz, linked_to: interv_42, ttl: 72h }
+    WS->>AC: POST /temp-permissions<br/>{ user: jean, permission_code: "map:download",<br/>resource: map_xyz, linked_to: interv_42, ttl: 72h }
     AC-->>WS: 201 Created
 
     Note over TE,MAP: Jean veut télécharger la map
@@ -430,12 +430,13 @@ CREATE TABLE roles (
     name            VARCHAR(50) UNIQUE NOT NULL,
     description     VARCHAR(255),
     is_system       BOOLEAN DEFAULT false,
-    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE permissions (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    code            VARCHAR(100) UNIQUE NOT NULL,
+    permission_code VARCHAR(100) UNIQUE NOT NULL,
     description     VARCHAR(255),
     created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -458,7 +459,7 @@ CREATE TABLE user_roles (
 CREATE TABLE user_permissions (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id         UUID NOT NULL,
-    permission      VARCHAR(100) NOT NULL,
+    permission_code VARCHAR(100) NOT NULL,
     resource_id     UUID NOT NULL,
     granted_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
     granted_by      UUID NOT NULL
@@ -467,7 +468,7 @@ CREATE TABLE user_permissions (
 CREATE TABLE temp_permissions (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id         UUID NOT NULL,
-    permission      VARCHAR(100) NOT NULL,
+    permission_code VARCHAR(100) NOT NULL,
     resource_id     UUID NOT NULL,
     linked_to       UUID NOT NULL,
     ttl_seconds     INTEGER NOT NULL,

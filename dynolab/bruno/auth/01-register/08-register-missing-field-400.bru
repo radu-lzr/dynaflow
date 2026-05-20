@@ -1,0 +1,26 @@
+meta {
+  name: Register Missing Required Field (400)
+  type: http
+  seq: 8
+}
+
+post {
+  url: {{authUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "missing@test.com",
+    "firstName": "No",
+    "lastName": "Password",
+    "accountType": "internal"
+  }
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

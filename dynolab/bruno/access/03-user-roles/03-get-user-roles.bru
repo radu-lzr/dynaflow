@@ -1,0 +1,33 @@
+meta {
+  name: Get User Roles
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{accessUrl}}/user-roles/{{techId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has roles array", function() {
+    expect(res.body.roles).to.be.an("array");
+  });
+  test("has at least one role", function() {
+    expect(res.body.roles.length).to.be.greaterThan(0);
+  });
+  test("role has roleId", function() {
+    expect(res.body.roles[0].roleId).to.be.a("string");
+  });
+  test("role has roleName", function() {
+    expect(res.body.roles[0].roleName).to.be.a("string");
+  });
+}

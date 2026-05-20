@@ -1,0 +1,27 @@
+meta {
+  name: Register Invalid Email (400)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{authUrl}}/auth/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "not-an-email",
+    "password": "testpass123",
+    "firstName": "Bad",
+    "lastName": "Email",
+    "accountType": "internal"
+  }
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

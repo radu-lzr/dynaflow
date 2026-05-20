@@ -1,0 +1,41 @@
+meta {
+  name: Update Admin User
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{authUrl}}/users/{{adminId}}
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "firstName": "Super",
+    "lastName": "Admin",
+    "phone": "+32470999999"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("id matches", function() {
+    expect(res.body.id).to.equal(bru.getVar("adminId"));
+  });
+  test("firstName updated", function() {
+    expect(res.body.firstName).to.equal("Super");
+  });
+  test("lastName updated", function() {
+    expect(res.body.lastName).to.equal("Admin");
+  });
+  test("has updatedAt", function() {
+    expect(res.body.updatedAt).to.be.a("string");
+  });
+}

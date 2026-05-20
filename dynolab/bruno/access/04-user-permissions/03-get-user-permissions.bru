@@ -1,0 +1,33 @@
+meta {
+  name: Get User Permissions
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{accessUrl}}/user-permissions/{{techId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has permissions array", function() {
+    expect(res.body.permissions).to.be.an("array");
+  });
+  test("has at least one permission", function() {
+    expect(res.body.permissions.length).to.be.greaterThan(0);
+  });
+  test("permission has permissionCode", function() {
+    expect(res.body.permissions[0].permissionCode).to.be.a("string");
+  });
+  test("permission has resourceId", function() {
+    expect(res.body.permissions[0].resourceId).to.be.a("string");
+  });
+}

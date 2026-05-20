@@ -1,0 +1,38 @@
+meta {
+  name: Create Temp Permission For Check Test
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{accessUrl}}/temp-permissions
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "userId": "{{techId}}",
+    "permissionCode": "role:list",
+    "resourceId": "{{techId}}",
+    "linkedTo": "a0000000-0000-0000-0000-000000000003",
+    "ttlSeconds": 60
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+}
+
+script:post-response {
+  bru.setVar("checkTempPermId", res.body.id);
+}

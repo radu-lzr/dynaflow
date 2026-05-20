@@ -1,0 +1,30 @@
+meta {
+  name: Assign Permissions To Nonexistent Role 404
+  type: http
+  seq: 10
+}
+
+post {
+  url: {{accessUrl}}/roles/00000000-0000-0000-0000-000000000000/permissions
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "permissionIds": ["{{permissionId}}"]
+  }
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.status).to.equal(404);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

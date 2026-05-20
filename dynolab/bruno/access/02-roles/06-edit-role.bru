@@ -1,0 +1,34 @@
+meta {
+  name: Edit Role
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{accessUrl}}/roles/{{roleId}}
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "name": "Updated Test Role {{roleId}}",
+    "description": "Updated by Bruno tests"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("name is updated", function() {
+    expect(res.body.name).to.contain("Updated Test Role");
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+}

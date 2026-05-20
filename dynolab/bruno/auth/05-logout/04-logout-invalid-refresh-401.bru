@@ -1,0 +1,30 @@
+meta {
+  name: Logout With Invalid Refresh Token (401)
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{authUrl}}/auth/logout
+  body: json
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{adminAccessToken}}
+}
+
+body:json {
+  {
+    "refreshToken": "not_a_real_refresh_token"
+  }
+}
+
+tests {
+  test("status 401", function() {
+    expect(res.status).to.equal(401);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

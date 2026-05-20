@@ -1,0 +1,31 @@
+meta {
+  name: Load Existing Roles
+  type: http
+  seq: 0
+}
+
+get {
+  url: {{accessUrl}}/roles
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}
+
+script:post-response {
+  const role = res.body.roles.find(function(item) {
+    return item.name === "Test Role";
+  });
+
+  if (role) {
+    bru.setVar("roleId", role.id);
+  }
+}

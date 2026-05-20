@@ -1,0 +1,24 @@
+meta {
+  name: Failed Login Attempt 5/5 — Account Locks
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{authUrl}}/auth/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "{{lockmeEmail}}",
+    "password": "wrongpassword"
+  }
+}
+
+tests {
+  test("status 401 or 423", function() {
+    expect([401, 423]).to.include(res.status);
+  });
+}
