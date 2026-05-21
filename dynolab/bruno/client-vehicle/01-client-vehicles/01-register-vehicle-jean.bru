@@ -1,0 +1,44 @@
+meta {
+  name: Register Vehicle - Jean
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{clientVehicleUrl}}/client-vehicles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "ownerId": "{{adminId}}",
+    "configId": "507f1f77bcf86cd799439011",
+    "vin": "WVWZZZ1KZAM012345",
+    "plateNumber": "AB-123-CD",
+    "mileage": 45000,
+    "notes": "Jean's Golf 7 GTI with IS38 hybrid turbo"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("vehicleId", res.body.id);
+  }
+}

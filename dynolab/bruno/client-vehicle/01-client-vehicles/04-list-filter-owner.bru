@@ -1,0 +1,26 @@
+meta {
+  name: List Vehicles - Filter by ownerId
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{clientVehicleUrl}}/client-vehicles?ownerId={{adminId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all vehicles belong to owner", function() {
+    res.body.vehicles.forEach(function(v) {
+      expect(v.ownerId).to.equal(bru.getEnvVar("adminId"));
+    });
+  });
+}

@@ -1,0 +1,31 @@
+meta {
+  name: Add Intake Modification
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{clientVehicleUrl}}/client-vehicles/{{vehicleId}}/modifications
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "category": "intake",
+    "description": "034 Motorsport cold air intake"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+}
