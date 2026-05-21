@@ -1,19 +1,9 @@
 apiVersion: gateway.nginx.org/v1alpha1
-kind: SnippetsPolicy
+kind: SnippetsFilter
 metadata:
   name: auth-required
   namespace: dynaflow
 spec:
-  targetRefs:
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: access-route
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: site-route
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: vehicle-route
   snippets:
     - context: http.server
       value: |

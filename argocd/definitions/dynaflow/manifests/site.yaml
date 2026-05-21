@@ -69,6 +69,11 @@ spec:
         path:
           type: ReplacePrefixMatch
           replacePrefixMatch: /sites
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: auth-required
     backendRefs:
     - name: site-service
       port: 80

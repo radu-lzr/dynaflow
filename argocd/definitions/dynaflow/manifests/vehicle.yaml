@@ -61,6 +61,11 @@ spec:
         path:
           type: ReplacePrefixMatch
           replacePrefixMatch: /vehicles
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: auth-required
     backendRefs:
     - name: vehicle-service
       port: 80

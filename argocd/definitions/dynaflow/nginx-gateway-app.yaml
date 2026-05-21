@@ -16,6 +16,8 @@ spec:
         service:
           type: LoadBalancer
         nginxGateway:
+          snippets:
+            enable: true
           config:
             logging:
               level: info
