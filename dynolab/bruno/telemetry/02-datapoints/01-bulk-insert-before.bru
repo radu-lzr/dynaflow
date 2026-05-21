@@ -1,0 +1,44 @@
+meta {
+  name: Bulk Insert Datapoints - Before Session
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}/datapoints
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "datapoints": [
+      { "timestamp": "2026-01-15T10:00:00Z", "rpm": 2000, "horsepower": 80, "torque": 180, "boostPressure": 0.5 },
+      { "timestamp": "2026-01-15T10:00:01Z", "rpm": 2500, "horsepower": 110, "torque": 210, "boostPressure": 0.8 },
+      { "timestamp": "2026-01-15T10:00:02Z", "rpm": 3000, "horsepower": 145, "torque": 250, "boostPressure": 1.1 },
+      { "timestamp": "2026-01-15T10:00:03Z", "rpm": 3500, "horsepower": 175, "torque": 280, "boostPressure": 1.3 },
+      { "timestamp": "2026-01-15T10:00:04Z", "rpm": 4000, "horsepower": 200, "torque": 300, "boostPressure": 1.5 },
+      { "timestamp": "2026-01-15T10:00:05Z", "rpm": 4500, "horsepower": 220, "torque": 310, "boostPressure": 1.6 },
+      { "timestamp": "2026-01-15T10:00:06Z", "rpm": 5000, "horsepower": 235, "torque": 305, "boostPressure": 1.7 },
+      { "timestamp": "2026-01-15T10:00:07Z", "rpm": 5500, "horsepower": 245, "torque": 295, "boostPressure": 1.7 },
+      { "timestamp": "2026-01-15T10:00:08Z", "rpm": 6000, "horsepower": 250, "torque": 280, "boostPressure": 1.6 },
+      { "timestamp": "2026-01-15T10:00:09Z", "rpm": 6500, "horsepower": 248, "torque": 260, "boostPressure": 1.5 }
+    ]
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("insertedCount is 10", function() {
+    expect(res.body.insertedCount).to.equal(10);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

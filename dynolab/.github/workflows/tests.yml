@@ -28,7 +28,7 @@ jobs:
           version: 9
 
       - name: Start databases and Redis
-        run: docker compose -f docker/docker-compose.yml up -d pg-auth pg-access pg-site pg-client-vehicle mongodb redis
+        run: docker compose -f docker/docker-compose.yml up -d pg-auth pg-access pg-site pg-client-vehicle timescaledb mongodb redis
 
       - name: Wait for PostgreSQL
         run: |
@@ -44,9 +44,12 @@ jobs:
           until docker compose -f docker/docker-compose.yml exec -T pg-client-vehicle pg_isready -U dynolab -d dynolab_client_vehicle >/dev/null 2>&1; do
             sleep 2
           done
+          until docker compose -f docker/docker-compose.yml exec -T timescaledb pg_isready -U dynolab -d dynolab_telemetry >/dev/null 2>&1; do
+            sleep 2
+          done
 
-      - name: Start auth, access, site, vehicle, and client-vehicle services
-        run: docker compose -f docker/docker-compose.yml up -d auth access site vehicle client-vehicle
+      - name: Start auth, access, site, vehicle, client-vehicle, and telemetry services
+        run: docker compose -f docker/docker-compose.yml up -d auth access site vehicle client-vehicle telemetry
 
       - name: Wait for service health checks
         run: |
@@ -63,6 +66,9 @@ jobs:
             sleep 2
           done
           until curl -fsS http://localhost:4005/health >/dev/null; do
+            sleep 2
+          done
+          until curl -fsS http://localhost:4008/health >/dev/null; do
             sleep 2
           done
 
@@ -86,9 +92,13 @@ jobs:
         working-directory: bruno
         run: pnpm dlx @usebruno/cli@latest run client-vehicle --env local -r --output results_client_vehicle_ci.json
 
+      - name: Run telemetry Bruno collection
+        working-directory: bruno
+        run: pnpm dlx @usebruno/cli@latest run telemetry --env local -r --output results_telemetry_ci.json
+
       - name: Show service logs on failure
         if: failure()
-        run: docker compose -f docker/docker-compose.yml logs --no-color auth access site vehicle client-vehicle pg-auth pg-access pg-site pg-client-vehicle mongodb redis
+        run: docker compose -f docker/docker-compose.yml logs --no-color auth access site vehicle client-vehicle telemetry pg-auth pg-access pg-site pg-client-vehicle timescaledb mongodb redis
 
       - name: Tear down containers
         if: always()

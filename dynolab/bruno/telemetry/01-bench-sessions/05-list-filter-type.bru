@@ -1,0 +1,26 @@
+meta {
+  name: List Sessions - Filter by type
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions?type=before
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all sessions are type before", function() {
+    res.body.sessions.forEach(function(s) {
+      expect(s.type).to.equal("before");
+    });
+  });
+}

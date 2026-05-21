@@ -1,0 +1,45 @@
+meta {
+  name: Compare Before/After Sessions
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions/compare?interventionId=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has before", function() {
+    expect(res.body.before).to.not.be.null;
+  });
+  test("has after", function() {
+    expect(res.body.after).to.not.be.null;
+  });
+  test("has gains", function() {
+    expect(res.body.gains).to.not.be.null;
+  });
+  test("hp gain is positive", function() {
+    expect(res.body.gains.hp).to.be.greaterThan(0);
+  });
+  test("hp gain equals 55", function() {
+    expect(res.body.gains.hp).to.equal(55);
+  });
+  test("torque gain equals 60", function() {
+    expect(res.body.gains.torque).to.equal(60);
+  });
+  test("hpPercent is calculated", function() {
+    expect(res.body.gains.hpPercent).to.be.a("number");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

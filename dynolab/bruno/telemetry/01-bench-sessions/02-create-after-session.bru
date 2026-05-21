@@ -1,0 +1,39 @@
+meta {
+  name: Create After Session
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{telemetryUrl}}/bench-sessions
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "interventionId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "type": "after",
+    "startedAt": "2026-01-15T14:00:00Z",
+    "notes": "After ECU remap, Stage 2 tune"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("afterSessionId", res.body.id);
+  }
+}

@@ -1,0 +1,24 @@
+meta {
+  name: Get OBD Logs - Time Range Filter
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}/obd-logs?from=2026-01-15T10:00:01Z&to=2026-01-15T10:00:01Z
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("only second-second logs", function() {
+    expect(res.body.logs.length).to.equal(3);
+  });
+}

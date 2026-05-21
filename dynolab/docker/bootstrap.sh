@@ -29,5 +29,6 @@ run_sql "dynolab-pg-site"    "$PG_SITE_DB"    "$REPO_ROOT/services/site/db_creat
 run_sql "dynolab-pg-client-vehicle" "$PG_CLIENT_VEHICLE_DB" "$REPO_ROOT/services/client-vehicle/db_create.sql"
 run_sql "dynolab-pg-map"      "$PG_MAP_DB"      "$REPO_ROOT/services/map/db_create.sql"
 run_sql "dynolab-pg-workshop" "$PG_WORKSHOP_DB" "$REPO_ROOT/services/workshop/db_create.sql"
+run_sql "dynolab-timescaledb"  "$TIMESCALE_DB"   "$REPO_ROOT/services/telemetry/db_create.sql"
 
 echo "[bootstrap] done"

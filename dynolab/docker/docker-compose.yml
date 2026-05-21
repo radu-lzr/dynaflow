@@ -116,6 +116,30 @@ services:
       - '5438:5432'
     volumes:
       - timescale_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${TIMESCALE_DB}']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  telemetry:
+    build:
+      context: ..
+      dockerfile: services/telemetry/Dockerfile
+    container_name: dynolab-telemetry
+    environment:
+      PORT: ${TELEMETRY_PORT}
+      POSTGRES_HOST: timescaledb
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${TIMESCALE_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - '${TELEMETRY_PORT}:${TELEMETRY_PORT}'
+    depends_on:
+      timescaledb:
+        condition: service_healthy
 
   mongodb:
     image: mongo:7

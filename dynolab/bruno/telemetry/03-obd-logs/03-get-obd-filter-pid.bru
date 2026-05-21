@@ -1,0 +1,29 @@
+meta {
+  name: Get OBD Logs - Filter by PID
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}/obd-logs?pid=010C
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("only pid 010C returned", function() {
+    res.body.logs.forEach(function(l) {
+      expect(l.pid).to.equal("010C");
+    });
+  });
+  test("totalCount is 2", function() {
+    expect(res.body.totalCount).to.equal(2);
+  });
+}

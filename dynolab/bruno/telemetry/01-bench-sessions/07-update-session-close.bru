@@ -1,0 +1,35 @@
+meta {
+  name: Update Session - Close with Peaks
+  type: http
+  seq: 7
+}
+
+put {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "peakHp": 230,
+    "peakTorque": 350,
+    "endedAt": "2026-01-15T09:45:00Z"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

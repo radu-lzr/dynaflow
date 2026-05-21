@@ -1,0 +1,27 @@
+meta {
+  name: Get Datapoints - Downsample Every 2nd
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}/datapoints?downsample=2
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("downsampled to 5 points", function() {
+    expect(res.body.datapoints.length).to.equal(5);
+  });
+  test("totalCount still 10", function() {
+    expect(res.body.totalCount).to.equal(10);
+  });
+}
