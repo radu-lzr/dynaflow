@@ -9,7 +9,7 @@ spec:
   project: dynaflow
   source:
     repoURL: https://github.com/radu-lzr/dynaflow
-    targetRevision: argocd-conf
+    targetRevision: main
     path: argocd/definitions/dynaflow/manifests
   destination:
     server: https://kubernetes.default.svc
