@@ -10,7 +10,7 @@ spec:
         location /internal/auth-verify {
           internal;
           proxy_method POST;
-          proxy_pass http://auth-service.dynaflow.svc.cluster.local/api/auth/verify;
+          proxy_pass http://auth-service.dynaflow.svc.cluster.local/auth/verify;
           proxy_pass_request_body off;
           proxy_set_header Content-Length "0";
           proxy_set_header Content-Type "application/json";
@@ -19,7 +19,7 @@ spec:
         location /internal/access-check {
           internal;
           proxy_method POST;
-          proxy_pass http://access-service.dynaflow.svc.cluster.local/api/access/check;
+          proxy_pass http://access-service.dynaflow.svc.cluster.local/access/check;
           proxy_pass_request_body off;
           proxy_set_header Content-Length "0";
           proxy_set_header Content-Type "application/json";

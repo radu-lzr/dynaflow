@@ -64,6 +64,11 @@ spec:
         type: PathPrefix
         value: /api/access
     filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /access
     - type: ExtensionRef
       extensionRef:
         group: gateway.nginx.org
