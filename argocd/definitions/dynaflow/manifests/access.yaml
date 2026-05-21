@@ -22,16 +22,21 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: DATABASE_URL
+        - name: PORT
+          value: "3000"
+        - name: POSTGRES_HOST
+          value: postgres-db-postgresql.dynaflow.svc.cluster.local
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_USER
+          value: dynaflow
+        - name: POSTGRES_PASSWORD
           valueFrom:
             secretKeyRef:
-              name: dynaflow-secrets
-              key: access-db-url
-        - name: REDIS_URL
-          valueFrom:
-            secretKeyRef:
-              name: dynaflow-secrets
-              key: redis-url
+              name: postgres-credentials
+              key: password
+        - name: POSTGRES_DB
+          value: access
 ---
 apiVersion: v1
 kind: Service
@@ -58,6 +63,12 @@ spec:
     - path:
         type: PathPrefix
         value: /api/access
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: auth-required
     backendRefs:
     - name: access-service
       port: 80

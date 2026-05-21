@@ -22,16 +22,43 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: DATABASE_URL
+        - name: PORT
+          value: "3000"
+        - name: POSTGRES_HOST
+          value: postgres-db-postgresql.dynaflow.svc.cluster.local
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_USER
+          value: dynaflow
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password
+        - name: POSTGRES_DB
+          value: auth
+        - name: REDIS_HOST
+          value: redis-master.dynaflow.svc.cluster.local
+        - name: REDIS_PORT
+          value: "6379"
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: redis-credentials
+              key: redis-password
+        - name: JWT_SECRET
           valueFrom:
             secretKeyRef:
               name: dynaflow-secrets
-              key: auth-db-url
-        - name: REDIS_URL
-          valueFrom:
-            secretKeyRef:
-              name: dynaflow-secrets
-              key: redis-url
+              key: jwt-secret
+        - name: JWT_ACCESS_TTL
+          value: "900"
+        - name: REFRESH_TOKEN_TTL_DAYS
+          value: "7"
+        - name: MAX_LOGIN_ATTEMPTS
+          value: "5"
+        - name: LOCK_DURATION_MINUTES
+          value: "15"
 ---
 apiVersion: v1
 kind: Service

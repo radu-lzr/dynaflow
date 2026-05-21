@@ -6,9 +6,9 @@ metadata:
 spec:
   project: dynaflow
   source:
-    repoURL: https://charts.bitnami.com/bitnami
+    repoURL: oci://registry-1.docker.io/bitnamicharts
     chart: redis
-    targetRevision: 19.x.x
+    targetRevision: 21.x.x
     helm:
       valuesObject:
         auth:

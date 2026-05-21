@@ -1,0 +1,46 @@
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: auth-required
+  namespace: dynaflow
+spec:
+  snippets:
+    - context: http.server
+      value: |
+        location /internal/auth-verify {
+          internal;
+          proxy_method POST;
+          proxy_pass http://auth-service.dynaflow.svc.cluster.local/api/auth/verify;
+          proxy_pass_request_body off;
+          proxy_set_header Content-Length "0";
+          proxy_set_header Content-Type "application/json";
+          proxy_set_header Authorization $http_authorization;
+        }
+        location /internal/access-check {
+          internal;
+          proxy_method POST;
+          proxy_pass http://access-service.dynaflow.svc.cluster.local/api/access/check;
+          proxy_pass_request_body off;
+          proxy_set_header Content-Length "0";
+          proxy_set_header Content-Type "application/json";
+          proxy_set_header Authorization $http_authorization;
+          proxy_set_header X-Original-URI $request_uri;
+          proxy_set_header X-Original-Method $request_method;
+        }
+        location @unauthorized {
+          default_type application/json;
+          return 401 '{"error":"Unauthorized","message":"Valid token required"}';
+        }
+        location @forbidden {
+          default_type application/json;
+          return 403 '{"error":"Forbidden","message":"Access denied"}';
+        }
+    - context: http.server.location
+      value: |
+        auth_request /internal/auth-verify;
+        auth_request_set $user_id $upstream_http_x_user_id;
+        auth_request_set $user_account_type $upstream_http_x_account_type;
+        proxy_set_header X-User-Id $user_id;
+        proxy_set_header X-Account-Type $user_account_type;
+        error_page 401 = @unauthorized;
+        error_page 403 = @forbidden;

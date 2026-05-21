@@ -1,51 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: site-service
+  name: vehicle-service
   namespace: dynaflow
   labels:
-    app: site
+    app: vehicle
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: site
+      app: vehicle
   template:
     metadata:
       labels:
-        app: site
+        app: vehicle
     spec:
       containers:
-      - name: site
-        image: ghcr.io/radu-lzr/dynaflow/site:latest
+      - name: vehicle
+        image: ghcr.io/radu-lzr/dynaflow/vehicle:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
         env:
         - name: PORT
           value: "3000"
-        - name: POSTGRES_HOST
-          value: postgres-db-postgresql.dynaflow.svc.cluster.local
-        - name: POSTGRES_PORT
-          value: "5432"
-        - name: POSTGRES_USER
-          value: dynaflow
-        - name: POSTGRES_PASSWORD
+        - name: MONGO_URI
           valueFrom:
             secretKeyRef:
-              name: postgres-credentials
-              key: password
-        - name: POSTGRES_DB
-          value: site
+              name: dynaflow-secrets
+              key: mongo-uri
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: site-service
+  name: vehicle-service
   namespace: dynaflow
 spec:
   selector:
-    app: site
+    app: vehicle
   ports:
   - port: 80
     targetPort: 3000
@@ -53,7 +45,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: site-route
+  name: vehicle-route
   namespace: dynaflow
 spec:
   parentRefs:
@@ -62,7 +54,7 @@ spec:
   - matches:
     - path:
         type: PathPrefix
-        value: /api/site
+        value: /api/vehicle
     filters:
     - type: ExtensionRef
       extensionRef:
@@ -70,5 +62,5 @@ spec:
         kind: SnippetsFilter
         name: auth-required
     backendRefs:
-    - name: site-service
+    - name: vehicle-service
       port: 80

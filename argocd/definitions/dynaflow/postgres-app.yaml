@@ -6,9 +6,9 @@ metadata:
 spec:
   project: dynaflow
   source:
-    repoURL: https://charts.bitnami.com/bitnami
+    repoURL: oci://registry-1.docker.io/bitnamicharts
     chart: postgresql
-    targetRevision: 15.x.x
+    targetRevision: 16.x.x
     helm:
       valuesObject:
         auth:
@@ -16,8 +16,16 @@ spec:
           secretKeys:
             adminPasswordKey: "postgres-password"
             userPasswordKey: "password"
-          database: "dynaflow"
+          database: "auth"
           username: "dynaflow"
+        primary:
+          initdb:
+            scripts:
+              init-dbs.sql: |
+                CREATE DATABASE access;
+                CREATE DATABASE site;
+                GRANT ALL PRIVILEGES ON DATABASE access TO dynaflow;
+                GRANT ALL PRIVILEGES ON DATABASE site TO dynaflow;
   destination:
     server: https://kubernetes.default.svc
     namespace: dynaflow
