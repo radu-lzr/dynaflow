@@ -1,0 +1,38 @@
+meta {
+  name: List Vehicles
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{vehicleUrl}}/vehicles
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has vehicles array", function() {
+    expect(res.body.vehicles).to.be.an("array");
+    expect(res.body.vehicles.length).to.be.at.least(3);
+  });
+  test("has pagination fields", function() {
+    expect(res.body.totalCount).to.be.a("number");
+    expect(res.body.page).to.equal(1);
+    expect(res.body.limit).to.equal(20);
+  });
+  test("vehicle has expected fields", function() {
+    const v = res.body.vehicles[0];
+    expect(v.id).to.be.a("string");
+    expect(v.brand).to.be.a("string");
+    expect(v.model).to.be.a("string");
+    expect(v.fuelType).to.be.a("string");
+    expect(v.tags).to.be.an("array");
+  });
+}

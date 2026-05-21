@@ -1,0 +1,29 @@
+meta {
+  name: Filter By Fuel Type Diesel
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{vehicleUrl}}/vehicles?fuelType=diesel
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all results are diesel", function() {
+    res.body.vehicles.forEach(function(v) {
+      expect(v.fuelType).to.equal("diesel");
+    });
+  });
+  test("at least one diesel vehicle returned", function() {
+    expect(res.body.vehicles.length).to.be.at.least(1);
+  });
+}

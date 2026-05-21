@@ -1,0 +1,36 @@
+meta {
+  name: Get Unique Tags
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{vehicleUrl}}/vehicles/tags
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has tags array", function() {
+    expect(res.body.tags).to.be.an("array");
+  });
+  test("tags are strings", function() {
+    res.body.tags.forEach(function(tag) {
+      expect(tag).to.be.a("string");
+    });
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+  test("includes expected tags", function() {
+    expect(res.body.tags).to.include("turbo");
+    expect(res.body.tags).to.include("diesel");
+  });
+}

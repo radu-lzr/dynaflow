@@ -1,0 +1,21 @@
+meta {
+  name: Get Vehicle Invalid ObjectId 400
+  type: http
+  seq: 11
+}
+
+get {
+  url: {{vehicleUrl}}/vehicles/not-a-valid-objectid
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

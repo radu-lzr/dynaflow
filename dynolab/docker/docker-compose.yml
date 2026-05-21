@@ -128,6 +128,11 @@ services:
       - '27017:27017'
     volumes:
       - mongo_data:/data/db
+    healthcheck:
+      test: ['CMD-SHELL', 'mongosh --username $MONGO_INITDB_ROOT_USERNAME --password $MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin --eval "db.adminCommand(''ping'')" --quiet']
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   # ============ SERVICES ============
 
@@ -196,6 +201,21 @@ services:
       - '${SITE_PORT}:${SITE_PORT}'
     depends_on:
       pg-site:
+        condition: service_healthy
+
+  vehicle:
+    build:
+      context: ..
+      dockerfile: services/vehicle/Dockerfile
+    container_name: dynolab-vehicle
+    environment:
+      PORT: ${VEHICLE_PORT}
+      MONGO_URI: mongodb://${MONGO_USER}:${MONGO_PASSWORD}@mongodb:27017/${MONGO_DB}?authSource=admin
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - '${VEHICLE_PORT}:${VEHICLE_PORT}'
+    depends_on:
+      mongodb:
         condition: service_healthy
 
   # ============ INFRASTRUCTURE ============
