@@ -1,0 +1,40 @@
+meta {
+  name: Register Vehicle - Technician Owner
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{clientVehicleUrl}}/client-vehicles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "ownerId": "{{techId}}",
+    "configId": "507f191e810c19729de860ea",
+    "vin": "VF1RFD00054321098",
+    "plateNumber": "XY-456-ZW",
+    "mileage": 120000
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("vehicle2Id", res.body.id);
+  }
+}

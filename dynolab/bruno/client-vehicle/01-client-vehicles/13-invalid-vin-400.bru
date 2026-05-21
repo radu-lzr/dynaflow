@@ -1,0 +1,29 @@
+meta {
+  name: Register Invalid VIN - 400
+  type: http
+  seq: 13
+}
+
+post {
+  url: {{clientVehicleUrl}}/client-vehicles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "ownerId": "{{adminId}}",
+    "configId": "507f1f77bcf86cd799439011",
+    "vin": "INVALID_VIN_FORMAT"
+  }
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

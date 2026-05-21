@@ -1,0 +1,24 @@
+meta {
+  name: Get Nonexistent Vehicle - 404
+  type: http
+  seq: 12
+}
+
+get {
+  url: {{clientVehicleUrl}}/client-vehicles/00000000-0000-0000-0000-000000000000
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.status).to.equal(404);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

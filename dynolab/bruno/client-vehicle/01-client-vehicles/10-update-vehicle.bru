@@ -1,0 +1,35 @@
+meta {
+  name: Update Vehicle - Mileage and Notes
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{clientVehicleUrl}}/client-vehicles/{{vehicleId}}
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "mileage": 47500,
+    "plateNumber": "AB-123-CD",
+    "notes": "IS38 hybrid turbo installed, Stage 2 tune"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

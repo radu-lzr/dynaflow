@@ -1,0 +1,30 @@
+meta {
+  name: List Vehicles - Pagination
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{clientVehicleUrl}}/client-vehicles?page=1&limit=1
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("limit respected", function() {
+    expect(res.body.vehicles.length).to.be.at.most(1);
+  });
+  test("page is 1", function() {
+    expect(res.body.page).to.equal(1);
+  });
+  test("limit is 1", function() {
+    expect(res.body.limit).to.equal(1);
+  });
+}

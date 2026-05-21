@@ -9,7 +9,7 @@ on:
 
 jobs:
   bruno-tests:
-    name: Auth, Access, Site, and Vehicle Bruno tests
+    name: Auth, Access, Site, Vehicle, and Client Vehicle Bruno tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -28,7 +28,7 @@ jobs:
           version: 9
 
       - name: Start databases and Redis
-        run: docker compose -f docker/docker-compose.yml up -d pg-auth pg-access pg-site mongodb redis
+        run: docker compose -f docker/docker-compose.yml up -d pg-auth pg-access pg-site pg-client-vehicle mongodb redis
 
       - name: Wait for PostgreSQL
         run: |
@@ -41,9 +41,12 @@ jobs:
           until docker compose -f docker/docker-compose.yml exec -T pg-site pg_isready -U dynolab -d dynolab_site >/dev/null 2>&1; do
             sleep 2
           done
+          until docker compose -f docker/docker-compose.yml exec -T pg-client-vehicle pg_isready -U dynolab -d dynolab_client_vehicle >/dev/null 2>&1; do
+            sleep 2
+          done
 
-      - name: Start auth, access, site, and vehicle services
-        run: docker compose -f docker/docker-compose.yml up -d auth access site vehicle
+      - name: Start auth, access, site, vehicle, and client-vehicle services
+        run: docker compose -f docker/docker-compose.yml up -d auth access site vehicle client-vehicle
 
       - name: Wait for service health checks
         run: |
@@ -57,6 +60,9 @@ jobs:
             sleep 2
           done
           until curl -fsS http://localhost:4004/health >/dev/null; do
+            sleep 2
+          done
+          until curl -fsS http://localhost:4005/health >/dev/null; do
             sleep 2
           done
 
@@ -76,9 +82,13 @@ jobs:
         working-directory: bruno
         run: pnpm dlx @usebruno/cli@latest run vehicle --env local -r --output results_vehicle_ci.json
 
+      - name: Run client-vehicle Bruno collection
+        working-directory: bruno
+        run: pnpm dlx @usebruno/cli@latest run client-vehicle --env local -r --output results_client_vehicle_ci.json
+
       - name: Show service logs on failure
         if: failure()
-        run: docker compose -f docker/docker-compose.yml logs --no-color auth access site vehicle pg-auth pg-access pg-site mongodb redis
+        run: docker compose -f docker/docker-compose.yml logs --no-color auth access site vehicle client-vehicle pg-auth pg-access pg-site pg-client-vehicle mongodb redis
 
       - name: Tear down containers
         if: always()

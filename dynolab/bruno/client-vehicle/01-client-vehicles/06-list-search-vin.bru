@@ -1,0 +1,27 @@
+meta {
+  name: List Vehicles - Search by VIN
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{clientVehicleUrl}}/client-vehicles?search=WVWZZZ
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has vehicles array", function() {
+    expect(res.body.vehicles).to.be.an("array");
+  });
+  test("at least one result", function() {
+    expect(res.body.vehicles.length).to.be.greaterThan(0);
+  });
+}

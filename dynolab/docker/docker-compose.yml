@@ -218,6 +218,25 @@ services:
       mongodb:
         condition: service_healthy
 
+  client-vehicle:
+    build:
+      context: ..
+      dockerfile: services/client-vehicle/Dockerfile
+    container_name: dynolab-client-vehicle
+    environment:
+      PORT: ${CLIENT_VEHICLE_PORT}
+      POSTGRES_HOST: pg-client-vehicle
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${PG_CLIENT_VEHICLE_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - '${CLIENT_VEHICLE_PORT}:${CLIENT_VEHICLE_PORT}'
+    depends_on:
+      pg-client-vehicle:
+        condition: service_healthy
+
   # ============ INFRASTRUCTURE ============
 
   redis:
