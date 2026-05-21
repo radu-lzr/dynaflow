@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres-db
+  namespace: argocd
+spec:
+  project: dynaflow
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: 15.x.x
+    helm:
+      valuesObject:
+        auth:
+          existingSecret: "postgres-credentials"
+          secretKeys:
+            adminPasswordKey: "postgres-password"
+            userPasswordKey: "password"
+          database: "dynaflow"
+          username: "dynaflow"
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dynaflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

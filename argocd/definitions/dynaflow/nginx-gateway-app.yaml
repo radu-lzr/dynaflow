@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-gateway
+  namespace: argocd
+spec:
+  project: dynaflow
+  source:
+    repoURL: oci://ghcr.io/nginxinc/charts
+    chart: nginx-gateway-fabric
+    targetRevision: 1.2.1
+    helm:
+      valuesObject:
+        service:
+          type: LoadBalancer
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dynaflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

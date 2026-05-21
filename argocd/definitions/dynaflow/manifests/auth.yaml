@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth-service
+  namespace: dynaflow
+  labels:
+    app: auth
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+      - name: auth
+        image: ghcr.io/radu-lzr/dynaflow/auth:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: dynaflow-secrets
+              key: auth-db-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: dynaflow-secrets
+              key: redis-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: dynaflow
+spec:
+  selector:
+    app: auth
+  ports:
+  - port: 80
+    targetPort: 3000
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: auth-route
+  namespace: dynaflow
+spec:
+  parentRefs:
+  - name: dynaflow-gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api/auth
+    backendRefs:
+    - name: auth-service
+      port: 80

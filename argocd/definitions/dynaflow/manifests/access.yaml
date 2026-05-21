@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: access-service
+  namespace: dynaflow
+  labels:
+    app: access
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: access
+  template:
+    metadata:
+      labels:
+        app: access
+    spec:
+      containers:
+      - name: access
+        image: ghcr.io/radu-lzr/dynaflow/access:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: dynaflow-secrets
+              key: access-db-url
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              name: dynaflow-secrets
+              key: redis-url
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: access-service
+  namespace: dynaflow
+spec:
+  selector:
+    app: access
+  ports:
+  - port: 80
+    targetPort: 3000
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: access-route
+  namespace: dynaflow
+spec:
+  parentRefs:
+  - name: dynaflow-gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api/access
+    backendRefs:
+    - name: access-service
+      port: 80
