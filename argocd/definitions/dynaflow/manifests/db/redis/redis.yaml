@@ -13,6 +13,21 @@ spec:
     app: redis
 
 ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: redis-config-template
+  namespace: dynaflow
+data:
+  redis.conf.template: |
+    # Redis configuration
+    port 6379
+    loglevel notice
+    databases 16
+    dir /data
+    requirepass REDIS_PASSWORD_PLACEHOLDER
+
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -29,22 +44,44 @@ spec:
       labels:
         app: redis
     spec:
+      initContainers:
+        - name: init-config
+          image: busybox:1.35
+          command:
+            - sh
+            - -c
+            - |
+              PASSWORD=$(cat /run/secrets/redis-password)
+              sed "s/REDIS_PASSWORD_PLACEHOLDER/$PASSWORD/" /etc/redis-template/redis.conf.template > /etc/redis/redis.conf
+              chmod 644 /etc/redis/redis.conf
+          volumeMounts:
+            - name: config-template
+              mountPath: /etc/redis-template
+              readOnly: true
+            - name: config
+              mountPath: /etc/redis
+            - name: redis-password
+              mountPath: /run/secrets
+              readOnly: true
       containers:
         - name: redis
           image: redis:7-alpine
           ports:
             - containerPort: 6379
-          command:
-            - sh
-            - -c
-            - redis-server --requirepass $(cat /run/secrets/redis-password)
+          args:
+            - /etc/redis/redis.conf
           volumeMounts:
             - name: data
               mountPath: /data
-            - name: redis-password
-              mountPath: /run/secrets
+            - name: config
+              mountPath: /etc/redis
               readOnly: true
       volumes:
+        - name: config-template
+          configMap:
+            name: redis-config-template
+        - name: config
+          emptyDir: {}
         - name: redis-password
           secret:
             secretName: redis-credentials
