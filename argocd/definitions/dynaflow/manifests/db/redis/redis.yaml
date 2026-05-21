@@ -34,9 +34,24 @@ spec:
           image: redis:7-alpine
           ports:
             - containerPort: 6379
+          command:
+            - sh
+            - -c
+            - redis-server --requirepass $(cat /run/secrets/redis-password)
           volumeMounts:
             - name: data
               mountPath: /data
+            - name: redis-password
+              mountPath: /run/secrets
+              readOnly: true
+      volumes:
+        - name: redis-password
+          secret:
+            secretName: redis-credentials
+            items:
+              - key: redis-password
+                path: redis-password
+            defaultMode: 0400
   volumeClaimTemplates:
     - metadata:
         name: data
