@@ -69,11 +69,6 @@ spec:
         path:
           type: ReplacePrefixMatch
           replacePrefixMatch: /access
-    - type: ExtensionRef
-      extensionRef:
-        group: gateway.nginx.org
-        kind: SnippetsFilter
-        name: auth-required
     backendRefs:
     - name: access-service
       port: 80
