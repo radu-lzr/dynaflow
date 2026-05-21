@@ -1,0 +1,34 @@
+meta {
+  name: Get Vehicle By Id
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{vehicleUrl}}/vehicles/{{golfGtiId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("id matches", function() {
+    expect(res.body.id).to.equal(bru.getVar("golfGtiId"));
+  });
+  test("has required fields", function() {
+    expect(res.body.brand).to.equal("Volkswagen");
+    expect(res.body.model).to.equal("Golf 7 GTI");
+    expect(res.body.fuelType).to.equal("gasoline");
+    expect(res.body.specs).to.be.an("object");
+    expect(res.body.tags).to.be.an("array");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

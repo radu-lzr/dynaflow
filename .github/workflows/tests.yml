@@ -9,7 +9,7 @@ on:
 
 jobs:
   bruno-tests:
-    name: Auth, Access and Site Bruno tests
+    name: Auth, Access, Site, and Vehicle Bruno tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -31,7 +31,7 @@ jobs:
         run: cp dynolab/docker/.env.example dynolab/docker/.env
 
       - name: Start databases and Redis
-        run: docker compose -f dynolab/docker/docker-compose.yml up -d pg-auth pg-access pg-site redis
+        run: docker compose -f dynolab/docker/docker-compose.yml up -d pg-auth pg-access pg-site mongodb redis
 
       - name: Wait for PostgreSQL
         run: |
@@ -45,8 +45,8 @@ jobs:
             sleep 2
           done
 
-      - name: Start auth, access and site services
-        run: docker compose -f dynolab/docker/docker-compose.yml up -d auth access site
+      - name: Start auth, access, site and vehicle services
+        run: docker compose -f dynolab/docker/docker-compose.yml up -d auth access site vehicle
 
       - name: Wait for service health checks
         run: |
@@ -59,7 +59,9 @@ jobs:
           until curl -fsS http://localhost:4003/health >/dev/null; do
             sleep 2
           done
-
+          until curl -fsS http://localhost:4004/health >/dev/null; do
+            sleep 2
+          done
       - name: Run auth Bruno collection
         working-directory: dynolab/bruno
         run: pnpm dlx @usebruno/cli@latest run auth --env local -r --output results_auth_ci.json
@@ -72,9 +74,13 @@ jobs:
         working-directory: dynolab/bruno
         run: pnpm dlx @usebruno/cli@latest run site --env local -r --output results_site_ci.json
 
+      - name: Run vehicle Bruno collection
+        working-directory: dynolab/bruno
+        run: pnpm dlx @usebruno/cli@latest run vehicle --env local -r --output results_vehicle_ci.json
+
       - name: Show service logs on failure
         if: failure()
-        run: docker compose -f dynolab/docker/docker-compose.yml logs --no-color auth access site pg-auth pg-access pg-site redis
+        run: docker compose -f dynolab/docker/docker-compose.yml logs --no-color auth access site vehicle pg-auth pg-access pg-site mongodb redis
 
       - name: Tear down containers
         if: always()

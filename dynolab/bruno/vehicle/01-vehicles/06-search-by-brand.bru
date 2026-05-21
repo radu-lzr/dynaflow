@@ -1,0 +1,27 @@
+meta {
+  name: Search By Brand
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{vehicleUrl}}/vehicles?search=volkswagen
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all results contain volkswagen (case-insensitive)", function() {
+    res.body.vehicles.forEach(function(v) {
+      const combined = (v.brand + " " + v.model + " " + v.engineCode).toLowerCase();
+      expect(combined).to.include("volkswagen");
+    });
+  });
+}

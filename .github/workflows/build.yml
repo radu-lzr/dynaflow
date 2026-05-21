@@ -25,6 +25,7 @@ jobs:
       auth: ${{ steps.filter.outputs.auth }}
       access: ${{ steps.filter.outputs.access }}
       site: ${{ steps.filter.outputs.site }}
+      vehicle: ${{ steps.filter.outputs.vehicle }}
       services: ${{ steps.build-matrix.outputs.services }}
     steps:
       - name: Check out repository
@@ -45,6 +46,8 @@ jobs:
               - 'dynolab/services/access/**'
             site:
               - 'dynolab/services/site/**'
+            vehicle:
+              - 'dynolab/services/vehicle/**'
 
       - name: Build service matrix
         id: build-matrix
@@ -55,12 +58,13 @@ jobs:
 
           # If core changed or manual trigger → build all
           if [[ "$CORE" == "true" || "$MANUAL" == "true" ]]; then
-            SERVICES=("auth" "access" "site")
+            SERVICES=("auth" "access" "site" "vehicle")
           else
             # Only build changed services
             [[ "${{ steps.filter.outputs.auth }}" == "true" ]] && SERVICES+=("auth")
             [[ "${{ steps.filter.outputs.access }}" == "true" ]] && SERVICES+=("access")
             [[ "${{ steps.filter.outputs.site }}" == "true" ]] && SERVICES+=("site")
+            [[ "${{ steps.filter.outputs.vehicle }}" == "true" ]] && SERVICES+=("vehicle")
           fi
 
           # Output as JSON array
