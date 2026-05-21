@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/radu-lzr/dynaflow
     targetRevision: main
-    path: argocd/definitions/dynaflow/manifests/db
+    path: argocd/definitions/dynaflow/manifests/db/mongodb
   destination:
     server: https://kubernetes.default.svc
     namespace: dynaflow
