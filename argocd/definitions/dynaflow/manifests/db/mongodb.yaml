@@ -1,0 +1,86 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: mongodb-credentials
+  namespace: dynaflow
+stringData:
+  MONGO_INITDB_ROOT_USERNAME: root
+  MONGO_INITDB_ROOT_PASSWORD: rootpass
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongodb-init-js
+  namespace: dynaflow
+data:
+  init-vehicle.js: |
+    db = db.getSiblingDB('vehicle');
+    db.createUser({user: 'dynaflow', pwd: 'dynaflow', roles: [{role: 'readWrite', db: 'vehicle'}]});
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: dynaflow
+spec:
+  ports:
+    - port: 27017
+      targetPort: 27017
+      protocol: TCP
+      name: mongodb
+  selector:
+    app: mongodb
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongodb
+  namespace: dynaflow
+spec:
+  serviceName: mongodb
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+        - name: mongodb
+          image: mongo:7
+          ports:
+            - containerPort: 27017
+          env:
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb-credentials
+                  key: MONGO_INITDB_ROOT_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /data/db
+            - name: init-js
+              mountPath: /docker-entrypoint-initdb.d/init-vehicle.js
+              subPath: init-vehicle.js
+      volumes:
+        - name: init-js
+          configMap:
+            name: mongodb-init-js
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi

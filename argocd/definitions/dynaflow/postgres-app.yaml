@@ -6,27 +6,9 @@ metadata:
 spec:
   project: dynaflow
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: postgresql
-    targetRevision: 16.x.x
-    helm:
-      valuesObject:
-        image:
-          registry: ""
-          repository: postgres
-          tag: "16-alpine"
-        auth:
-          existingSecret: "postgres-credentials"
-          database: "auth"
-          username: "dynaflow"
-        primary:
-          initdb:
-            scripts:
-              init-dbs.sql: |
-                CREATE DATABASE access;
-                CREATE DATABASE site;
-                GRANT ALL PRIVILEGES ON DATABASE access TO dynaflow;
-                GRANT ALL PRIVILEGES ON DATABASE site TO dynaflow;
+    repoURL: https://github.com/radu-lzr/dynaflow
+    targetRevision: main
+    path: argocd/definitions/dynaflow/manifests/db
   destination:
     server: https://kubernetes.default.svc
     namespace: dynaflow

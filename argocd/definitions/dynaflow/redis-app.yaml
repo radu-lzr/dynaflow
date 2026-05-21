@@ -6,19 +6,9 @@ metadata:
 spec:
   project: dynaflow
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: redis
-    targetRevision: 21.x.x
-    helm:
-      valuesObject:
-        image:
-          registry: ""
-          repository: redis
-          tag: "7-alpine"
-        auth:
-          existingSecret: "redis-credentials"
-          existingSecretPasswordKey: "redis-password"
-        architecture: standalone
+    repoURL: https://github.com/radu-lzr/dynaflow
+    targetRevision: main
+    path: argocd/definitions/dynaflow/manifests/db
   destination:
     server: https://kubernetes.default.svc
     namespace: dynaflow

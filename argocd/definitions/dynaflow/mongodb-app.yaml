@@ -6,22 +6,9 @@ metadata:
 spec:
   project: dynaflow
   source:
-    repoURL: https://charts.bitnami.com/bitnami
-    chart: mongodb
-    targetRevision: 16.x.x
-    helm:
-      valuesObject:
-        image:
-          registry: ""
-          repository: mongo
-          tag: "7"
-        auth:
-          existingSecret: "mongodb-credentials"
-          databases:
-            - vehicle
-          usernames:
-            - dynaflow
-        architecture: standalone
+    repoURL: https://github.com/radu-lzr/dynaflow
+    targetRevision: main
+    path: argocd/definitions/dynaflow/manifests/db
   destination:
     server: https://kubernetes.default.svc
     namespace: dynaflow

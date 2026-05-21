@@ -1,0 +1,94 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-credentials
+  namespace: dynaflow
+stringData:
+  POSTGRES_USER: dynaflow
+  POSTGRES_PASSWORD: dynaflow
+  POSTGRES_DB: auth
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-init-sql
+  namespace: dynaflow
+data:
+  init-dbs.sql: |
+    CREATE DATABASE access;
+    CREATE DATABASE site;
+    GRANT ALL PRIVILEGES ON DATABASE access TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE site TO dynaflow;
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: dynaflow
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+      name: postgres
+  selector:
+    app: postgres
+
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: dynaflow
+spec:
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_DB
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+            - name: init-sql
+              mountPath: /docker-entrypoint-initdb.d/init-dbs.sql
+              subPath: init-dbs.sql
+      volumes:
+        - name: init-sql
+          configMap:
+            name: postgres-init-sql
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
