@@ -27,6 +27,12 @@ cat "$SECRET_FILE"
 echo "========================================"
 echo ""
 
+# Function to URL-encode a string
+urlencode() {
+  local string="$1"
+  python3 -c "import urllib.parse; print(urllib.parse.quote('$string', safe=''))"
+}
+
 echo "Creating namespace $NAMESPACE..."
 kubectl create namespace "$NAMESPACE" --dry-run=client -o yaml | kubectl apply -f -
 
@@ -58,8 +64,9 @@ kubectl create secret generic mongodb-credentials \
 
 # --- Dynaflow app secrets ---
 # jwt-secret: signing key for auth service
-# mongo-uri:  full connection string for vehicle service
-MONGO_URI="mongodb://dynaflow:${MONGO_PASS}@mongodb.${NAMESPACE}.svc.cluster.local:27017/vehicle?authSource=vehicle"
+# mongo-uri:  full connection string for vehicle service (password must be URL-encoded)
+MONGO_PASS_ENCODED=$(urlencode "$MONGO_PASS")
+MONGO_URI="mongodb://dynaflow:${MONGO_PASS_ENCODED}@mongodb.${NAMESPACE}.svc.cluster.local:27017/vehicle?authSource=vehicle"
 echo "Creating dynaflow-secrets..."
 kubectl create secret generic dynaflow-secrets \
   --namespace "$NAMESPACE" \
