@@ -1,76 +1,38 @@
-apiVersion: v1
-kind: ConfigMap
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  name: postgres-init-scripts
-  namespace: dynaflow
-data:
-  01-init-dbs.sh: |
-    #!/bin/bash
-    set -e
-
-    psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" <<-EOSQL
-      SELECT 'CREATE DATABASE "access"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'access')\gexec
-      SELECT 'CREATE DATABASE "site"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'site')\gexec
-      SELECT 'CREATE DATABASE "auth"' WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = 'auth')\gexec
-      ALTER DATABASE "access" OWNER TO "$POSTGRES_USER";
-      ALTER DATABASE "site" OWNER TO "$POSTGRES_USER";
-      ALTER DATABASE "auth" OWNER TO "$POSTGRES_USER";
-    EOSQL
-
----
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: postgres-db-postgresql
-  namespace: dynaflow
+  name: postgres-db
+  namespace: argocd
 spec:
-  serviceName: postgres-db-postgresql
-  replicas: 1
-  selector:
-    matchLabels:
-      app: postgres-db-postgresql
-  template:
-    metadata:
-      labels:
-        app: postgres-db-postgresql
-    spec:
-      containers:
-        - name: postgresql
-          image: postgres:16-alpine
-          env:
-            - name: POSTGRES_USER
-              value: "dynaflow"
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: postgres-credentials
-                  key: password
-            - name: POSTGRES_DB
-              value: "auth"
-          ports:
-            - containerPort: 5432
-          volumeMounts:
-            - name: init-scripts
-              mountPath: /docker-entrypoint-initdb.d/
-            - name: pgdata
-              mountPath: /var/lib/postgresql/data
-      volumes:
-        - name: init-scripts
-          configMap:
-            name: postgres-init-scripts
-        - name: pgdata
-          emptyDir: {}
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-db-postgresql
-  namespace: dynaflow
-spec:
-  selector:
-    app: postgres-db-postgresql
-  ports:
-    - port: 5432
-      targetPort: 5432
-  type: ClusterIP
+  project: dynaflow
+  source:
+    repoURL: https://charts.bitnami.com/bitnami
+    chart: postgresql
+    targetRevision: 16.x.x
+    helm:
+      valuesObject:
+        image:
+          registry: ""
+          repository: postgres
+          tag: "16-alpine"
+        auth:
+          existingSecret: "postgres-credentials"
+          database: "auth"
+          username: "dynaflow"
+        primary:
+          initdb:
+            scripts:
+              init-dbs.sql: |
+                CREATE DATABASE access;
+                CREATE DATABASE site;
+                GRANT ALL PRIVILEGES ON DATABASE access TO dynaflow;
+                GRANT ALL PRIVILEGES ON DATABASE site TO dynaflow;
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dynaflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
