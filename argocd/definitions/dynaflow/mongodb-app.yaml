@@ -6,11 +6,15 @@ metadata:
 spec:
   project: dynaflow
   source:
-    repoURL: oci://registry-1.docker.io/bitnamicharts
+    repoURL: https://charts.bitnami.com/bitnami
     chart: mongodb
     targetRevision: 16.x.x
     helm:
       valuesObject:
+        image:
+          registry: ""
+          repository: mongo
+          tag: "7"
         auth:
           existingSecret: "mongodb-credentials"
           databases:

@@ -1,26 +1,49 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: redis
-  namespace: argocd
+  name: redis-master
+  namespace: dynaflow
 spec:
-  project: dynaflow
-  source:
-    repoURL: oci://registry-1.docker.io/bitnamicharts
-    chart: redis
-    targetRevision: 21.x.x
-    helm:
-      valuesObject:
-        auth:
-          existingSecret: "redis-credentials"
-          existingSecretPasswordKey: "redis-password"
-        architecture: standalone
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: dynaflow
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
+  serviceName: redis-master
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis-master
+  template:
+    metadata:
+      labels:
+        app: redis-master
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: redis-credentials
+                  key: redis-password
+          command: ["/bin/sh", "-c"]
+          args: ["exec redis-server --requirepass \"$REDIS_PASSWORD\""]
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data
+      volumes:
+        - name: redis-data
+          emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-master
+  namespace: dynaflow
+spec:
+  selector:
+    app: redis-master
+  ports:
+    - port: 6379
+      targetPort: 6379
+  type: ClusterIP
