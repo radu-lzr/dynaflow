@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres-db
+  namespace: argocd
+spec:
+  project: dynaflow
+  source:
+    repoURL: oci://registry-1.docker.io/bitnamicharts
+    chart: postgresql
+    targetRevision: 16.x.x
+    helm:
+      valuesObject:
+        auth:
+          existingSecret: "postgres-credentials"
+          secretKeys:
+            adminPasswordKey: "postgres-password"
+            userPasswordKey: "password"
+          database: "auth"
+          username: "dynaflow"
+        primary:
+          initdb:
+            scripts:
+              init-dbs.sql: |
+                CREATE DATABASE access;
+                CREATE DATABASE site;
+                GRANT ALL PRIVILEGES ON DATABASE access TO dynaflow;
+                GRANT ALL PRIVILEGES ON DATABASE site TO dynaflow;
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dynaflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argocd
+spec:
+  project: dynaflow
+  source:
+    repoURL: oci://registry-1.docker.io/bitnamicharts
+    chart: redis
+    targetRevision: 21.x.x
+    helm:
+      valuesObject:
+        auth:
+          existingSecret: "redis-credentials"
+          existingSecretPasswordKey: "redis-password"
+        architecture: standalone
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dynaflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

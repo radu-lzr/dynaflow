@@ -1,0 +1,29 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mongodb
+  namespace: argocd
+spec:
+  project: dynaflow
+  source:
+    repoURL: oci://registry-1.docker.io/bitnamicharts
+    chart: mongodb
+    targetRevision: 16.x.x
+    helm:
+      valuesObject:
+        auth:
+          existingSecret: "mongodb-credentials"
+          databases:
+            - vehicle
+          usernames:
+            - dynaflow
+        architecture: standalone
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dynaflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

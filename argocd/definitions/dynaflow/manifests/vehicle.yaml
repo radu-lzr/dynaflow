@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehicle-service
+  namespace: dynaflow
+  labels:
+    app: vehicle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vehicle
+  template:
+    metadata:
+      labels:
+        app: vehicle
+    spec:
+      containers:
+      - name: vehicle
+        image: ghcr.io/radu-lzr/dynaflow/vehicle:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: MONGO_URI
+          valueFrom:
+            secretKeyRef:
+              name: dynaflow-secrets
+              key: mongo-uri
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehicle-service
+  namespace: dynaflow
+spec:
+  selector:
+    app: vehicle
+  ports:
+  - port: 80
+    targetPort: 3000
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: vehicle-route
+  namespace: dynaflow
+spec:
+  parentRefs:
+  - name: dynaflow-gateway
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api/vehicle
+    filters:
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: auth-required
+    backendRefs:
+    - name: vehicle-service
+      port: 80

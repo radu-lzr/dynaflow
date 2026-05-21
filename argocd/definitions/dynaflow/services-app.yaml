@@ -1,20 +1,20 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: root-dynaflow
+  name: dynaflow-services
   namespace: argocd
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
-  project: default
+  project: dynaflow
   source:
     repoURL: https://github.com/radu-lzr/dynaflow
     targetRevision: argocd-conf
-    path: argocd/definitions/dynaflow
+    path: argocd/definitions/dynaflow/manifests
   destination:
     server: https://kubernetes.default.svc
-    namespace: argocd
+    namespace: dynaflow
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
