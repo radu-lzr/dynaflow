@@ -1,0 +1,30 @@
+meta {
+  name: Filter By Tags
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{vehicleUrl}}/vehicles?tags=turbo,popular
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all results have at least one matching tag", function() {
+    res.body.vehicles.forEach(function(v) {
+      const hasTag = v.tags.includes("turbo") || v.tags.includes("popular");
+      expect(hasTag).to.be.true;
+    });
+  });
+  test("at least two vehicles match turbo or popular", function() {
+    expect(res.body.vehicles.length).to.be.at.least(2);
+  });
+}

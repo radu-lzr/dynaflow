@@ -1,0 +1,54 @@
+meta {
+  name: Create Golf 7 GTI
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{vehicleUrl}}/vehicles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "brand": "Volkswagen",
+    "model": "Golf 7 GTI",
+    "yearStart": 2013,
+    "yearEnd": 2020,
+    "engineCode": "EA888 Gen3",
+    "fuelType": "gasoline",
+    "ecuType": "Bosch MED17.5.2",
+    "stockHp": 230,
+    "stockTorque": 350,
+    "specs": {
+      "turbo": "IHI IS38",
+      "injectors": "direct 350cc",
+      "intake": "stock"
+    },
+    "tags": ["turbo", "direct_injection", "popular"]
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+    expect(res.body.id).to.match(/^[0-9a-fA-F]{24}$/);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("golfGtiId", res.body.id);
+  }
+}

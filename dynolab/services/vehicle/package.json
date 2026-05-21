@@ -1,0 +1,21 @@
+{
+  "name": "@dynolab/vehicle",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@dynolab/core": "workspace:*",
+    "fastify": "^5.0.0",
+    "fastify-plugin": "^5.1.0",
+    "mongodb": "^6.0.0"
+  },
+  "devDependencies": {
+    "json-schema-to-ts": "^3.1.1",
+    "tsx": "^4.0.0",
+    "typescript": "^5.5.0"
+  }
+}

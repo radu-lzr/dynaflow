@@ -1,0 +1,52 @@
+meta {
+  name: Create Mazda MX-5
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{vehicleUrl}}/vehicles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "brand": "Mazda",
+    "model": "MX-5 ND",
+    "yearStart": 2015,
+    "engineCode": "P5-VP",
+    "fuelType": "gasoline",
+    "ecuType": "Denso",
+    "stockHp": 131,
+    "stockTorque": 150,
+    "specs": {
+      "intake": "open_filter",
+      "exhaust": "cat_back"
+    },
+    "tags": ["naturally_aspirated", "roadster"]
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+    expect(res.body.id).to.match(/^[0-9a-fA-F]{24}$/);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("mx5Id", res.body.id);
+  }
+}

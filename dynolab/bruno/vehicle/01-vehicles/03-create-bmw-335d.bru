@@ -1,0 +1,54 @@
+meta {
+  name: Create BMW 335d
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{vehicleUrl}}/vehicles
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "brand": "BMW",
+    "model": "335d E90",
+    "yearStart": 2006,
+    "yearEnd": 2012,
+    "engineCode": "M57N2",
+    "fuelType": "diesel",
+    "ecuType": "Bosch EDC17CP02",
+    "stockHp": 286,
+    "stockTorque": 580,
+    "specs": {
+      "turbo": "twin turbo",
+      "dpf": true,
+      "egr": "deleted"
+    },
+    "tags": ["turbo", "diesel", "twin_turbo"]
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+    expect(res.body.id).to.match(/^[0-9a-fA-F]{24}$/);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("bmw335dId", res.body.id);
+  }
+}
