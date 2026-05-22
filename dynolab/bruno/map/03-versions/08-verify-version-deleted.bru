@@ -1,0 +1,24 @@
+meta {
+  name: Verify Version Count After Delete
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/versions
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has 1 version remaining", function() {
+    expect(res.body.versions.length).to.equal(1);
+  });
+}

@@ -1,0 +1,31 @@
+meta {
+  name: List Maps
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{mapUrl}}/maps
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has maps array", function() {
+    expect(res.body.maps).to.be.an("array");
+  });
+  test("totalCount >= 3", function() {
+    expect(res.body.totalCount).to.be.at.least(3);
+  });
+  test("has pagination", function() {
+    expect(res.body.page).to.equal(1);
+    expect(res.body.limit).to.equal(20);
+  });
+}

@@ -1,0 +1,36 @@
+meta {
+  name: Upload Version 1.1
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/versions
+  body: multipart-form
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:multipart-form {
+  versionNumber: 1.1
+  changelog: Minor boost pressure adjustment, improved low-end torque
+  file: @file(map/test-files/test.bin)
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("versionNumber is 1.1", function() {
+    expect(res.body.versionNumber).to.equal("1.1");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("versionId2", res.body.id);
+  }
+}

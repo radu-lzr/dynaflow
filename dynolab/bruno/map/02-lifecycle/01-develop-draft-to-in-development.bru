@@ -1,0 +1,24 @@
+meta {
+  name: Develop - draft to in_development
+  type: http
+  seq: 1
+}
+
+put {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/develop
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("status is in_development", function() {
+    expect(res.body.status).to.equal("in_development");
+  });
+}

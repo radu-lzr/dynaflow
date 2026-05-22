@@ -1,0 +1,24 @@
+meta {
+  name: Redevelop - revoked to in_development
+  type: http
+  seq: 6
+}
+
+put {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/redevelop
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("status is in_development", function() {
+    expect(res.body.status).to.equal("in_development");
+  });
+}

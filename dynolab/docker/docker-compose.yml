@@ -295,6 +295,36 @@ services:
       - '9001:9001'
     volumes:
       - minio_data:/data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -f http://localhost:9000/minio/health/live || exit 1']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  map:
+    build:
+      context: ..
+      dockerfile: services/map/Dockerfile
+    container_name: dynolab-map
+    environment:
+      PORT: ${MAP_PORT}
+      POSTGRES_HOST: pg-map
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: ${PG_MAP_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      MINIO_ENDPOINT: http://minio:9000
+      MINIO_ACCESS_KEY: ${MINIO_ROOT_USER}
+      MINIO_SECRET_KEY: ${MINIO_ROOT_PASSWORD}
+      MINIO_BUCKET: dynolab-maps
+      LOG_LEVEL: ${LOG_LEVEL}
+    ports:
+      - '${MAP_PORT}:${MAP_PORT}'
+    depends_on:
+      pg-map:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
 
 volumes:
   pg_auth_data:

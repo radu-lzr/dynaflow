@@ -1,0 +1,21 @@
+meta {
+  name: Remove Non-existent Config - 404
+  type: http
+  seq: 7
+}
+
+delete {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/configs/000000000000000000000000
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.status).to.equal(404);
+  });
+}

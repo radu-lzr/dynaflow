@@ -1,0 +1,21 @@
+meta {
+  name: Download Non-existent Version - 404
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/versions/00000000-0000-4000-8000-000000000000/download
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.status).to.equal(404);
+  });
+}

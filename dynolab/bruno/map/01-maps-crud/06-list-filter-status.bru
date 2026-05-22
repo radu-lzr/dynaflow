@@ -1,0 +1,26 @@
+meta {
+  name: List Maps - Filter by Status (draft)
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{mapUrl}}/maps?status=draft
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all maps are draft", function() {
+    res.body.maps.forEach(function(m) {
+      expect(m.status).to.equal("draft");
+    });
+  });
+}

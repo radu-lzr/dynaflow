@@ -1,0 +1,27 @@
+meta {
+  name: List Compatible Configs
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/configs
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has configs array", function() {
+    expect(res.body.configs).to.be.an("array");
+  });
+  test("has 3 configs", function() {
+    expect(res.body.configs.length).to.equal(3);
+  });
+}

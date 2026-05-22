@@ -1,0 +1,40 @@
+meta {
+  name: Create Map - BMW 335d E85
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{mapUrl}}/maps
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "name": "BMW 335d E85 Flex Fuel",
+    "configId": "bbbbbbbbbbbbbbbbbbbbbbbb",
+    "type": "e85",
+    "description": "E85 flex fuel conversion for BMW 335d",
+    "authorId": "{{adminId}}"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("mapBmwE85Id", res.body.id);
+  }
+}

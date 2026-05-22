@@ -1,0 +1,27 @@
+meta {
+  name: List Versions
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/versions
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has versions array", function() {
+    expect(res.body.versions).to.be.an("array");
+  });
+  test("has 2 versions", function() {
+    expect(res.body.versions.length).to.equal(2);
+  });
+}
