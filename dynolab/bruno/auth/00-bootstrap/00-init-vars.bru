@@ -19,7 +19,8 @@ tests {
 script:post-response {
   const runId = `${Date.now()}_${Math.floor(Math.random() * 100000)}`;
   bru.setVar("runId", runId);
-  bru.setVar("adminEmail", `admin+${runId}@dynolab.com`);
+  // adminEmail is the seeded admin — static, not per-run
+  bru.setVar("adminEmail", "admin@dynolab.dev");
   bru.setVar("techEmail", `tech+${runId}@dynolab.com`);
   bru.setVar("cartoEmail", `carto+${runId}@dynolab.com`);
   bru.setVar("clientEmail", `client+${runId}@dynolab.com`);
