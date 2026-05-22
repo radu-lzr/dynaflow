@@ -1,0 +1,36 @@
+meta {
+  name: Get OBD Logs
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}/obd-logs
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has logs array", function() {
+    expect(res.body.logs).to.be.an("array");
+  });
+  test("totalCount is 6", function() {
+    expect(res.body.totalCount).to.equal(6);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+  test("log has pid", function() {
+    expect(res.body.logs[0].pid).to.be.a("string");
+  });
+  test("log has value", function() {
+    expect(res.body.logs[0].value).to.be.a("number");
+  });
+}

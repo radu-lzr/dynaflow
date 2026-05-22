@@ -1,0 +1,29 @@
+meta {
+  name: List Sessions - Filter by interventionId
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions?interventionId=aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has at least 2 sessions", function() {
+    expect(res.body.sessions.length).to.be.at.least(2);
+  });
+  test("all match interventionId", function() {
+    res.body.sessions.forEach(function(s) {
+      expect(s.interventionId).to.equal("aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa");
+    });
+  });
+}

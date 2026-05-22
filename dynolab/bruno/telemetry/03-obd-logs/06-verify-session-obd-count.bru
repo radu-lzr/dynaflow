@@ -1,0 +1,27 @@
+meta {
+  name: Verify Session obdLogCount
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("obdLogCount is 6", function() {
+    expect(res.body.obdLogCount).to.equal(6);
+  });
+  test("datapointCount is 10", function() {
+    expect(res.body.datapointCount).to.equal(10);
+  });
+}

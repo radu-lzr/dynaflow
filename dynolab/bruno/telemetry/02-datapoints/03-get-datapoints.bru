@@ -1,0 +1,36 @@
+meta {
+  name: Get Datapoints
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}/datapoints
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has datapoints array", function() {
+    expect(res.body.datapoints).to.be.an("array");
+  });
+  test("totalCount is 10", function() {
+    expect(res.body.totalCount).to.equal(10);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+  test("datapoint has timestamp", function() {
+    expect(res.body.datapoints[0].timestamp).to.be.a("string");
+  });
+  test("datapoint has rpm", function() {
+    expect(res.body.datapoints[0].rpm).to.be.a("number");
+  });
+}

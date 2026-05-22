@@ -1,0 +1,27 @@
+meta {
+  name: Get Datapoints - Time Range Filter
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions/{{beforeSessionId}}/datapoints?from=2026-01-15T10:00:03Z&to=2026-01-15T10:00:06Z
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("filtered to 4 points", function() {
+    expect(res.body.datapoints.length).to.equal(4);
+  });
+  test("totalCount reflects full count", function() {
+    expect(res.body.totalCount).to.equal(10);
+  });
+}
