@@ -1,6 +1,21 @@
 import fp from 'fastify-plugin';
 import type { FastifyInstance } from 'fastify';
 import { ensureExtension, ensureTable, ensureIndex } from '@dynolab/core';
+import { ROUTE_TO_PERMISSION_CODE_MAP, EXTRA_PERMISSIONS } from '../utils/routes-to-perm-code';
+
+const SUPER_ADMIN_ROLE_ID = 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa';
+const SEED_ADMIN_ID       = process.env.SEED_ADMIN_ID ?? '11111111-1111-4111-8111-111111111111';
+
+function uniquePermissions() {
+    const seen = new Map<string, string>();
+    for (const { permissionCode, description } of ROUTE_TO_PERMISSION_CODE_MAP) {
+        if (!seen.has(permissionCode)) seen.set(permissionCode, description);
+    }
+    for (const { permissionCode, description } of EXTRA_PERMISSIONS) {
+        seen.set(permissionCode, description);
+    }
+    return [...seen.entries()].map(([permissionCode, description]) => ({ permissionCode, description }));
+}
 
 export default fp(async (fastify: FastifyInstance) => {
     const { pg, log } = fastify;
@@ -83,6 +98,44 @@ export default fp(async (fastify: FastifyInstance) => {
         `CREATE INDEX IF NOT EXISTS idx_temp_permissions_linked_to ON temp_permissions(linked_to)`);
     await ensureIndex(pg, log, 'idx_temp_permissions_expires_at',
         `CREATE INDEX IF NOT EXISTS idx_temp_permissions_expires_at ON temp_permissions(expires_at)`);
+
+    // Seed all permission codes derived from the route map (single source of truth)
+    for (const { permissionCode, description } of uniquePermissions()) {
+        await pg.query(
+            `INSERT INTO permissions (permission_code, description)
+             VALUES ($1, $2)
+             ON CONFLICT (permission_code) DO NOTHING`,
+            [permissionCode, description],
+        );
+    }
+
+    // Seed super_admin role
+    await pg.query(
+        `INSERT INTO roles (id, name, description, is_system)
+         VALUES ($1, 'super_admin', 'Full access to all resources', TRUE)
+         ON CONFLICT (name) DO NOTHING`,
+        [SUPER_ADMIN_ROLE_ID],
+    );
+
+    // Assign every permission to super_admin
+    await pg.query(
+        `INSERT INTO role_permissions (role_id, permission_id)
+         SELECT $1, id FROM permissions
+         ON CONFLICT DO NOTHING`,
+        [SUPER_ADMIN_ROLE_ID],
+    );
+
+    // Assign super_admin to admin user (global scope — site_id IS NULL)
+    // Uses WHERE NOT EXISTS because PostgreSQL UNIQUE treats NULLs as distinct
+    await pg.query(
+        `INSERT INTO user_roles (user_id, role_id, site_id)
+         SELECT $1, $2, NULL
+         WHERE NOT EXISTS (
+             SELECT 1 FROM user_roles
+             WHERE user_id = $1 AND role_id = $2 AND site_id IS NULL
+         )`,
+        [SEED_ADMIN_ID, SUPER_ADMIN_ROLE_ID],
+    );
 
     log.info('Access service schema ready');
 });

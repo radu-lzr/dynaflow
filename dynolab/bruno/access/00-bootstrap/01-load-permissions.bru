@@ -5,7 +5,7 @@ meta {
 }
 
 get {
-  url: {{accessUrl}}/permissions
+  url: {{accessUrl}}/permissions?limit=100
   body: none
   auth: none
 }
@@ -21,16 +21,17 @@ tests {
 }
 
 script:post-response {
-  const userListPermission = res.body.permissions.find(function(item) {
-    return item.permissionCode === "user:list";
+  // user:read is seeded — use it as the permission for role assignment in check tests
+  const userReadPermission = res.body.permissions.find(function(item) {
+    return item.permissionCode === "user:read";
   });
 
   const mapDownloadPermission = res.body.permissions.find(function(item) {
     return item.permissionCode === "map:download";
   });
 
-  if (userListPermission) {
-    bru.setVar("permissionId", userListPermission.id);
+  if (userReadPermission) {
+    bru.setVar("permissionId", userReadPermission.id);
   }
 
   if (mapDownloadPermission) {
