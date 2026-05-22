@@ -27,6 +27,7 @@ jobs:
       site: ${{ steps.filter.outputs.site }}
       vehicle: ${{ steps.filter.outputs.vehicle }}
       client-vehicle: ${{ steps.filter.outputs.client-vehicle }}
+      workshop: ${{ steps.filter.outputs.workshop }}
       telemetry: ${{ steps.filter.outputs.telemetry }}
       services: ${{ steps.build-matrix.outputs.services }}
     steps:
@@ -52,6 +53,8 @@ jobs:
               - 'dynolab/services/vehicle/**'
             client-vehicle:
               - 'dynolab/services/client-vehicle/**'
+            workshop:
+              - 'dynolab/services/workshop/**'
             telemetry:
               - 'dynolab/services/telemetry/**'
 
@@ -64,7 +67,7 @@ jobs:
 
           # If core changed or manual trigger → build all
           if [[ "$CORE" == "true" || "$MANUAL" == "true" ]]; then
-            SERVICES=("auth" "access" "site" "vehicle" "client-vehicle" "telemetry")
+            SERVICES=("auth" "access" "site" "vehicle" "client-vehicle" "workshop" "telemetry")
           else
             # Only build changed services
             [[ "${{ steps.filter.outputs.auth }}" == "true" ]] && SERVICES+=("auth")
@@ -72,6 +75,7 @@ jobs:
             [[ "${{ steps.filter.outputs.site }}" == "true" ]] && SERVICES+=("site")
             [[ "${{ steps.filter.outputs.vehicle }}" == "true" ]] && SERVICES+=("vehicle")
             [[ "${{ steps.filter.outputs.client-vehicle }}" == "true" ]] && SERVICES+=("client-vehicle")
+            [[ "${{ steps.filter.outputs.workshop }}" == "true" ]] && SERVICES+=("workshop")
             [[ "${{ steps.filter.outputs.telemetry }}" == "true" ]] && SERVICES+=("telemetry")
           fi
 
