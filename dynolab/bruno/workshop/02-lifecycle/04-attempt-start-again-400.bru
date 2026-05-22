@@ -1,0 +1,21 @@
+meta {
+  name: Attempt Start Again (in_progress) → 400
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{workshopUrl}}/interventions/{{lifecycleInterventionId}}/start
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 400 (already in_progress)", function() {
+    expect(res.status).to.equal(400);
+  });
+}

@@ -1,0 +1,33 @@
+meta {
+  name: Reassign Technician (pending → new tech)
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{workshopUrl}}/interventions/{{assignInterventionId}}/assign
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "technicianId": "33333333-3333-4333-8333-333333333333"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

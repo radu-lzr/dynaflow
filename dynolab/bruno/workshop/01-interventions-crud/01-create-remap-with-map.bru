@@ -1,0 +1,45 @@
+meta {
+  name: Create Remap Intervention (with map)
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{workshopUrl}}/interventions
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "clientVehicleId": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+    "siteId": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+    "technicianId": "{{techId}}",
+    "mapId": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+    "mapVersionId": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+    "type": "remap",
+    "notes": "Full ECU remap, stage 1"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("remapInterventionId", res.body.id);
+  }
+}

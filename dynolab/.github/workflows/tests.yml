@@ -9,7 +9,7 @@ on:
 
 jobs:
   bruno-tests:
-    name: Auth, Access, Site, Vehicle, and Client Vehicle Bruno tests
+    name: All services Bruno tests
     runs-on: ubuntu-latest
     timeout-minutes: 30
 
@@ -28,7 +28,7 @@ jobs:
           version: 9
 
       - name: Start databases and Redis
-        run: docker compose -f docker/docker-compose.yml up -d pg-auth pg-access pg-site pg-client-vehicle pg-map timescaledb mongodb redis minio
+        run: docker compose -f docker/docker-compose.yml up -d pg-auth pg-access pg-site pg-client-vehicle pg-map pg-workshop timescaledb mongodb redis minio rabbitmq
 
       - name: Wait for PostgreSQL
         run: |
@@ -50,12 +50,18 @@ jobs:
           until docker compose -f docker/docker-compose.yml exec -T timescaledb pg_isready -U dynolab -d dynolab_telemetry >/dev/null 2>&1; do
             sleep 2
           done
+          until docker compose -f docker/docker-compose.yml exec -T pg-workshop pg_isready -U dynolab -d dynolab_workshop >/dev/null 2>&1; do
+            sleep 2
+          done
           until curl -fsS http://localhost:9000/minio/health/live >/dev/null; do
             sleep 2
           done
+          until docker compose -f docker/docker-compose.yml exec -T rabbitmq rabbitmq-diagnostics -q ping >/dev/null 2>&1; do
+            sleep 2
+          done
 
-      - name: Start auth, access, site, vehicle, client-vehicle, map, and telemetry services
-        run: docker compose -f docker/docker-compose.yml up -d auth access site vehicle client-vehicle map telemetry
+      - name: Start all application services
+        run: docker compose -f docker/docker-compose.yml up -d auth access site vehicle client-vehicle map telemetry workshop
 
       - name: Wait for service health checks
         run: |
@@ -75,6 +81,9 @@ jobs:
             sleep 2
           done
           until curl -fsS http://localhost:4006/health >/dev/null; do
+            sleep 2
+          done
+          until curl -fsS http://localhost:4007/health >/dev/null; do
             sleep 2
           done
           until curl -fsS http://localhost:4008/health >/dev/null; do
@@ -109,9 +118,13 @@ jobs:
         working-directory: bruno
         run: pnpm dlx @usebruno/cli@latest run map --env local -r --output results_map_ci.json
 
+      - name: Run workshop Bruno collection
+        working-directory: bruno
+        run: pnpm dlx @usebruno/cli@latest run workshop --env local -r --output results_workshop_ci.json
+
       - name: Show service logs on failure
         if: failure()
-        run: docker compose -f docker/docker-compose.yml logs --no-color auth access site vehicle client-vehicle map telemetry pg-auth pg-access pg-site pg-client-vehicle pg-map timescaledb mongodb redis minio
+        run: docker compose -f docker/docker-compose.yml logs --no-color auth access site vehicle client-vehicle map workshop telemetry pg-auth pg-access pg-site pg-client-vehicle pg-map pg-workshop timescaledb mongodb redis minio rabbitmq
 
       - name: Tear down containers
         if: always()

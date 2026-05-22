@@ -1,0 +1,36 @@
+meta {
+  name: Get Intervention by ID (with status history)
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{workshopUrl}}/interventions/{{remapInterventionId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.equal(bru.getVar("remapInterventionId"));
+  });
+  test("has statusHistory array", function() {
+    expect(res.body.statusHistory).to.be.an("array");
+  });
+  test("initial status history has pending entry", function() {
+    var history = res.body.statusHistory;
+    expect(history.length).to.be.at.least(1);
+    expect(history[0].toStatus).to.equal("pending");
+    expect(history[0].fromStatus).to.be.null;
+  });
+  test("status is pending", function() {
+    expect(res.body.status).to.equal("pending");
+  });
+}

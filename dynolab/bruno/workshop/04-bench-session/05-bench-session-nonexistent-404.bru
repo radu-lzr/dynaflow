@@ -1,0 +1,30 @@
+meta {
+  name: Bench Session on Non-Existent Intervention → 404
+  type: http
+  seq: 5
+}
+
+post {
+  url: {{workshopUrl}}/interventions/00000000-0000-4000-8000-000000000000/bench-session
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{techId}}
+}
+
+body:json {
+  {
+    "type": "before"
+  }
+}
+
+tests {
+  test("status 404", function() {
+    expect(res.status).to.equal(404);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

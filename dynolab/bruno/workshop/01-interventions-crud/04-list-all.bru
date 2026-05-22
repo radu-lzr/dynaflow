@@ -1,0 +1,33 @@
+meta {
+  name: List Interventions (all)
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{workshopUrl}}/interventions
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has interventions array", function() {
+    expect(res.body.interventions).to.be.an("array");
+  });
+  test("has totalCount", function() {
+    expect(res.body.totalCount).to.be.a("number");
+  });
+  test("has page", function() {
+    expect(res.body.page).to.be.a("number");
+  });
+  test("has limit", function() {
+    expect(res.body.limit).to.be.a("number");
+  });
+}
