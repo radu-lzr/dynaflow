@@ -1,0 +1,24 @@
+meta {
+  name: Develop from validated - 400 invalid transition
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/develop
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+  test("has error message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

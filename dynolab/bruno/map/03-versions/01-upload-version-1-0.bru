@@ -1,0 +1,48 @@
+meta {
+  name: Upload Version 1.0
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/versions
+  body: multipart-form
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:multipart-form {
+  versionNumber: 1.0
+  changelog: Initial release - Stage 1 tune for EA888 Gen3
+  file: @file(map/test-files/test.bin)
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("versionNumber is 1.0", function() {
+    expect(res.body.versionNumber).to.equal("1.0");
+  });
+  test("has fileHash", function() {
+    expect(res.body.fileHash).to.be.a("string");
+    expect(res.body.fileHash.length).to.equal(64);
+  });
+  test("has fileSize", function() {
+    expect(res.body.fileSize).to.be.a("number");
+    expect(res.body.fileSize).to.be.above(0);
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("versionId1", res.body.id);
+    bru.setVar("versionHash1", res.body.fileHash);
+  }
+}

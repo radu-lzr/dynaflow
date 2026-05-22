@@ -1,0 +1,26 @@
+meta {
+  name: List Maps - Filter by configId
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{mapUrl}}/maps?configId=aaaaaaaaaaaaaaaaaaaaaaaa
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all maps have correct configId", function() {
+    res.body.maps.forEach(function(m) {
+      expect(m.configId).to.equal("aaaaaaaaaaaaaaaaaaaaaaaa");
+    });
+  });
+}

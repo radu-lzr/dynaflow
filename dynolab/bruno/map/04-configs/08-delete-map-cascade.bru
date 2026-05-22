@@ -1,0 +1,24 @@
+meta {
+  name: Delete Map with Versions - Cascades MinIO + DB
+  type: http
+  seq: 8
+}
+
+delete {
+  url: {{mapUrl}}/maps/{{mapBmwE85Id}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

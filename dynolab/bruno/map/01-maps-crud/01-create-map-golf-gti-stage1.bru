@@ -1,0 +1,43 @@
+meta {
+  name: Create Map - Golf GTI Stage 1
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{mapUrl}}/maps
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "name": "Golf GTI Stage 1 - EA888 Gen3",
+    "configId": "aaaaaaaaaaaaaaaaaaaaaaaa",
+    "type": "stage1",
+    "description": "Stage 1 remap for Golf GTI, +30hp on stock turbo",
+    "authorId": "{{adminId}}"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.id) {
+    bru.setVar("mapGtiStage1Id", res.body.id);
+  }
+}

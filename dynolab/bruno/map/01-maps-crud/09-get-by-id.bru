@@ -1,0 +1,33 @@
+meta {
+  name: Get Map by ID
+  type: http
+  seq: 9
+}
+
+get {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("correct id", function() {
+    expect(res.body.id).to.equal(bru.getVar("mapGtiStage1Id"));
+  });
+  test("has versions array", function() {
+    expect(res.body.versions).to.be.an("array");
+  });
+  test("has compatibleConfigs array", function() {
+    expect(res.body.compatibleConfigs).to.be.an("array");
+  });
+  test("status is draft", function() {
+    expect(res.body.status).to.equal("draft");
+  });
+}

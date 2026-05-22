@@ -1,0 +1,30 @@
+meta {
+  name: Revoke - validated to revoked
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}/revoke
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "reason": "Safety issue discovered during real-world testing"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("status is revoked", function() {
+    expect(res.body.status).to.equal("revoked");
+  });
+}

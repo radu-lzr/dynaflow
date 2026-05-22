@@ -1,0 +1,34 @@
+meta {
+  name: Update Map Metadata
+  type: http
+  seq: 10
+}
+
+put {
+  url: {{mapUrl}}/maps/{{mapGtiStage1Id}}
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "name": "Golf GTI Stage 1 - EA888 Gen3 (updated)",
+    "description": "Updated description with dyno verified gains of +32hp"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("has id", function() {
+    expect(res.body.id).to.be.a("string");
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}
