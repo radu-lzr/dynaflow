@@ -10,6 +10,10 @@ spec:
         location /internal/auth-verify {
           internal;
           proxy_method POST;
+          # If the client didn't send an Authorization header, return 401
+          if ($http_authorization = "") {
+            return 401;
+          }
           proxy_pass http://auth-service.dynaflow.svc.cluster.local/auth/verify;
           proxy_pass_request_body off;
           proxy_set_header Authorization $http_authorization;
@@ -17,6 +21,9 @@ spec:
         location /internal/access-check {
           internal;
           proxy_method POST;
+          if ($http_authorization = "") {
+            return 401;
+          }
           proxy_pass http://access-service.dynaflow.svc.cluster.local/access/check;
           proxy_pass_request_body off;
           proxy_set_header Authorization $http_authorization;
@@ -36,7 +43,17 @@ spec:
         auth_request /internal/auth-verify;
         auth_request_set $user_id $upstream_http_x_user_id;
         auth_request_set $user_account_type $upstream_http_x_account_type;
+        # Treat upstream 400 from auth as Unauthorized so nginx doesn't return 500
+        auth_request_set $auth_status $upstream_status;
+        # If the auth subrequest returned 400 (invalid client request),
+        # return 400 to the original client instead of mapping to 500/401.
+        if ($auth_status = 400) {
+          return 400;
+        }
         proxy_set_header X-User-Id $user_id;
         proxy_set_header X-Account-Type $user_account_type;
+        error_page 401 = @unauthorized;
+        error_page 403 = @forbidden;
+        error_page 400 = @unauthorized;
         error_page 401 = @unauthorized;
         error_page 403 = @forbidden;
