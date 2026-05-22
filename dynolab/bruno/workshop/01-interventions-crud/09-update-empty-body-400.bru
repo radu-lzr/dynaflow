@@ -1,0 +1,28 @@
+meta {
+  name: Update Intervention (empty body → 400)
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{workshopUrl}}/interventions/{{diagInterventionId}}
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {}
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

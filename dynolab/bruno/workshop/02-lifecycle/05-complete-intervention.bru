@@ -1,0 +1,30 @@
+meta {
+  name: Complete Intervention (in_progress → completed)
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{workshopUrl}}/interventions/{{lifecycleInterventionId}}/complete
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {
+    "notes": "ECU remap completed successfully, stage 1 applied"
+  }
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("status is completed", function() {
+    expect(res.body.status).to.equal("completed");
+  });
+}

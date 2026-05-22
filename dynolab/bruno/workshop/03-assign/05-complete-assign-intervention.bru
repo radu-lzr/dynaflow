@@ -1,0 +1,25 @@
+meta {
+  name: Complete the Assign Test Intervention
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{workshopUrl}}/interventions/{{assignInterventionId}}/complete
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+body:json {
+  {}
+}
+
+tests {
+  test("completed", function() {
+    expect(res.status).to.equal(200);
+  });
+}

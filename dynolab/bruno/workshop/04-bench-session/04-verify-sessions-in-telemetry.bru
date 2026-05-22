@@ -1,0 +1,29 @@
+meta {
+  name: Verify Sessions Exist in Telemetry Service
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{telemetryUrl}}/bench-sessions?interventionId={{benchProxyInterventionId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("two sessions created", function() {
+    expect(res.body.sessions.length).to.be.at.least(2);
+  });
+  test("sessions linked to intervention", function() {
+    res.body.sessions.forEach(function(s) {
+      expect(s.interventionId).to.equal(bru.getVar("benchProxyInterventionId"));
+    });
+  });
+}

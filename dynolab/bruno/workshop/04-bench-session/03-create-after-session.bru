@@ -1,0 +1,37 @@
+meta {
+  name: Create Bench Session "after" via Intervention Proxy
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{workshopUrl}}/interventions/{{benchProxyInterventionId}}/bench-session
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{techId}}
+}
+
+body:json {
+  {
+    "type": "after",
+    "notes": "Post-remap performance run"
+  }
+}
+
+tests {
+  test("status 201", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has sessionId", function() {
+    expect(res.body.sessionId).to.be.a("string");
+  });
+}
+
+script:post-response {
+  if (res.body.sessionId) {
+    bru.setVar("afterSessionId", res.body.sessionId);
+  }
+}

@@ -1,0 +1,26 @@
+meta {
+  name: List Interventions (filter by status)
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{workshopUrl}}/interventions?status=pending
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("all items are pending", function() {
+    res.body.interventions.forEach(function(i) {
+      expect(i.status).to.equal("pending");
+    });
+  });
+}

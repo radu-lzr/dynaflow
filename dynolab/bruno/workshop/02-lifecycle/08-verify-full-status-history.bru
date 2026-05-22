@@ -1,0 +1,39 @@
+meta {
+  name: Verify Full Status History (4 entries)
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{workshopUrl}}/interventions/{{lifecycleInterventionId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("status is delivered", function() {
+    expect(res.body.status).to.equal("delivered");
+  });
+  test("status history has 4 transitions", function() {
+    expect(res.body.statusHistory.length).to.equal(4);
+  });
+  test("first history entry is pending", function() {
+    expect(res.body.statusHistory[0].toStatus).to.equal("pending");
+  });
+  test("second history entry is in_progress", function() {
+    expect(res.body.statusHistory[1].toStatus).to.equal("in_progress");
+  });
+  test("third history entry is completed", function() {
+    expect(res.body.statusHistory[2].toStatus).to.equal("completed");
+  });
+  test("fourth history entry is delivered", function() {
+    expect(res.body.statusHistory[3].toStatus).to.equal("delivered");
+  });
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Complete Intervention then Attempt Reassign → 400
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{workshopUrl}}/interventions/{{assignInterventionId}}/start
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("started", function() {
+    expect(res.status).to.equal(200);
+  });
+}

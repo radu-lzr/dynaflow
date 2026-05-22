@@ -1,0 +1,28 @@
+meta {
+  name: Verify Reassign Status History Has Reason
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{workshopUrl}}/interventions/{{assignInterventionId}}
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("status history has reassign entry", function() {
+    var history = res.body.statusHistory;
+    var reassignEntry = history.find(function(h) {
+      return h.reason === "Technician reassigned";
+    });
+    expect(reassignEntry).to.not.be.undefined;
+  });
+}

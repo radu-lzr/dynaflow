@@ -1,0 +1,32 @@
+meta {
+  name: Duplicate "before" Session (allowed — technician may redo bench run)
+  type: http
+  seq: 6
+}
+
+post {
+  url: {{workshopUrl}}/interventions/{{benchProxyInterventionId}}/bench-session
+  body: json
+  auth: none
+}
+
+headers {
+  X-User-Id: {{techId}}
+}
+
+body:json {
+  {
+    "type": "before",
+    "notes": "Redo baseline — previous run had sensor error"
+  }
+}
+
+tests {
+  test("status 201 (duplicate allowed)", function() {
+    expect(res.status).to.equal(201);
+  });
+  test("has new sessionId", function() {
+    expect(res.body.sessionId).to.be.a("string");
+    expect(res.body.sessionId).to.not.equal(bru.getVar("beforeSessionId"));
+  });
+}

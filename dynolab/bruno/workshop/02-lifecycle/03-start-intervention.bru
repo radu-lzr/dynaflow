@@ -1,0 +1,27 @@
+meta {
+  name: Start Intervention (pending → in_progress)
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{workshopUrl}}/interventions/{{lifecycleInterventionId}}/start
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{adminId}}
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("status is in_progress", function() {
+    expect(res.body.status).to.equal("in_progress");
+  });
+  test("has id", function() {
+    expect(res.body.id).to.equal(bru.getVar("lifecycleInterventionId"));
+  });
+}
