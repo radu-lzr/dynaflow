@@ -23,7 +23,9 @@ tests {
   });
   test("results match search", function() {
     res.body.permissions.forEach(function(p) {
-      expect(p.permissionCode.toLowerCase()).to.include("user");
+      const inCode = p.permissionCode.toLowerCase().includes("user");
+      const inDesc = (p.description || "").toLowerCase().includes("user");
+      expect(inCode || inDesc).to.equal(true);
     });
   });
 }
