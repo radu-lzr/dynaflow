@@ -120,8 +120,7 @@ spec:
     - port: 3000
       protocol: TCP
 ---
-# map: mTLS sidecar on port 3443 — reachable from NGF and workshop
-# (workshop connection is pre-wired; app code will use workshop-map-client-cert)
+# map: mTLS sidecar on port 3443 — reachable from NGF only
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -138,9 +137,6 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: nginx-gateway
-    - podSelector:
-        matchLabels:
-          app: workshop
     ports:
     - port: 3443
       protocol: TCP
@@ -613,7 +609,7 @@ spec:
     - port: 9000
       protocol: TCP
 ---
-# workshop → PostgreSQL + RabbitMQ + access (temp-permissions) + telemetry (bench sessions) + map (mTLS)
+# workshop → PostgreSQL + RabbitMQ + access (temp-permissions) + telemetry (bench sessions)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -653,13 +649,6 @@ spec:
           app: telemetry
     ports:
     - port: 3000
-      protocol: TCP
-  - to:
-    - podSelector:
-        matchLabels:
-          app: map
-    ports:
-    - port: 3443
       protocol: TCP
 ---
 # telemetry → TimescaleDB

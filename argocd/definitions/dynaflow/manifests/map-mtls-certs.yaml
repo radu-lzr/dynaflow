@@ -27,18 +27,3 @@ spec:
   issuerRef:
     name: dynaflow-internal-ca-issuer
     kind: Issuer
----
-# Client cert for workshop-service when calling map-service (pre-wired; app code TBD)
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: workshop-map-client-cert
-  namespace: dynaflow
-spec:
-  secretName: workshop-map-client-cert
-  commonName: workshop-service
-  usages:
-  - client auth
-  issuerRef:
-    name: dynaflow-internal-ca-issuer
-    kind: Issuer
