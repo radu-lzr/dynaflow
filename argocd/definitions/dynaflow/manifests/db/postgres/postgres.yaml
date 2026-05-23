@@ -7,8 +7,16 @@ data:
   init-dbs.sql: |
     CREATE DATABASE access;
     CREATE DATABASE site;
+    CREATE DATABASE client_vehicle;
+    CREATE DATABASE map;
+    CREATE DATABASE telemetry;
+    CREATE DATABASE workshop;
     GRANT ALL PRIVILEGES ON DATABASE access TO dynaflow;
     GRANT ALL PRIVILEGES ON DATABASE site TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE client_vehicle TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE map TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE telemetry TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE workshop TO dynaflow;
 
 ---
 apiVersion: v1
@@ -65,6 +73,25 @@ spec:
             - name: init-sql
               mountPath: /docker-entrypoint-initdb.d/init-dbs.sql
               subPath: init-dbs.sql
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          livenessProbe:
+            exec:
+              command: [pg_isready, -U, dynaflow, -d, auth]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            exec:
+              command: [pg_isready, -U, dynaflow, -d, auth]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
       volumes:
         - name: init-sql
           configMap:

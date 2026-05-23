@@ -37,6 +37,29 @@ spec:
               key: password
         - name: POSTGRES_DB
           value: access
+        - name: AUTH_SERVICE_URL
+          value: http://auth-service.dynaflow.svc.cluster.local
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
 ---
 apiVersion: v1
 kind: Service
@@ -58,6 +81,7 @@ metadata:
 spec:
   parentRefs:
   - name: dynaflow-gateway
+    sectionName: https
   rules:
   - matches:
     - path:
@@ -73,7 +97,7 @@ spec:
       extensionRef:
         group: gateway.nginx.org
         kind: SnippetsFilter
-        name: auth-required
+        name: access-required
     backendRefs:
     - name: access-service
       port: 80

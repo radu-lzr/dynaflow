@@ -30,6 +30,8 @@ export async function verifyTokenHandler(
             return reply.code(401).send({ message: 'Unauthorized' });
         }
 
+        reply.header('X-User-Id', payload.userId);
+        reply.header('X-Account-Type', payload.accountType);
         return reply.code(200).send({
             userId: payload.userId,
             accountType: payload.accountType,

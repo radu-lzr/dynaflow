@@ -1,0 +1,22 @@
+meta {
+  name: Verify Access Missing User ID 400
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{accessUrl}}/access/verify
+  body: none
+  auth: none
+}
+
+headers {
+  X-Original-URI: /api/access/roles
+  X-Original-Method: GET
+}
+
+tests {
+  test("status 400", function() {
+    expect(res.status).to.equal(400);
+  });
+}

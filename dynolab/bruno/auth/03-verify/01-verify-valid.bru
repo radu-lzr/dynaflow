@@ -30,6 +30,15 @@ tests {
       expect(res.body.userId).to.equal(adminId);
     }
   });
+  test("response header X-User-Id is set", function() {
+    expect(res.headers["x-user-id"]).to.be.a("string");
+  });
+  test("response header X-Account-Type is set", function() {
+    expect(res.headers["x-account-type"]).to.be.a("string");
+  });
+  test("X-User-Id matches body userId", function() {
+    expect(res.headers["x-user-id"]).to.equal(res.body.userId);
+  });
 }
 
 script:post-response {

@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: site-service
+  name: map-service
   namespace: dynaflow
   labels:
-    app: site
+    app: map
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: site
+      app: map
   template:
     metadata:
       labels:
-        app: site
+        app: map
     spec:
       containers:
-      - name: site
-        image: ghcr.io/radu-lzr/dynaflow/site:latest
+      - name: map
+        image: ghcr.io/radu-lzr/dynaflow/map:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
@@ -36,7 +36,21 @@ spec:
               name: postgres-credentials
               key: password
         - name: POSTGRES_DB
-          value: site
+          value: map
+        - name: MINIO_ENDPOINT
+          value: http://minio.dynaflow.svc.cluster.local:9000
+        - name: MINIO_BUCKET
+          value: dynolab-maps
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: access-key
+        - name: MINIO_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-credentials
+              key: secret-key
         resources:
           requests:
             cpu: "50m"
@@ -62,11 +76,11 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: site-service
+  name: map-service
   namespace: dynaflow
 spec:
   selector:
-    app: site
+    app: map
   ports:
   - port: 80
     targetPort: 3000
@@ -74,7 +88,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: site-route
+  name: map-route
   namespace: dynaflow
 spec:
   parentRefs:
@@ -84,18 +98,18 @@ spec:
   - matches:
     - path:
         type: PathPrefix
-        value: /api/site
+        value: /api/map
     filters:
     - type: URLRewrite
       urlRewrite:
         path:
           type: ReplacePrefixMatch
-          replacePrefixMatch: /sites
+          replacePrefixMatch: /maps
     - type: ExtensionRef
       extensionRef:
         group: gateway.nginx.org
         kind: SnippetsFilter
         name: access-required
     backendRefs:
-    - name: site-service
+    - name: map-service
       port: 80

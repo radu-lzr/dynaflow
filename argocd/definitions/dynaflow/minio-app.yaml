@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mongodb
+  name: minio
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "2"
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/radu-lzr/dynaflow
     targetRevision: main
-    path: argocd/definitions/dynaflow/manifests/db/mongodb
+    path: argocd/definitions/dynaflow/manifests/infra/minio
   destination:
     server: https://kubernetes.default.svc
     namespace: dynaflow

@@ -1,12 +1,24 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: mongodb-init-js
+  name: mongodb-init
   namespace: dynaflow
 data:
-  init-vehicle.js: |
-    db = db.getSiblingDB('vehicle');
-    db.createUser({user: 'dynaflow', pwd: process.env.MONGO_PASSWORD || 'dynaflow', roles: [{role: 'readWrite', db: 'vehicle'}]});
+  init-vehicle.sh: |
+    #!/bin/bash
+    set -e
+    mongosh \
+      --username "$MONGO_INITDB_ROOT_USERNAME" \
+      --password "$MONGO_INITDB_ROOT_PASSWORD" \
+      --authenticationDatabase admin \
+      --eval "
+        db = db.getSiblingDB('vehicle');
+        db.createUser({
+          user: 'dynaflow',
+          pwd: '$MONGO_PASSWORD',
+          roles: [{ role: 'readWrite', db: 'vehicle' }]
+        });
+      "
 
 ---
 apiVersion: v1
@@ -61,13 +73,33 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data/db
-            - name: init-js
-              mountPath: /docker-entrypoint-initdb.d/init-vehicle.js
-              subPath: init-vehicle.js
+            - name: init-script
+              mountPath: /docker-entrypoint-initdb.d/init-vehicle.sh
+              subPath: init-vehicle.sh
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          livenessProbe:
+            exec:
+              command: [mongosh, --eval, "db.adminCommand('ping')", --quiet]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            exec:
+              command: [mongosh, --eval, "db.adminCommand('ping')", --quiet]
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 3
       volumes:
-        - name: init-js
+        - name: init-script
           configMap:
-            name: mongodb-init-js
+            name: mongodb-init
+            defaultMode: 0755
   volumeClaimTemplates:
     - metadata:
         name: data

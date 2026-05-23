@@ -1,0 +1,30 @@
+meta {
+  name: Verify Access Forbidden No Permission 403
+  type: http
+  seq: 4
+}
+
+// techId is a seeded user with limited access.
+// This test verifies that techId cannot access a privileged route (permission:assign).
+
+post {
+  url: {{accessUrl}}/access/verify
+  body: none
+  auth: none
+}
+
+headers {
+  X-User-Id: {{techId}}
+  X-Account-Type: tech
+  X-Original-URI: /api/access/permissions
+  X-Original-Method: POST
+}
+
+tests {
+  test("status 403", function() {
+    expect(res.status).to.equal(403);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

@@ -1,0 +1,47 @@
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsPolicy
+metadata:
+  name: auth-server-locations
+  namespace: dynaflow
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: dynaflow-gateway
+  snippets:
+    - context: http.server
+      value: |
+        location /internal/auth-verify {
+          internal;
+          proxy_method POST;
+          if ($http_authorization = "") {
+            return 401;
+          }
+          proxy_pass http://auth-service.dynaflow.svc.cluster.local/auth/verify;
+          proxy_pass_request_body off;
+          proxy_set_header Authorization $http_authorization;
+        }
+        location /internal/access-check {
+          internal;
+          proxy_method POST;
+          if ($http_authorization = "") {
+            return 401;
+          }
+          auth_request /internal/auth-verify;
+          auth_request_set $access_user_id $upstream_http_x_user_id;
+          auth_request_set $access_account_type $upstream_http_x_account_type;
+          proxy_pass http://access-service.dynaflow.svc.cluster.local/access/verify;
+          proxy_pass_request_body off;
+          proxy_set_header X-User-Id $access_user_id;
+          proxy_set_header X-Account-Type $access_account_type;
+          proxy_set_header X-Original-URI $request_uri;
+          proxy_set_header X-Original-Method $request_method;
+        }
+        location @unauthorized {
+          default_type application/json;
+          return 401 '{"error":"Unauthorized","message":"Valid token required"}';
+        }
+        location @forbidden {
+          default_type application/json;
+          return 403 '{"error":"Forbidden","message":"Access denied"}';
+        }
