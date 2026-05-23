@@ -22,10 +22,16 @@ minio:
 deploymentMode: Monolithic
 singleBinary:
   replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
   persistence:
     enabled: true
-    size: 20Gi 
-    storageClass: standard 
+    size: 20Gi
+    storageClass: standard
 backend:
   replicas: 0
 read:

@@ -1,1 +1,132 @@
-# Mimir chart overrides
+# mimir-distributed chart overrides — configuration POC minimale
+# Chart: https://github.com/grafana/mimir/tree/main/operations/helm/charts/mimir-distributed
+
+# ──────────────────────────────────────────────
+# Single-tenant mode
+# ──────────────────────────────────────────────
+mimir:
+  structuredConfig:
+    multitenancy_enabled: false
+    ingester:
+      ring:
+        replication_factor: 1
+      push_grpc_method_enabled: true
+    ingest_storage:
+      enabled: false
+    limits:
+      max_global_series_per_user: 0
+      ingestion_rate: 10000000
+      ingestion_burst_size: 20000000
+      out_of_order_time_window: 30m
+
+# ──────────────────────────────────────────────
+# Ressources POC — 1 replica par composant
+# ──────────────────────────────────────────────
+distributor:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+
+ingester:
+  replicas: 1
+  zoneAwareReplication:
+    enabled: false
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      memory: 512Mi
+  persistentVolume:
+    enabled: true
+    size: 2Gi
+
+querier:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+
+query_frontend:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      memory: 64Mi
+
+store_gateway:
+  replicas: 1
+  zoneAwareReplication:
+    enabled: false
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+  persistentVolume:
+    enabled: true
+    size: 2Gi
+
+compactor:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+  persistentVolume:
+    enabled: true
+    size: 2Gi
+
+# ──────────────────────────────────────────────
+# Stockage — MinIO intégré
+# ──────────────────────────────────────────────
+minio:
+  enabled: true
+  mode: standalone
+  persistence:
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      memory: 128Mi
+  rootUser: mimir
+  rootPassword: supersecret
+
+# ──────────────────────────────────────────────
+# Composants désactivés (non nécessaires pour POC)
+# ──────────────────────────────────────────────
+alertmanager:
+  enabled: false
+
+ruler:
+  enabled: false
+
+overrides_exporter:
+  enabled: false
+
+kafka:
+  enabled: false
+
+nginx:
+  enabled: true
+  replicas: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+    limits:
+      memory: 32Mi
