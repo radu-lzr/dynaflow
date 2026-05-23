@@ -14,7 +14,12 @@ spec:
     helm:
       valuesObject:
         installCRDs: true
-        featureGates: "ExperimentalGatewayAPISupport=true"
+        config:
+          apiVersion: controller.config.cert-manager.io/v1alpha1
+          kind: ControllerConfiguration
+          enableGatewayAPI: true
+          featureGates:
+            ExperimentalGatewayAPISupport: true
   destination:
     server: https://kubernetes.default.svc
     namespace: dynaflow
