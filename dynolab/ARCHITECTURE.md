@@ -95,32 +95,30 @@ sequenceDiagram
     C->>NGX: HTTPS request + JWT
 
     rect rgb(198, 246, 213)
-        Note over NGX,A: Subrequest 1 — Authentification
-        NGX->>A: POST /auth/verify (JWT dans header)
-        A->>A: Vérifier JWT (+ blacklist Redis)
-        A-->>NGX: 200 + headers X-User-Id, X-Account-Type
+        Note over NGX,A: Subrequest 1 — Authentification (interne à /internal/access-check)
+        NGX->>A: POST /auth/verify (Authorization: Bearer JWT)
+        A->>A: Vérifier JWT (signature + expiry + blacklist Redis)
+        A-->>NGX: 200 + X-User-Id, X-Account-Type
         Note over NGX: Si 401 → bloqué, réponse directe au client
     end
 
     rect rgb(224, 231, 255)
         Note over NGX,AC: Subrequest 2 — Autorisation
-        NGX->>AC: POST /access/check (X-User-Id + route + method)
+        NGX->>AC: POST /access/verify (X-User-Id + X-Original-URI + X-Original-Method)
+        AC->>AC: Résoudre permission_code depuis la route
         AC->>AC: Vérifier permissions (rôle + directe + temp)
-        alt Ressource standard (pas Map)
-            AC->>AC: Vérif avec cache interne
-        else Ressource Map (actif stratégique)
-            AC->>AC: Vérif temps réel systématique (pas de cache)
-        end
-        AC-->>NGX: 200 + header X-Scope (site_id ou null)
+        AC-->>NGX: 200 + X-User-Id, X-Account-Type
         Note over NGX: Si 403 → bloqué, réponse directe au client
     end
 
-    NGX->>S: HTTP request + X-User-Id + X-Account-Type + X-Scope
+    NGX->>S: HTTP request + X-User-Id + X-Account-Type
     S-->>NGX: Response
     NGX-->>C: HTTPS response
 ```
 
-**Important** : les services métier ne vérifient ni JWT ni permissions. Ils lisent les headers `X-User-Id`, `X-Account-Type` et `X-Scope` injectés par NGINX après les subrequests. Ces headers sont fiables car les services sont sur le réseau interne, inaccessible de l'extérieur.
+**Important** : les services métier ne vérifient ni JWT ni permissions. Ils lisent les headers `X-User-Id` et `X-Account-Type` injectés par NGINX après les subrequests. Ces headers sont fiables car les services sont sur le réseau interne Kubernetes, inaccessible de l'extérieur.
+
+**Implémentation** : les deux subrequests sont chaînés dans une seule location NGINX interne (`/internal/access-check`). Le filtre `access-required` (SnippetsFilter) déclenche cette location, qui elle-même appelle `/internal/auth-verify` (auth-service) avant de passer à `/access/verify` (access-service).
 
 Le **cache des permissions** est géré par l'Access Service lui-même (pas par NGINX). L'invalidation se fait via l'événement RabbitMQ `permission.updated`.
 
@@ -128,17 +126,13 @@ Le **cache des permissions** est géré par l'Access Service lui-même (pas par 
 
 ```mermaid
 graph LR
-    CLIENT_VEH -->|"GET config"| VEHICLE
-    MAP -->|"GET config cible"| VEHICLE
-    WORKSHOP -->|"GET véhicule client"| CLIENT_VEH
-    WORKSHOP -->|"GET map dispo (à la demande)"| MAP
-    WORKSHOP -->|"POST passage banc"| TELEMETRY
-    ACCESS -->|"GET scope site"| SITE
-
-    style MAP fill:#fefcbf,stroke:#d69e2e
+    WORKSHOP -->|"POST/DELETE /temp-permissions"| ACCESS
+    WORKSHOP -->|"POST /bench-sessions"| TELEMETRY
 ```
 
-**Règle** : les appels vers le Map Service passent en **mTLS**. Tous les autres en HTTP simple sur le réseau interne.
+Seul le Workshop Service effectue des appels HTTP directs vers d'autres services. Les autres services ne font que stocker des IDs de référence (voir section 7) sans appeler les services cibles.
+
+**Règle** : tous les appels inter-services utilisent HTTP simple sur le réseau interne Kubernetes. Le mTLS est réservé au chemin NGF → Map Service.
 
 ### 3.3 Flux asynchrones (RabbitMQ)
 
@@ -160,12 +154,12 @@ Note : l'événement `permission.updated` est consommé par l'Access Service lui
 | Direction | Protocole | Détail |
 |-----------|-----------|--------|
 | Client → NGINX Gateway | HTTPS (TLS terminé par NGINX) | REST / JSON |
-| NGINX → Auth (subrequest) | HTTP interne | Vérification JWT |
-| NGINX → Access (subrequest) | HTTP interne | Vérification permissions |
-| NGINX → Services métier | HTTP interne | REST / JSON + headers X-User-Id, X-Scope |
-| NGINX → Map Service | mTLS | Certificat mutuel requis |
-| Service → Service | HTTP interne | REST / JSON |
-| Service → Map Service | mTLS | Certificat mutuel requis |
+| NGINX → Auth (subrequest interne) | HTTP interne | Vérification JWT via `/auth/verify` |
+| NGINX → Access (subrequest interne) | HTTP interne | Vérification permissions via `/access/verify` |
+| NGINX → Services métier (sauf Map) | HTTP interne | REST / JSON + headers X-User-Id, X-Account-Type |
+| NGINX → Map Service | mTLS | Certificat client NGF requis (port 3443) |
+| Workshop → Access | HTTP interne | Gestion des permissions temporaires |
+| Workshop → Telemetry | HTTP interne | Création de sessions banc |
 | Événements | AMQP (RabbitMQ) | Pub/sub |
 
 ---
@@ -195,28 +189,26 @@ graph TD
     end
 
     CLIENT -->|"HTTPS"| GW
-    GW -->|"subrequest 1"| AUTH
-    GW -->|"subrequest 2"| ACCESS
-    GW -->|"route"| Services
-    GW -->|"mTLS"| MAP
-    WORKSHOP -->|"mTLS"| MAP
+    GW -->|"subrequest auth"| AUTH
+    GW -->|"subrequest access"| ACCESS
+    GW -->|"route HTTP"| Services
+    GW -->|"mTLS port 3443"| MAP
+    WORKSHOP -->|"HTTP"| ACCESS
+    WORKSHOP -->|"HTTP"| TELEMETRY
 ```
 
 - **Isolation externe/interne** : seule la Gateway est exposée
 - **Network policies Kubernetes** : chaque service ne contacte que ceux dont il a besoin
 - **Egress bloqué** : aucun service ne peut contacter l'extérieur du cluster
-- **DNS interne** : `*.dynolab.svc.cluster.local`
-- **mTLS** : uniquement pour les flux vers le Map Service
+- **DNS interne** : `*.dynaflow.svc.cluster.local`
+- **mTLS** : uniquement pour le chemin NGF → Map Service (port 3443)
 
 ### Matrice de communication autorisée (network policies)
 
 | Source → | Auth | Access | Site | Vehicle | Client Veh. | Map | Workshop | Telemetry |
 |----------|------|--------|------|---------|-------------|-----|----------|-----------|
-| **Gateway** | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ mTLS | ✅ | ✅ |
-| **Access** | — | — | ✅ | — | — | — | — | — |
-| **Workshop** | — | — | — | — | ✅ | ✅ mTLS | — | ✅ |
-| **Client Veh.** | — | — | — | ✅ | — | — | — | — |
-| **Map** | — | — | — | ✅ | — | — | — | — |
+| **Gateway** | ✅ subreq | ✅ subreq | ✅ | ✅ | ✅ | ✅ mTLS | ✅ | ✅ |
+| **Workshop** | — | ✅ HTTP | — | — | — | — | — | ✅ HTTP |
 | **Autres** | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 
 ### Couche 2 : API Gateway (NGINX Gateway Fabric)
@@ -363,7 +355,7 @@ sequenceDiagram
 
     Note over WS,AC: Intervention clôturée
 
-    WS->>AC: DELETE /temp-permissions?linked_to=interv_42
+    WS->>AC: DELETE /temp-permissions/by-link/interv_42
     AC-->>WS: 200 OK (permissions supprimées)
 
     Note over AC: Filet de sécurité TTL
@@ -746,7 +738,7 @@ dynolab/
     └── docker-compose.yml             # dev local uniquement (bases de données + Redis + RabbitMQ + MinIO)
 ```
 
-> **Note** : l'infrastructure Kubernetes (Terraform, ArgoCD, Helm charts, NGINX Gateway Fabric config, network policies) est gérée dans des repos séparés, hors de ce monorepo.
+> **Note** : l'infrastructure Kubernetes (ArgoCD, NGINX Gateway Fabric config, network policies, cert-manager) est gérée dans le répertoire `argocd/` à la racine du dépôt.
 
 ### Structure type d'un service
 
@@ -790,10 +782,10 @@ import { createLogger, createAuditLogger, AppError, createMetrics } from '@dynol
 
 ### Références inter-services
 
-Les services ne stockent **jamais** les données d'un autre service — uniquement des IDs de référence. Pour obtenir les données, ils appellent l'API du service concerné.
+Les services ne stockent **jamais** les données d'un autre service — uniquement des IDs de référence. Ces IDs sont des clés étrangères logiques entre services ; les services ne font **pas** d'appels HTTP pour les résoudre (sauf Workshop → Access et Workshop → Telemetry qui sont des appels métier explicites, voir section 3.2).
 
-| Service source | Champ | Service cible |
-|----------------|-------|---------------|
+| Service source | Champ | Service cible (logique) |
+|----------------|-------|------------------------|
 | Access | `user_roles.user_id` | Auth |
 | Access | `user_roles.site_id` | Site |
 | Client Vehicle | `client_vehicles.owner_id` | Auth |
