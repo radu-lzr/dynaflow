@@ -1,3 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: map-mtls-proxy-config
+  namespace: dynaflow
+data:
+  default.conf: |
+    server {
+        listen 3443 ssl;
+        ssl_certificate        /etc/nginx/certs/server/tls.crt;
+        ssl_certificate_key    /etc/nginx/certs/server/tls.key;
+        ssl_client_certificate /etc/nginx/certs/server/ca.crt;
+        ssl_verify_client      on;
+        ssl_protocols          TLSv1.3;
+        location / {
+            proxy_pass         http://localhost:3000;
+            proxy_set_header   Host $host;
+        }
+    }
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -72,6 +92,24 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
           failureThreshold: 3
+      - name: mtls-proxy
+        image: nginx:alpine
+        ports:
+        - containerPort: 3443
+        volumeMounts:
+        - name: map-server-cert
+          mountPath: /etc/nginx/certs/server
+          readOnly: true
+        - name: mtls-proxy-config
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+      volumes:
+      - name: map-server-cert
+        secret:
+          secretName: map-server-cert
+      - name: mtls-proxy-config
+        configMap:
+          name: map-mtls-proxy-config
 ---
 apiVersion: v1
 kind: Service
@@ -82,8 +120,9 @@ spec:
   selector:
     app: map
   ports:
-  - port: 80
-    targetPort: 3000
+  - name: mtls
+    port: 443
+    targetPort: 3443
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -110,6 +149,11 @@ spec:
         group: gateway.nginx.org
         kind: SnippetsFilter
         name: access-required
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: map-mtls-backend
     backendRefs:
     - name: map-service
-      port: 80
+      port: 443

@@ -42,6 +42,14 @@ spec:
             secretKeyRef:
               name: rabbitmq-credentials
               key: rabbitmq-url
+        - name: MAP_SERVICE_URL
+          value: https://map-service.dynaflow.svc.cluster.local
+        - name: MAP_CLIENT_CERT_PATH
+          value: /etc/certs/map/tls.crt
+        - name: MAP_CLIENT_KEY_PATH
+          value: /etc/certs/map/tls.key
+        - name: MAP_CA_CERT_PATH
+          value: /etc/certs/map/ca.crt
         resources:
           requests:
             cpu: "50m"
@@ -63,6 +71,14 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 10
           failureThreshold: 3
+        volumeMounts:
+        - name: workshop-map-client-cert
+          mountPath: /etc/certs/map
+          readOnly: true
+      volumes:
+      - name: workshop-map-client-cert
+        secret:
+          secretName: workshop-map-client-cert
 ---
 apiVersion: v1
 kind: Service

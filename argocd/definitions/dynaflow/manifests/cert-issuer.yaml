@@ -29,3 +29,37 @@ spec:
     kind: ClusterIssuer
   dnsNames:
   - dynolab.be
+---
+# Bootstrap issuer — only used to self-sign the internal CA cert
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-issuer
+spec:
+  selfSigned: {}
+---
+# Internal CA — issues all mTLS certificates within the cluster
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: dynaflow-internal-ca
+  namespace: dynaflow
+spec:
+  isCA: true
+  commonName: dynaflow-internal-ca
+  secretName: dynaflow-internal-ca
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: selfsigned-issuer
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: dynaflow-internal-ca-issuer
+  namespace: dynaflow
+spec:
+  ca:
+    secretName: dynaflow-internal-ca

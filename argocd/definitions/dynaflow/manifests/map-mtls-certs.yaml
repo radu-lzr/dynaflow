@@ -1,0 +1,44 @@
+# Server cert for the map-service nginx mTLS sidecar
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: map-server-cert
+  namespace: dynaflow
+spec:
+  secretName: map-server-cert
+  issuerRef:
+    name: dynaflow-internal-ca-issuer
+    kind: Issuer
+  dnsNames:
+  - map-service.dynaflow.svc.cluster.local
+  - map-service
+---
+# Client cert for NGF when proxying requests to map-service
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ngf-map-client-cert
+  namespace: dynaflow
+spec:
+  secretName: ngf-map-client-cert
+  commonName: ngf-gateway
+  usages:
+  - client auth
+  issuerRef:
+    name: dynaflow-internal-ca-issuer
+    kind: Issuer
+---
+# Client cert for workshop-service when calling map-service (pre-wired; app code TBD)
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: workshop-map-client-cert
+  namespace: dynaflow
+spec:
+  secretName: workshop-map-client-cert
+  commonName: workshop-service
+  usages:
+  - client auth
+  issuerRef:
+    name: dynaflow-internal-ca-issuer
+    kind: Issuer

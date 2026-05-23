@@ -11,7 +11,8 @@ spec:
   policyTypes:
   - Ingress
 ---
-# auth: reachable from NGF (API + /internal/auth-verify subrequest) and access-service (JWT validation)
+# auth: reachable from NGF only
+# (access-service does NOT call auth — NGF runs the auth subrequest itself before calling access)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -28,14 +29,11 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: nginx-gateway
-    - podSelector:
-        matchLabels:
-          app: access
     ports:
     - port: 3000
       protocol: TCP
 ---
-# access: reachable from NGF only (API + /internal/access-check subrequest)
+# access: reachable from NGF and workshop (temp-permissions lifecycle)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -52,6 +50,9 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: nginx-gateway
+    - podSelector:
+        matchLabels:
+          app: workshop
     ports:
     - port: 3000
       protocol: TCP
@@ -119,7 +120,8 @@ spec:
     - port: 3000
       protocol: TCP
 ---
-# map: reachable from NGF only
+# map: mTLS sidecar on port 3443 — reachable from NGF and workshop
+# (workshop connection is pre-wired; app code will use workshop-map-client-cert)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -136,11 +138,14 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: nginx-gateway
+    - podSelector:
+        matchLabels:
+          app: workshop
     ports:
-    - port: 3000
+    - port: 3443
       protocol: TCP
 ---
-# workshop: reachable from NGF only (RabbitMQ does not connect back — workshop initiates the AMQP connection)
+# workshop: reachable from NGF only
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -161,7 +166,7 @@ spec:
     - port: 3000
       protocol: TCP
 ---
-# telemetry: reachable from NGF only
+# telemetry: reachable from NGF and workshop (bench session creation)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -178,11 +183,14 @@ spec:
     - podSelector:
         matchLabels:
           app.kubernetes.io/name: nginx-gateway
+    - podSelector:
+        matchLabels:
+          app: workshop
     ports:
     - port: 3000
       protocol: TCP
 ---
-# PostgreSQL — individual allow per service (each service has its own DB on the shared instance)
+# PostgreSQL — individual allow per service
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -492,7 +500,8 @@ spec:
     - port: 6379
       protocol: TCP
 ---
-# access → PostgreSQL + auth service (JWT validation)
+# access → PostgreSQL only
+# (access does NOT call auth — NGF handles auth subrequests before calling access)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -511,13 +520,6 @@ spec:
           app: postgres
     ports:
     - port: 5432
-      protocol: TCP
-  - to:
-    - podSelector:
-        matchLabels:
-          app: auth
-    ports:
-    - port: 3000
       protocol: TCP
 ---
 # site → PostgreSQL
@@ -611,7 +613,7 @@ spec:
     - port: 9000
       protocol: TCP
 ---
-# workshop → PostgreSQL + RabbitMQ
+# workshop → PostgreSQL + RabbitMQ + access (temp-permissions) + telemetry (bench sessions) + map (mTLS)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -638,6 +640,27 @@ spec:
     ports:
     - port: 5672
       protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: access
+    ports:
+    - port: 3000
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: telemetry
+    ports:
+    - port: 3000
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: map
+    ports:
+    - port: 3443
+      protocol: TCP
 ---
 # telemetry → TimescaleDB
 apiVersion: networking.k8s.io/v1
@@ -660,7 +683,7 @@ spec:
     - port: 5432
       protocol: TCP
 ---
-# NGF → all app services (proxying) + kube-apiserver (watches Gateway/HTTPRoute resources)
+# NGF → all app services (port 3000 HTTP, except map on 3443 mTLS) + kube-apiserver
 # Verify label with: kubectl get pods -n dynaflow -l app.kubernetes.io/name=nginx-gateway
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -679,9 +702,16 @@ spec:
         matchExpressions:
         - key: app
           operator: In
-          values: [auth, access, site, vehicle, client-vehicle, map, telemetry, workshop]
+          values: [auth, access, site, vehicle, client-vehicle, telemetry, workshop]
     ports:
     - port: 3000
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: map
+    ports:
+    - port: 3443
       protocol: TCP
   - to:
     - ipBlock:

@@ -39,3 +39,21 @@ spec:
         proxy_set_header X-Account-Type $user_account_type;
         error_page 401 = @unauthorized;
         error_page 403 = @forbidden;
+---
+# Applied to the map HTTPRoute: configures NGF to present its client cert when proxying to map-service mTLS sidecar
+apiVersion: gateway.nginx.org/v1alpha1
+kind: SnippetsFilter
+metadata:
+  name: map-mtls-backend
+  namespace: dynaflow
+spec:
+  snippets:
+  - context: http.server.location
+    value: |
+      proxy_ssl                     on;
+      proxy_ssl_certificate         /etc/nginx/client-certs/map/tls.crt;
+      proxy_ssl_certificate_key     /etc/nginx/client-certs/map/tls.key;
+      proxy_ssl_verify              on;
+      proxy_ssl_trusted_certificate /etc/nginx/client-certs/map/ca.crt;
+      proxy_ssl_server_name         on;
+      proxy_ssl_name                map-service.dynaflow.svc.cluster.local;

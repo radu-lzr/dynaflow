@@ -103,6 +103,34 @@ spec:
   - name: dynaflow-gateway
     sectionName: https
   rules:
+  # Public — no auth required
+  - matches:
+    - path:
+        type: Exact
+        value: /api/auth/login
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /auth/login
+    backendRefs:
+    - name: auth-service
+      port: 80
+  - matches:
+    - path:
+        type: Exact
+        value: /api/auth/register
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplaceFullPath
+          replaceFullPath: /auth/register
+    backendRefs:
+    - name: auth-service
+      port: 80
+  # All other auth endpoints require full auth + permissions check
   - matches:
     - path:
         type: PathPrefix
@@ -113,6 +141,11 @@ spec:
         path:
           type: ReplacePrefixMatch
           replacePrefixMatch: /auth
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: access-required
     backendRefs:
     - name: auth-service
       port: 80
