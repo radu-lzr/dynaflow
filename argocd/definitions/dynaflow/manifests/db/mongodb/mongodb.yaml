@@ -88,12 +88,14 @@ spec:
               command: [mongosh, --eval, "db.adminCommand('ping')", --quiet]
             initialDelaySeconds: 30
             periodSeconds: 10
+            timeoutSeconds: 5
             failureThreshold: 6
           readinessProbe:
             exec:
               command: [mongosh, --eval, "db.adminCommand('ping')", --quiet]
             initialDelaySeconds: 15
             periodSeconds: 5
+            timeoutSeconds: 5
             failureThreshold: 3
       volumes:
         - name: init-script
