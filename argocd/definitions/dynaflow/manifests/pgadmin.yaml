@@ -44,7 +44,7 @@ spec:
         - containerPort: 80
         env:
         - name: PGADMIN_DEFAULT_EMAIL
-          value: admin@dynaflow.local
+          value: admin@dynolab.be
         - name: PGADMIN_DEFAULT_PASSWORD
           valueFrom:
             secretKeyRef:
