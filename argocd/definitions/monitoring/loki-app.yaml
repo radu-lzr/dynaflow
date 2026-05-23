@@ -20,6 +20,17 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      name: loki
+      namespace: monitoring
+      jsonPointers:
+        - /spec/persistentVolumeClaimRetentionPolicy
+    - group: ""
+      kind: PersistentVolumeClaim
+      jsonPointers:
+        - /metadata/ownerReferences
   syncPolicy:
     automated:
       prune: true

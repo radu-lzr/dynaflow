@@ -32,6 +32,7 @@ singleBinary:
     enabled: true
     size: 20Gi
     storageClass: standard
+    enableStatefulSetAutoDeletePVC: false
 backend:
   replicas: 0
 read:
