@@ -9,7 +9,7 @@
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
       "id": 100,
-      "title": "Vue d'ensemble",
+      "title": "Overview",
       "type": "row"
     },
     {
@@ -149,7 +149,7 @@
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 },
       "id": 101,
-      "title": "État des Services",
+      "title": "Service Status",
       "type": "row"
     },
     {
@@ -187,14 +187,14 @@
           "instant": true
         }
       ],
-      "title": "Disponibilité par Service (Ready / Desired)",
+      "title": "Availability per Service (Ready / Desired)",
       "type": "bargauge"
     },
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 12 },
       "id": 102,
-      "title": "Consommation CPU",
+      "title": "CPU Usage",
       "type": "row"
     },
     {
@@ -215,14 +215,14 @@
           "legendFormat": "{{pod}}"
         }
       ],
-      "title": "CPU Usage (cores) par Pod",
+      "title": "CPU Usage (cores) per Pod",
       "type": "timeseries"
     },
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 20 },
       "id": 103,
-      "title": "Consommation Mémoire",
+      "title": "Memory Usage",
       "type": "row"
     },
     {
@@ -243,14 +243,14 @@
           "legendFormat": "{{pod}}"
         }
       ],
-      "title": "Mémoire (working set) par Pod",
+      "title": "Memory (working set) per Pod",
       "type": "timeseries"
     },
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 28 },
       "id": 104,
-      "title": "Redémarrages de Containers",
+      "title": "Container Restarts",
       "type": "row"
     },
     {
@@ -285,7 +285,7 @@
           "instant": true
         }
       ],
-      "title": "Redémarrages (24h) par Pod",
+      "title": "Restarts (24h) per Pod",
       "type": "bargauge"
     }
   ],

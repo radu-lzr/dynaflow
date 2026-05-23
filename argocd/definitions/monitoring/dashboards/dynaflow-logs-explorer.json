@@ -9,7 +9,7 @@
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
       "id": 100,
-      "title": "Volume de Logs",
+      "title": "Log Volume",
       "type": "row"
     },
     {
@@ -30,7 +30,7 @@
           "legendFormat": "{{pod}}"
         }
       ],
-      "title": "Volume de Logs par Pod",
+      "title": "Log Volume per Pod",
       "type": "timeseries"
     },
     {
@@ -51,14 +51,14 @@
           "legendFormat": "{{pod}}"
         }
       ],
-      "title": "Volume d'Erreurs par Pod",
+      "title": "Error Volume per Pod",
       "type": "timeseries"
     },
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 7 },
       "id": 101,
-      "title": "Erreurs Applicatives",
+      "title": "Application Errors",
       "type": "row"
     },
     {
@@ -82,14 +82,14 @@
           "legendFormat": ""
         }
       ],
-      "title": "Logs d'Erreurs",
+      "title": "Error Logs",
       "type": "logs"
     },
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 18 },
       "id": 102,
-      "title": "Événements Kubernetes",
+      "title": "Kubernetes Events",
       "type": "row"
     },
     {
@@ -110,7 +110,7 @@
           "legendFormat": "{{pod}}"
         }
       ],
-      "title": "Problèmes Kubernetes par Pod",
+      "title": "Kubernetes Issues per Pod",
       "type": "timeseries"
     },
     {
@@ -134,14 +134,14 @@
           "legendFormat": ""
         }
       ],
-      "title": "Événements Kubernetes",
+      "title": "Kubernetes Events",
       "type": "logs"
     },
     {
       "collapsed": false,
       "gridPos": { "h": 1, "w": 24, "x": 0, "y": 27 },
       "id": 103,
-      "title": "Tous les Logs",
+      "title": "All Logs",
       "type": "row"
     },
     {
@@ -165,7 +165,7 @@
           "legendFormat": ""
         }
       ],
-      "title": "Logs Filtrés",
+      "title": "Filtered Logs",
       "type": "logs"
     }
   ],
