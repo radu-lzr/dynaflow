@@ -56,7 +56,7 @@ prometheus:
     externalLabels:
       cluster: dynaflow
     remoteWrite:
-      - url: http://mimir-nginx.monitoring.svc:80/api/v1/push
+      - url: http://mimir-gateway.monitoring.svc:80/api/v1/push
     resources:
       requests:
         cpu: 100m

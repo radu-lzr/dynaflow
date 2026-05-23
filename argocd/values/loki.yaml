@@ -19,7 +19,7 @@ loki:
 minio:
   enabled: true
 
-deploymentMode: Monolithic
+deploymentMode: SingleBinary
 singleBinary:
   replicas: 1
   resources:
