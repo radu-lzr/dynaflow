@@ -1,9 +1,10 @@
 export const VerifyAccessSchema = {
     headers: {
         type: 'object',
-        required: ['authorization', 'x-original-uri', 'x-original-method'],
+        required: ['x-user-id', 'x-original-uri', 'x-original-method'],
         properties: {
-            authorization: { type: 'string' },
+            'x-user-id': { type: 'string' },
+            'x-account-type': { type: 'string' },
             'x-original-uri': { type: 'string' },
             'x-original-method': { type: 'string', enum: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'] },
         },

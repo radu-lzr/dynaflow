@@ -11,7 +11,8 @@ post {
 }
 
 headers {
-  Authorization: Bearer {{verifyTestToken}}
+  X-User-Id: {{adminId}}
+  X-Account-Type: admin
   X-Original-URI: /api/access/unknown-route-xyz
   X-Original-Method: GET
 }

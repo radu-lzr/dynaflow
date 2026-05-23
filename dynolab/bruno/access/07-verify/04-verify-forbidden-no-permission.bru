@@ -4,9 +4,8 @@ meta {
   seq: 4
 }
 
-// Uses a freshly registered user who has no roles/permissions assigned.
-// We reuse techId (a seeded user with limited access) and check a privileged route.
-// This test relies on techId not having the permission:assign permission.
+// techId is a seeded user with limited access.
+// This test verifies that techId cannot access a privileged route (permission:assign).
 
 post {
   url: {{accessUrl}}/access/verify
@@ -15,14 +14,17 @@ post {
 }
 
 headers {
-  Authorization: Bearer {{techAccessToken}}
+  X-User-Id: {{techId}}
+  X-Account-Type: tech
   X-Original-URI: /api/access/permissions
   X-Original-Method: POST
 }
 
 tests {
-  test("status 401 or 403", function() {
-    // 401 if techAccessToken is not set (token missing), 403 if set but no permission
-    expect([401, 403]).to.include(res.status);
+  test("status 403", function() {
+    expect(res.status).to.equal(403);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
   });
 }

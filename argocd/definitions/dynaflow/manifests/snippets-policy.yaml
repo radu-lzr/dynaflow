@@ -27,9 +27,13 @@ spec:
           if ($http_authorization = "") {
             return 401;
           }
+          auth_request /internal/auth-verify;
+          auth_request_set $access_user_id $upstream_http_x_user_id;
+          auth_request_set $access_account_type $upstream_http_x_account_type;
           proxy_pass http://access-service.dynaflow.svc.cluster.local/access/verify;
           proxy_pass_request_body off;
-          proxy_set_header Authorization $http_authorization;
+          proxy_set_header X-User-Id $access_user_id;
+          proxy_set_header X-Account-Type $access_account_type;
           proxy_set_header X-Original-URI $request_uri;
           proxy_set_header X-Original-Method $request_method;
         }
