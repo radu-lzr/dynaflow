@@ -18,7 +18,7 @@ spec:
       containers:
       - name: site
         image: ghcr.io/radu-lzr/dynaflow/site:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
         env:

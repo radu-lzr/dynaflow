@@ -21,6 +21,15 @@ spec:
           config:
             logging:
               level: info
+        nginx:
+          extraVolumes:
+          - name: ngf-map-client-cert
+            secret:
+              secretName: ngf-map-client-cert
+          extraVolumeMounts:
+          - name: ngf-map-client-cert
+            mountPath: /etc/nginx/client-certs/map
+            readOnly: true
   destination:
     server: https://kubernetes.default.svc
     namespace: dynaflow

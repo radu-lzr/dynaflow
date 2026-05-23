@@ -18,7 +18,7 @@ spec:
       containers:
       - name: vehicle
         image: ghcr.io/radu-lzr/dynaflow/vehicle:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
         env:

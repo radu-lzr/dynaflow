@@ -1,3 +1,6 @@
+# ============================================================
+# INGRESS POLICIES
+# ============================================================
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -8,19 +11,17 @@ spec:
   policyTypes:
   - Ingress
 ---
-# NGF nginx data-plane → all application services
-# Verify label with: kubectl get pods -n dynaflow -l app.kubernetes.io/name=nginx-gateway
+# auth: reachable from NGF only
+# (access-service does NOT call auth — NGF runs the auth subrequest itself before calling access)
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-ngf-to-services
+  name: allow-auth-ingress
   namespace: dynaflow
 spec:
   podSelector:
-    matchExpressions:
-    - key: app
-      operator: In
-      values: [auth, access, site, vehicle, client-vehicle, map, telemetry, workshop]
+    matchLabels:
+      app: auth
   policyTypes:
   - Ingress
   ingress:
@@ -32,7 +33,160 @@ spec:
     - port: 3000
       protocol: TCP
 ---
-# auth → PostgreSQL
+# access: reachable from NGF and workshop (temp-permissions lifecycle)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-access-ingress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: access
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nginx-gateway
+    - podSelector:
+        matchLabels:
+          app: workshop
+    ports:
+    - port: 3000
+      protocol: TCP
+---
+# site: reachable from NGF only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-site-ingress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: site
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nginx-gateway
+    ports:
+    - port: 3000
+      protocol: TCP
+---
+# vehicle: reachable from NGF only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-vehicle-ingress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: vehicle
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nginx-gateway
+    ports:
+    - port: 3000
+      protocol: TCP
+---
+# client-vehicle: reachable from NGF only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-client-vehicle-ingress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: client-vehicle
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nginx-gateway
+    ports:
+    - port: 3000
+      protocol: TCP
+---
+# map: mTLS sidecar on port 3443 — reachable from NGF only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-map-ingress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: map
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nginx-gateway
+    ports:
+    - port: 3443
+      protocol: TCP
+---
+# workshop: reachable from NGF only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-workshop-ingress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: workshop
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nginx-gateway
+    ports:
+    - port: 3000
+      protocol: TCP
+---
+# telemetry: reachable from NGF and workshop (bench session creation)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-telemetry-ingress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: telemetry
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nginx-gateway
+    - podSelector:
+        matchLabels:
+          app: workshop
+    ports:
+    - port: 3000
+      protocol: TCP
+---
+# PostgreSQL — individual allow per service
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -53,11 +207,10 @@ spec:
     - port: 5432
       protocol: TCP
 ---
-# access, site, client-vehicle, map, workshop → PostgreSQL
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-services-to-postgres
+  name: allow-access-to-postgres
   namespace: dynaflow
 spec:
   podSelector:
@@ -70,15 +223,83 @@ spec:
     - podSelector:
         matchLabels:
           app: access
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-site-to-postgres
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
     - podSelector:
         matchLabels:
           app: site
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-client-vehicle-to-postgres
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
     - podSelector:
         matchLabels:
           app: client-vehicle
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-map-to-postgres
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
     - podSelector:
         matchLabels:
           app: map
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-workshop-to-postgres
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
     - podSelector:
         matchLabels:
           app: workshop
@@ -149,7 +370,7 @@ spec:
     - port: 27017
       protocol: TCP
 ---
-# map → Minio
+# map → MinIO
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -191,23 +412,321 @@ spec:
     - port: 5672
       protocol: TCP
 ---
-# access service calls auth service internally for JWT validation in the access-check flow
+# cert-manager admission webhook — kube-apiserver calls this when Certificate/ClusterIssuer resources are created
+# Verify label: kubectl get pods -n dynaflow -l app.kubernetes.io/component=webhook --show-labels
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: allow-access-to-auth
+  name: allow-kube-apiserver-to-cert-manager-webhook
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: cert-manager
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 10250
+      protocol: TCP
+---
+# ============================================================
+# EGRESS POLICIES
+# ============================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-egress
+  namespace: dynaflow
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+---
+# All pods need DNS to resolve cluster service names
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns-egress
+  namespace: dynaflow
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+---
+# auth → PostgreSQL + Redis
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-auth-egress
   namespace: dynaflow
 spec:
   podSelector:
     matchLabels:
       app: auth
   policyTypes:
-  - Ingress
-  ingress:
-  - from:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - port: 6379
+      protocol: TCP
+---
+# access → PostgreSQL only
+# (access does NOT call auth — NGF handles auth subrequests before calling access)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-access-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: access
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+# site → PostgreSQL
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-site-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: site
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+# vehicle → MongoDB
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-vehicle-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: vehicle
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: mongodb
+    ports:
+    - port: 27017
+      protocol: TCP
+---
+# client-vehicle → PostgreSQL
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-client-vehicle-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: client-vehicle
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+# map → PostgreSQL + MinIO
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-map-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: map
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: minio
+    ports:
+    - port: 9000
+      protocol: TCP
+---
+# workshop → PostgreSQL + RabbitMQ + access (temp-permissions) + telemetry (bench sessions)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-workshop-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: workshop
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: rabbitmq
+    ports:
+    - port: 5672
+      protocol: TCP
+  - to:
     - podSelector:
         matchLabels:
           app: access
     ports:
     - port: 3000
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: telemetry
+    ports:
+    - port: 3000
+      protocol: TCP
+---
+# telemetry → TimescaleDB
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-telemetry-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: telemetry
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: timescaledb
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+# NGF → all app services (port 3000 HTTP, except map on 3443 mTLS) + kube-apiserver
+# Verify label with: kubectl get pods -n dynaflow -l app.kubernetes.io/name=nginx-gateway
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ngf-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nginx-gateway
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values: [auth, access, site, vehicle, client-vehicle, telemetry, workshop]
+    ports:
+    - port: 3000
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: map
+    ports:
+    - port: 3443
+      protocol: TCP
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - port: 6443
+      protocol: TCP
+---
+# cert-manager → kube-apiserver (manages certificates) + Let's Encrypt ACME (renews TLS certs)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-cert-manager-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - port: 6443
+      protocol: TCP
+    - port: 443
       protocol: TCP

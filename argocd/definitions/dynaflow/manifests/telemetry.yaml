@@ -18,7 +18,7 @@ spec:
       containers:
       - name: telemetry
         image: ghcr.io/radu-lzr/dynaflow/telemetry:latest
-        imagePullPolicy: Always
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
         env:
