@@ -1,1 +1,83 @@
 # Alloy chart overrides
+# Chart: https://github.com/grafana/alloy/tree/main/operations/helm/charts/alloy
+# Collecte les logs des containers et les envoie à Loki
+
+# ──────────────────────────────────────────────
+# DaemonSet — un agent par nœud
+# ──────────────────────────────────────────────
+alloy:
+  configMap:
+    content: |
+      // ─── Discovery: tous les pods du nœud ───
+      discovery.kubernetes "pods" {
+        role = "pod"
+        selectors {
+          role = "pod"
+          field = "spec.nodeName=" + sys.env("NODE_NAME")
+        }
+      }
+
+      // ─── Relabeling: extraction des métadonnées ───
+      discovery.relabel "pods" {
+        targets = discovery.kubernetes.pods.targets
+
+        rule {
+          source_labels = ["__meta_kubernetes_namespace"]
+          target_label  = "namespace"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_name"]
+          target_label  = "pod"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_container_name"]
+          target_label  = "container"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_node_name"]
+          target_label  = "node"
+        }
+        rule {
+          source_labels = ["__meta_kubernetes_pod_label_app"]
+          target_label  = "app"
+        }
+      }
+
+      // ─── Collecte des logs ───
+      loki.source.kubernetes "pods" {
+        targets    = discovery.relabel.pods.output
+        forward_to = [loki.process.pods.receiver]
+      }
+
+      // ─── Traitement: ajout du label cluster ───
+      loki.process "pods" {
+        stage.static_labels {
+          values = {
+            cluster = "dynaflow",
+          }
+        }
+        forward_to = [loki.write.default.receiver]
+      }
+
+      // ─── Envoi vers Loki ───
+      loki.write "default" {
+        endpoint {
+          url = "http://loki-gateway.monitoring.svc:80/loki/api/v1/push"
+        }
+      }
+
+  extraEnv:
+    - name: NODE_NAME
+      valueFrom:
+        fieldRef:
+          fieldPath: spec.nodeName
+
+controller:
+  type: daemonset
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    memory: 128Mi

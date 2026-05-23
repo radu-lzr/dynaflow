@@ -1,0 +1,227 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "Volume de Logs",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 0, "y": 1 },
+      "id": 1,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\", container=~\"$container\"}[$__auto])) by (pod)",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "title": "Volume de Logs par Pod",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 6, "w": 12, "x": 12, "y": 1 },
+      "id": 2,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\", container=~\"$container\"} |~ \"(?i)(\\\"level\\\":\\\"(error|fatal)\\\"|\\blevel=(error|fatal)\\b|\\berr(or)?=|\\bERROR\\b|\\bFATAL\\b|\\bexception\\b|\\btimeout\\b|\\bconnection refused\\b)\"[$__auto])) by (pod)",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "title": "Volume d'Erreurs par Pod",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 7 },
+      "id": 101,
+      "title": "Erreurs Applicatives",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 8 },
+      "id": 3,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\", container=~\"$container\"} |~ \"(?i)(\\\"level\\\":\\\"(error|fatal)\\\"|\\blevel=(error|fatal)\\b|\\berr(or)?=|\\bERROR\\b|\\bFATAL\\b|\\bexception\\b|\\btimeout\\b|\\bconnection refused\\b)\"",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Logs d'Erreurs",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 18 },
+      "id": 102,
+      "title": "Événements Kubernetes",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 5, "w": 12, "x": 0, "y": 19 },
+      "id": 4,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\"} |~ \"(?i)(CrashLoopBackOff|OOMKilled|BackOff|Readiness probe failed|Liveness probe failed)\"[$__auto])) by (pod)",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "title": "Problèmes Kubernetes par Pod",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 19 },
+      "id": 5,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"dynaflow\"} |~ \"(?i)(CrashLoopBackOff|OOMKilled|BackOff|Readiness probe failed|Liveness probe failed)\"",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Événements Kubernetes",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 27 },
+      "id": 103,
+      "title": "Tous les Logs",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 28 },
+      "id": 6,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\", container=~\"$container\"}",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Logs Filtrés",
+      "type": "logs"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["dynaflow", "logs", "loki"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "label": "Loki Datasource",
+        "multi": false,
+        "name": "loki_datasource",
+        "options": [],
+        "query": "loki",
+        "refresh": 1,
+        "type": "datasource"
+      },
+      {
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+        "definition": "label_values({cluster=\"dynaflow\", namespace=\"dynaflow\"}, pod)",
+        "hide": 0,
+        "includeAll": true,
+        "allValue": ".*",
+        "label": "Pod",
+        "multi": true,
+        "name": "pod",
+        "query": "label_values({cluster=\"dynaflow\", namespace=\"dynaflow\"}, pod)",
+        "refresh": 2,
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+        "definition": "label_values({cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\"}, container)",
+        "hide": 0,
+        "includeAll": true,
+        "allValue": ".*",
+        "label": "Container",
+        "multi": true,
+        "name": "container",
+        "query": "label_values({cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\"}, container)",
+        "refresh": 2,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Dynaflow — Logs Explorer",
+  "uid": "dynaflow-logs-explorer",
+  "version": 1
+}

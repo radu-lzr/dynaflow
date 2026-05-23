@@ -1,0 +1,437 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "Authentification",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
+          "unit": "short",
+          "mappings": []
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+      "id": 1,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"auth-service\"} |~ \"(?i)(login.*success|authenticated|user logged in|token.*issued|sign.?in.*success)\"[$__range]))",
+          "legendFormat": "Connexions réussies"
+        }
+      ],
+      "title": "Connexions Réussies",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 5 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "unit": "short",
+          "mappings": []
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+      "id": 2,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"auth-service\"} |~ \"(?i)(login.*fail|authentication.*fail|invalid.*credential|invalid.*password|wrong.*password|bad.*credential)\"[$__range]))",
+          "legendFormat": "Échecs"
+        }
+      ],
+      "title": "Tentatives Échouées",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "unit": "short",
+          "mappings": []
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+      "id": 3,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"auth-service\"} |~ \"(?i)(account.*lock|too many attempt|locked out|max.*attempt|rate.*limit)\"[$__range]))",
+          "legendFormat": "Lockouts"
+        }
+      ],
+      "title": "Comptes Verrouillés",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 1 }
+            ]
+          },
+          "unit": "short",
+          "mappings": []
+        }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+      "id": 4,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"auth-service\"} |~ \"(?i)(token.*invalid|token.*expired|jwt.*invalid|jwt.*expired|unauthorized)\"[$__range]))",
+          "legendFormat": "Tokens invalides"
+        }
+      ],
+      "title": "Tokens Invalides / Expirés",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 7, "w": 24, "x": 0, "y": 5 },
+      "id": 5,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"auth-service\"} |~ \"(?i)(login.*success|authenticated|token.*issued)\"[$__auto])) by (app)",
+          "legendFormat": "Succès"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"auth-service\"} |~ \"(?i)(login.*fail|invalid.*credential|wrong.*password)\"[$__auto])) by (app)",
+          "legendFormat": "Échecs"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"auth-service\"} |~ \"(?i)(account.*lock|too many attempt|locked out)\"[$__auto])) by (app)",
+          "legendFormat": "Lockouts"
+        }
+      ],
+      "title": "Événements d'Authentification dans le Temps",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 12 },
+      "id": 6,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"auth-service\"} |~ \"(?i)(login|auth|token|jwt|locked|attempt|credential|password|sign.?in|unauthorized)\"",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Logs Auth-Service",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 22 },
+      "id": 101,
+      "title": "Contrôle d'Accès",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          },
+          "unit": "short",
+          "mappings": []
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 23 },
+      "id": 7,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"access-service\"} |~ \"(?i)(access.*grant|access.*allow|permitted|authorized)\"[$__range]))",
+          "legendFormat": "Accès accordés"
+        }
+      ],
+      "title": "Accès Accordés",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "orange", "value": 5 },
+              { "color": "red", "value": 20 }
+            ]
+          },
+          "unit": "short",
+          "mappings": []
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 23 },
+      "id": 8,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"access-service\"} |~ \"(?i)(access.*den|access.*forbid|forbidden|unauthorized|not.*authorized)\"[$__range]))",
+          "legendFormat": "Accès refusés"
+        }
+      ],
+      "title": "Accès Refusés",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "red", "value": 1 }
+            ]
+          },
+          "unit": "short",
+          "mappings": []
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 23 },
+      "id": 9,
+      "options": {
+        "reduceOptions": { "calcs": ["sum"] },
+        "colorMode": "background",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"access-service\"} |~ \"(?i)(error|exception|fail)\"[$__range]))",
+          "legendFormat": "Erreurs Access-Service"
+        }
+      ],
+      "title": "Erreurs Access-Service",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 27 },
+      "id": 10,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"access-service\"} |~ \"(?i)(access.*grant|access.*allow|permitted)\"[$__auto])) by (app)",
+          "legendFormat": "Accordés"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"access-service\"} |~ \"(?i)(access.*den|access.*forbid|forbidden|not.*authorized)\"[$__auto])) by (app)",
+          "legendFormat": "Refusés"
+        }
+      ],
+      "title": "Décisions d'Accès dans le Temps",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 33 },
+      "id": 11,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"dynaflow\", app=\"access-service\"} |~ \"(?i)(access|allow|den|forbid|unauthorized|permitted|resource|check)\"",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Logs Access-Service",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 43 },
+      "id": 102,
+      "title": "Événements de Sécurité HTTP (Gateway)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 44 },
+      "id": 12,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"nginx-gateway\"} |~ \" 401 \"[$__auto])) by (pod)",
+          "legendFormat": "401 Unauthorized"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"nginx-gateway\"} |~ \" 403 \"[$__auto])) by (pod)",
+          "legendFormat": "403 Forbidden"
+        }
+      ],
+      "title": "Réponses 401 / 403 Gateway dans le Temps",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 50 },
+      "id": 13,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"nginx-gateway\"} |~ \" (401|403) \"",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Logs Gateway — Refus d'Accès (401/403)",
+      "type": "logs"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["dynaflow", "audit", "security", "loki"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "label": "Loki Datasource",
+        "multi": false,
+        "name": "loki_datasource",
+        "options": [],
+        "query": "loki",
+        "refresh": 1,
+        "type": "datasource"
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Dynaflow — Audit Logs",
+  "uid": "dynaflow-audit-logs",
+  "version": 1
+}

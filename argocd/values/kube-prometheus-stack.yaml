@@ -1,1 +1,85 @@
 # kube-prometheus-stack chart overrides
+# Chart: https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack
+
+# ──────────────────────────────────────────────
+# Grafana — tableau de bord central
+# ──────────────────────────────────────────────
+grafana:
+  enabled: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 256Mi
+  sidecar:
+    dashboards:
+      enabled: true
+      searchNamespace: ALL
+      folderAnnotation: grafana_folder
+      provider:
+        foldersFromFilesStructure: true
+        allowUiUpdates: true
+    datasources:
+      defaultDatasourceEnabled: false
+  persistence:
+    enabled: true
+    size: 1Gi
+  additionalDataSources:
+    - name: Mimir
+      type: prometheus
+      url: http://mimir-gateway.monitoring.svc:80/prometheus
+      access: proxy
+      isDefault: true
+    - name: Prometheus
+      type: prometheus
+      url: http://prometheus-operated.monitoring.svc:9090
+      access: proxy
+      isDefault: false
+    - name: Loki
+      type: loki
+      url: http://loki-gateway.monitoring.svc:80
+      access: proxy
+      isDefault: false
+
+# ──────────────────────────────────────────────
+# Prometheus — métriques locales
+# ──────────────────────────────────────────────
+prometheus:
+  service:
+    type: ClusterIP
+  prometheusSpec:
+    retention: 7d
+    serviceMonitorNamespaceSelector: {}
+    serviceMonitorSelector: {}
+    serviceMonitorSelectorNilUsesHelmValues: false
+    externalLabels:
+      cluster: dynaflow
+    resources:
+      requests:
+        cpu: 100m
+        memory: 512Mi
+      limits:
+        memory: 1Gi
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 5Gi
+
+# ──────────────────────────────────────────────
+# Alertmanager
+# ──────────────────────────────────────────────
+alertmanager:
+  enabled: false
+
+# ──────────────────────────────────────────────
+# Exporters
+# ──────────────────────────────────────────────
+kube-state-metrics:
+  enabled: true
+
+prometheus-node-exporter:
+  enabled: true
