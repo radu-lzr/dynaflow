@@ -28,8 +28,9 @@ spec:
   sourceRepos:
     - '*'
   destinations:
-    # Autorise le déploiement uniquement dans le namespace 'dynaflow'
     - namespace: dynaflow
+      server: https://kubernetes.default.svc
+    - namespace: kube-system
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: '*'
