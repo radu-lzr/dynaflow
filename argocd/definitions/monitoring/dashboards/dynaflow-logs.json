@@ -1,0 +1,338 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 100,
+      "title": "Log Volume",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 7, "w": 12, "x": 0, "y": 1 },
+      "id": 1,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\"}[$__auto])) by (pod)",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "title": "Log Volume per Pod",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 7, "w": 12, "x": 12, "y": 1 },
+      "id": 2,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\"} | json | level = \"error\" [$__auto])) by (pod)",
+          "legendFormat": "{{pod}}"
+        }
+      ],
+      "title": "Error Volume per Pod",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 8 },
+      "id": 101,
+      "title": "Error Logs",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 9 },
+      "id": 3,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\"} | json | level = \"error\"",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Error Log Stream",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 19 },
+      "id": 102,
+      "title": "All Logs",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 20 },
+      "id": 4,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"dynaflow\", pod=~\"$pod\"}",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Filtered Log Stream",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 30 },
+      "id": 103,
+      "title": "Audit Logs",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 31 },
+      "id": 5,
+      "options": { "reduceOptions": { "calcs": ["sum"] }, "colorMode": "background", "textMode": "auto" },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\"} | json | audit = \"true\" [$__range]))",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Total Audit Events",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 1 }]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 31 },
+      "id": 6,
+      "options": { "reduceOptions": { "calcs": ["sum"] }, "colorMode": "background", "textMode": "auto" },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\"} | json | audit = \"true\" | sensitive = \"true\" [$__range]))",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Sensitive Events",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }]
+          },
+          "unit": "short"
+        }
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 31 },
+      "id": 7,
+      "options": { "reduceOptions": { "calcs": ["sum"] }, "colorMode": "background", "textMode": "auto" },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"nginx-gateway\"} |~ \" (401|403) \" [$__range]))",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Gateway 401/403",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 20, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 7, "w": 24, "x": 0, "y": 35 },
+      "id": 8,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"dynaflow\"} | json | audit = \"true\" [$__auto])) by (action)",
+          "legendFormat": "{{action}}"
+        }
+      ],
+      "title": "Audit Events by Action",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 42 },
+      "id": 9,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"dynaflow\"} | json | audit = \"true\"",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Audit Log Stream",
+      "type": "logs"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 54 },
+      "id": 104,
+      "title": "Gateway Security",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "custom": { "fillOpacity": 30, "lineWidth": 1, "stacking": { "mode": "normal" } }
+        }
+      },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 55 },
+      "id": 10,
+      "options": { "tooltip": { "mode": "multi" } },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"nginx-gateway\"} |~ \" 401 \" [$__auto])) by (pod)",
+          "legendFormat": "401 Unauthorized"
+        },
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "sum(count_over_time({cluster=\"dynaflow\", namespace=\"nginx-gateway\"} |~ \" 403 \" [$__auto])) by (pod)",
+          "legendFormat": "403 Forbidden"
+        }
+      ],
+      "title": "Gateway 401/403 over Time",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 61 },
+      "id": 11,
+      "options": {
+        "showTime": true,
+        "showLabels": true,
+        "showCommonLabels": false,
+        "wrapLogMessage": true,
+        "prettifyLogMessage": false,
+        "enableLogDetails": true,
+        "sortOrder": "Descending",
+        "dedupStrategy": "none"
+      },
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+          "expr": "{cluster=\"dynaflow\", namespace=\"nginx-gateway\"} |~ \" (401|403) \"",
+          "legendFormat": ""
+        }
+      ],
+      "title": "Gateway Access Denied Logs",
+      "type": "logs"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "tags": ["dynaflow", "logs", "audit", "loki"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "label": "Loki Datasource",
+        "multi": false,
+        "name": "loki_datasource",
+        "options": [],
+        "query": "loki",
+        "refresh": 1,
+        "type": "datasource"
+      },
+      {
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": { "type": "loki", "uid": "${loki_datasource}" },
+        "definition": "label_values({cluster=\"dynaflow\", namespace=\"dynaflow\"}, pod)",
+        "hide": 0,
+        "includeAll": true,
+        "allValue": ".*",
+        "label": "Pod",
+        "multi": true,
+        "name": "pod",
+        "query": "label_values({cluster=\"dynaflow\", namespace=\"dynaflow\"}, pod)",
+        "refresh": 2,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Dynaflow — Logs & Audit",
+  "uid": "dynaflow-logs",
+  "version": 1
+}
