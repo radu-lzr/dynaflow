@@ -65,6 +65,25 @@ spec:
             - name: init-sql
               mountPath: /docker-entrypoint-initdb.d/init-dbs.sql
               subPath: init-dbs.sql
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
+          livenessProbe:
+            exec:
+              command: [pg_isready, -U, dynaflow, -d, auth]
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            failureThreshold: 6
+          readinessProbe:
+            exec:
+              command: [pg_isready, -U, dynaflow, -d, auth]
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
       volumes:
         - name: init-sql
           configMap:
