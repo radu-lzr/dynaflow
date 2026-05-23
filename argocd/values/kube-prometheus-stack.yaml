@@ -26,16 +26,11 @@ grafana:
     enabled: true
     size: 1Gi
   additionalDataSources:
-    - name: Mimir
-      type: prometheus
-      url: http://mimir-gateway.monitoring.svc:80/prometheus
-      access: proxy
-      isDefault: true
     - name: Prometheus
       type: prometheus
       url: http://prometheus-operated.monitoring.svc:9090
       access: proxy
-      isDefault: false
+      isDefault: true
     - name: Loki
       type: loki
       url: http://loki-gateway.monitoring.svc:80
@@ -55,8 +50,6 @@ prometheus:
     serviceMonitorSelectorNilUsesHelmValues: false
     externalLabels:
       cluster: dynaflow
-    remoteWrite:
-      - url: http://mimir-gateway.monitoring.svc:80/api/v1/push
     resources:
       requests:
         cpu: 100m
