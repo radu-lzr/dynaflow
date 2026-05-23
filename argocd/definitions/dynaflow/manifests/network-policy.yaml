@@ -53,7 +53,7 @@ spec:
     - port: 5432
       protocol: TCP
 ---
-# access, site, client-vehicle, map, telemetry, workshop → PostgreSQL
+# access, site, client-vehicle, map, workshop → PostgreSQL
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -81,10 +81,28 @@ spec:
           app: map
     - podSelector:
         matchLabels:
-          app: telemetry
+          app: workshop
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+# telemetry → TimescaleDB
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-telemetry-to-timescaledb
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: timescaledb
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
     - podSelector:
         matchLabels:
-          app: workshop
+          app: telemetry
     ports:
     - port: 5432
       protocol: TCP
