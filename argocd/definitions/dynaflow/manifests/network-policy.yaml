@@ -211,3 +211,306 @@ spec:
     ports:
     - port: 3000
       protocol: TCP
+---
+# cert-manager admission webhook — kube-apiserver calls this when Certificate/ClusterIssuer resources are created
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-kube-apiserver-to-cert-manager-webhook
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: webhook
+      app.kubernetes.io/instance: cert-manager
+  policyTypes:
+  - Ingress
+  ingress:
+  - ports:
+    - port: 10250
+      protocol: TCP
+---
+# ============================================================
+# EGRESS POLICIES
+# ============================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-egress
+  namespace: dynaflow
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+---
+# All pods need DNS to resolve cluster service names
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns-egress
+  namespace: dynaflow
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+---
+# auth → PostgreSQL + Redis
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-auth-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: auth
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - port: 6379
+      protocol: TCP
+---
+# access → PostgreSQL + auth service (JWT validation)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-access-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: access
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: auth
+    ports:
+    - port: 3000
+      protocol: TCP
+---
+# site → PostgreSQL
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-site-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: site
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+# vehicle → MongoDB
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-vehicle-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: vehicle
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: mongodb
+    ports:
+    - port: 27017
+      protocol: TCP
+---
+# client-vehicle → PostgreSQL
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-client-vehicle-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: client-vehicle
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+# map → PostgreSQL + MinIO
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-map-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: map
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: minio
+    ports:
+    - port: 9000
+      protocol: TCP
+---
+# workshop → PostgreSQL + RabbitMQ
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-workshop-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: workshop
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: rabbitmq
+    ports:
+    - port: 5672
+      protocol: TCP
+---
+# telemetry → TimescaleDB
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-telemetry-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: telemetry
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: timescaledb
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+# NGF → all app services (proxying) + kube-apiserver (watches Gateway/HTTPRoute resources)
+# Verify label with: kubectl get pods -n dynaflow -l app.kubernetes.io/name=nginx-gateway
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ngf-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: nginx-gateway
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchExpressions:
+        - key: app
+          operator: In
+          values: [auth, access, site, vehicle, client-vehicle, map, telemetry, workshop]
+    ports:
+    - port: 3000
+      protocol: TCP
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - port: 6443
+      protocol: TCP
+---
+# cert-manager → kube-apiserver (manages certificates) + Let's Encrypt ACME (renews TLS certs)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-cert-manager-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: cert-manager
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - port: 6443
+      protocol: TCP
+    - port: 443
+      protocol: TCP
