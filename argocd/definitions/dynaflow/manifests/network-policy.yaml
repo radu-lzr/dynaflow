@@ -186,6 +186,27 @@ spec:
     - port: 3000
       protocol: TCP
 ---
+# pgadmin: reachable from NGF only
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-pgadmin-ingress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: pgadmin
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/name: nginx-gateway
+    ports:
+    - port: 80
+      protocol: TCP
+---
 # PostgreSQL — individual allow per service
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -303,6 +324,26 @@ spec:
     - podSelector:
         matchLabels:
           app: workshop
+    ports:
+    - port: 5432
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-pgadmin-to-postgres
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: postgres
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: pgadmin
     ports:
     - port: 5432
       protocol: TCP
@@ -651,6 +692,27 @@ spec:
     - port: 3000
       protocol: TCP
 ---
+# pgadmin → PostgreSQL
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-pgadmin-egress
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: pgadmin
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
+---
 # telemetry → TimescaleDB
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -694,6 +756,13 @@ spec:
           values: [auth, access, site, vehicle, client-vehicle, telemetry, workshop]
     ports:
     - port: 3000
+      protocol: TCP
+  - to:
+    - podSelector:
+        matchLabels:
+          app: pgadmin
+    ports:
+    - port: 80
       protocol: TCP
   - to:
     - podSelector:
