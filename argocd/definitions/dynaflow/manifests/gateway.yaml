@@ -15,7 +15,7 @@ spec:
       namespaces:
         from: Same
   - name: https
-    hostname: YOUR_DOMAIN
+    hostname: dynolab.be
     port: 443
     protocol: HTTPS
     tls:

@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: minio
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: dynaflow
+  source:
+    repoURL: https://github.com/radu-lzr/dynaflow
+    targetRevision: main
+    path: argocd/definitions/dynaflow/manifests/infra/minio
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dynaflow
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

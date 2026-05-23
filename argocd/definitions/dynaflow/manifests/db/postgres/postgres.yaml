@@ -7,8 +7,16 @@ data:
   init-dbs.sql: |
     CREATE DATABASE access;
     CREATE DATABASE site;
+    CREATE DATABASE client_vehicle;
+    CREATE DATABASE map;
+    CREATE DATABASE telemetry;
+    CREATE DATABASE workshop;
     GRANT ALL PRIVILEGES ON DATABASE access TO dynaflow;
     GRANT ALL PRIVILEGES ON DATABASE site TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE client_vehicle TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE map TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE telemetry TO dynaflow;
+    GRANT ALL PRIVILEGES ON DATABASE workshop TO dynaflow;
 
 ---
 apiVersion: v1

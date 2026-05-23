@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workshop-service
+  namespace: dynaflow
+  labels:
+    app: workshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workshop
+  template:
+    metadata:
+      labels:
+        app: workshop
+    spec:
+      containers:
+      - name: workshop
+        image: ghcr.io/radu-lzr/dynaflow/workshop:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: PORT
+          value: "3000"
+        - name: POSTGRES_HOST
+          value: postgres.dynaflow.svc.cluster.local
+        - name: POSTGRES_PORT
+          value: "5432"
+        - name: POSTGRES_USER
+          value: dynaflow
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password
+        - name: POSTGRES_DB
+          value: workshop
+        - name: RABBITMQ_URL
+          valueFrom:
+            secretKeyRef:
+              name: rabbitmq-credentials
+              key: rabbitmq-url
+        resources:
+          requests:
+            cpu: "50m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          failureThreshold: 3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: workshop-service
+  namespace: dynaflow
+spec:
+  selector:
+    app: workshop
+  ports:
+  - port: 80
+    targetPort: 3000
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: workshop-route
+  namespace: dynaflow
+spec:
+  parentRefs:
+  - name: dynaflow-gateway
+    sectionName: https
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /api/workshop
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /interventions
+    - type: ExtensionRef
+      extensionRef:
+        group: gateway.nginx.org
+        kind: SnippetsFilter
+        name: access-required
+    backendRefs:
+    - name: workshop-service
+      port: 80

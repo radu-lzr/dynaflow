@@ -8,7 +8,7 @@ spec:
   policyTypes:
   - Ingress
 ---
-# NGF nginx data-plane → application services
+# NGF nginx data-plane → all application services
 # Verify label with: kubectl get pods -n dynaflow -l app.kubernetes.io/name=nginx-gateway
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -20,7 +20,7 @@ spec:
     matchExpressions:
     - key: app
       operator: In
-      values: [auth, access, site, vehicle]
+      values: [auth, access, site, vehicle, client-vehicle, map, telemetry, workshop]
   policyTypes:
   - Ingress
   ingress:
@@ -32,6 +32,7 @@ spec:
     - port: 3000
       protocol: TCP
 ---
+# auth → PostgreSQL
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -52,6 +53,7 @@ spec:
     - port: 5432
       protocol: TCP
 ---
+# access, site, client-vehicle, map, telemetry, workshop → PostgreSQL
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -71,10 +73,23 @@ spec:
     - podSelector:
         matchLabels:
           app: site
+    - podSelector:
+        matchLabels:
+          app: client-vehicle
+    - podSelector:
+        matchLabels:
+          app: map
+    - podSelector:
+        matchLabels:
+          app: telemetry
+    - podSelector:
+        matchLabels:
+          app: workshop
     ports:
     - port: 5432
       protocol: TCP
 ---
+# auth → Redis
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -95,6 +110,7 @@ spec:
     - port: 6379
       protocol: TCP
 ---
+# vehicle → MongoDB
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -113,6 +129,48 @@ spec:
           app: vehicle
     ports:
     - port: 27017
+      protocol: TCP
+---
+# map → Minio
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-map-to-minio
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: minio
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: map
+    ports:
+    - port: 9000
+      protocol: TCP
+---
+# workshop → RabbitMQ
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-workshop-to-rabbitmq
+  namespace: dynaflow
+spec:
+  podSelector:
+    matchLabels:
+      app: rabbitmq
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: workshop
+    ports:
+    - port: 5672
       protocol: TCP
 ---
 # access service calls auth service internally for JWT validation in the access-check flow

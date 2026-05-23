@@ -28,4 +28,4 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-  - YOUR_DOMAIN
+  - dynolab.be
