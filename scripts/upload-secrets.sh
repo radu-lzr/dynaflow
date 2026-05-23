@@ -13,6 +13,7 @@ JWT_SECRET="${JWT_SECRET:-$(openssl rand -base64 48)}"
 MINIO_ACCESS_KEY="${MINIO_ACCESS_KEY:-$(openssl rand -base64 12 | tr -dc 'A-Za-z0-9' | head -c 16)}"
 MINIO_SECRET_KEY="${MINIO_SECRET_KEY:-$(openssl rand -base64 24 | tr -dc 'A-Za-z0-9' | head -c 32)}"
 RABBITMQ_PASS="${RABBITMQ_PASS:-$(openssl rand -base64 18 | tr -dc 'A-Za-z0-9' | head -c 24)}"
+TIMESCALE_PASS="${TIMESCALE_PASS:-$(openssl rand -base64 24)}"
 
 SECRET_FILE="$(dirname "$0")/dynaflow.secret"
 cat > "$SECRET_FILE" <<EOF
@@ -24,6 +25,7 @@ JWT_SECRET=$JWT_SECRET
 MINIO_ACCESS_KEY=$MINIO_ACCESS_KEY
 MINIO_SECRET_KEY=$MINIO_SECRET_KEY
 RABBITMQ_PASS=$RABBITMQ_PASS
+TIMESCALE_PASS=$TIMESCALE_PASS
 EOF
 chmod 600 "$SECRET_FILE"
 
@@ -81,6 +83,13 @@ kubectl create secret generic rabbitmq-credentials \
   --namespace "$NAMESPACE" \
   --from-literal=rabbitmq-password="$RABBITMQ_PASS" \
   --from-literal=rabbitmq-url="$RABBITMQ_URL" \
+  --dry-run=client -o yaml | kubectl apply -f -
+
+# --- TimescaleDB ---
+echo "Creating timescaledb-credentials..."
+kubectl create secret generic timescaledb-credentials \
+  --namespace "$NAMESPACE" \
+  --from-literal=password="$TIMESCALE_PASS" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 # --- Dynaflow app secrets ---
