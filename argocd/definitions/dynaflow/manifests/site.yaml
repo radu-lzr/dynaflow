@@ -95,7 +95,7 @@ spec:
       extensionRef:
         group: gateway.nginx.org
         kind: SnippetsFilter
-        name: auth-required
+        name: access-required
     backendRefs:
     - name: site-service
       port: 80

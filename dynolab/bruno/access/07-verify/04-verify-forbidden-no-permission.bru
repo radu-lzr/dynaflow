@@ -1,0 +1,28 @@
+meta {
+  name: Verify Access Forbidden No Permission 403
+  type: http
+  seq: 4
+}
+
+// Uses a freshly registered user who has no roles/permissions assigned.
+// We reuse techId (a seeded user with limited access) and check a privileged route.
+// This test relies on techId not having the permission:assign permission.
+
+post {
+  url: {{accessUrl}}/access/verify
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{techAccessToken}}
+  X-Original-URI: /api/access/permissions
+  X-Original-Method: POST
+}
+
+tests {
+  test("status 401 or 403", function() {
+    // 401 if techAccessToken is not set (token missing), 403 if set but no permission
+    expect([401, 403]).to.include(res.status);
+  });
+}

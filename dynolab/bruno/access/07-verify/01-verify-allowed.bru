@@ -1,0 +1,32 @@
+meta {
+  name: Verify Access Allowed 200
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{accessUrl}}/access/verify
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{verifyTestToken}}
+  X-Original-URI: /api/access/roles
+  X-Original-Method: GET
+}
+
+tests {
+  test("status 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  test("allowed is true", function() {
+    expect(res.body.allowed).to.equal(true);
+  });
+  test("response header X-User-Id is set", function() {
+    expect(res.headers["x-user-id"]).to.be.a("string");
+  });
+  test("response header X-Account-Type is set", function() {
+    expect(res.headers["x-account-type"]).to.be.a("string");
+  });
+}

@@ -2,6 +2,7 @@ import Fastify from 'fastify';
 import { getLoggerOptions, createAuditLogger, postgresPlugin } from '@dynolab/core';
 import dbPlugin from './plugins/db';
 import checkRoutes from './routes/check.routes';
+import verifyRoutes from './routes/verify.routes';
 import rolesRoutes from './routes/roles.routes';
 import permissionsRoutes from './routes/permissions.routes';
 import userRolesRoutes from './routes/user-roles.routes';
@@ -20,6 +21,7 @@ app.decorate('audit', audit);
 
 // Routes
 app.register(checkRoutes);
+app.register(verifyRoutes);
 app.register(rolesRoutes);
 app.register(permissionsRoutes);
 app.register(userRolesRoutes);

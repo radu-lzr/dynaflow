@@ -1,0 +1,26 @@
+meta {
+  name: Verify Access Unknown Route 403
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{accessUrl}}/access/verify
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: Bearer {{verifyTestToken}}
+  X-Original-URI: /api/access/unknown-route-xyz
+  X-Original-Method: GET
+}
+
+tests {
+  test("status 403", function() {
+    expect(res.status).to.equal(403);
+  });
+  test("has message", function() {
+    expect(res.body.message).to.be.a("string");
+  });
+}

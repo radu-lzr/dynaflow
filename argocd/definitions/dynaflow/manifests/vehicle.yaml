@@ -87,7 +87,7 @@ spec:
       extensionRef:
         group: gateway.nginx.org
         kind: SnippetsFilter
-        name: auth-required
+        name: access-required
     backendRefs:
     - name: vehicle-service
       port: 80
